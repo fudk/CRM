@@ -125,9 +125,9 @@
 		<%@ include file="../common/top.jsp"%>
 		<form id="rechargeForm" action="">
 		<div class="main">
-			<div class="page_title">充值明细</div>
+			<div class="page_title">缴费记录</div>
 			<div id="Search">
-				充值用户：<input type="text" name="loginName" id="loginName" value=""
+				缴费用户：<input type="text" name="loginName" id="loginName" value=""
 					style="border:1px solid #ccc;"><input type="hidden" name="userId" id="userId"/>
 				操作员：<input type="text" name="operatorName" id="operatorName" value=""
 					style="border:1px solid #ccc;"><input type="hidden" name="operator" id="operator"/>
@@ -137,12 +137,12 @@
 				<option value="CU">中国联通</option>
 				<option value="CT">中国电信</option>
 				</select>	 -->
-				充值类型：<select name="recType">
+				缴费类型：<select name="recType">
 				<option value="">全部</option>
 				<option value="phone">话费</option>
 				<option value="flow">流量</option>
 				</select>	
-					 充值时间：<input type="text" size="12" readonly="readonly"
+					 缴费时间：<input type="text" size="12" readonly="readonly"
 					id="startTime" name="startTime" class="Wdate"
 					onFocus="startDate(this)"   value="" /> 
 					 至<input type="text" size="12" readonly="readonly"

@@ -15,6 +15,7 @@ import com.greatwall.platform.domain.PageParameter;
 import com.greatwall.platform.system.dao.UserDao;
 import com.greatwall.platform.system.dto.User;
 import com.greatwall.recharge.client.JudianService;
+import com.greatwall.recharge.client.LiulService;
 import com.greatwall.recharge.client.ShunpanService;
 import com.greatwall.recharge.dao.ConsumeDao;
 import com.greatwall.recharge.dao.ProductDao;
@@ -41,7 +42,7 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 	@Autowired
 	private ShunpanService shunpanService;
 	@Autowired
-	private JudianService judianService;
+	private LiulService liulService;
 
 	ExecutorService fixedThreadPool = Executors.newFixedThreadPool(30);
 
@@ -172,8 +173,8 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 				throw new DaoException(RMSConstant.ERROR_CODE_104+" "+consume.getRemark());
 			}
 		}else if("flow".equals(consume.getConsumeType())){
-			if(judianService.sendMsg(consume)){
-				consume.setState(RMSConstant.CONSUME_STATE_SUC);
+			if(liulService.sendMsg(consume)){
+				consume.setState(RMSConstant.CONSUME_STATE_SENDED);
 			}else{
 				throw new DaoException(RMSConstant.ERROR_CODE_104+" "+consume.getRemark());
 			}
