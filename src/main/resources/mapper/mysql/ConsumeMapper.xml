@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ConsumeMapper" >
+  <resultMap id="BaseResultMap" type="com.greatwall.recharge.dto.Consume" >
+    <id column="CONSUME_ID" property="consumeId" jdbcType="VARCHAR" />
+    <result column="USER_ID" property="userId" jdbcType="INTEGER" />
+    <result column="DISCOUNT" property="discount" jdbcType="INTEGER" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="CONSUME_PRICE" property="consumePrice" jdbcType="DOUBLE" />
+    <result column="CONSUME_NUM" property="consumeNum" jdbcType="INTEGER" />
+    <result column="CONSUME_AMOUNT" property="consumeAmount" jdbcType="DOUBLE" />
+    <result column="CONSUME_PHONE" property="consumePhone" jdbcType="VARCHAR" />
+    <result column="CONSUME_TYPE" property="consumeType" jdbcType="VARCHAR" />
+    <result column="ISP" property="isp" jdbcType="VARCHAR" />
+    <result column="NOTIFY_URL" property="notifyUrl" jdbcType="VARCHAR" />
+    <result column="PRODUCT_ID" property="productId" jdbcType="INTEGER" />
+    <result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+    <result column="STATE" property="state" jdbcType="VARCHAR" />
+    <result column="BALANCE" property="balance" jdbcType="DOUBLE" />
+    <result column="PAYMENT" property="payment" jdbcType="DOUBLE" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+ <resultMap id="ConditionsResultMap" type="com.greatwall.recharge.dto.ConsumeConditions" >
+    <id column="CONSUME_ID" property="consumeId" jdbcType="VARCHAR" />
+    <result column="USER_ID" property="userId" jdbcType="INTEGER" />
+    <result column="DISCOUNT" property="discount" jdbcType="INTEGER" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="CONSUME_PRICE" property="consumePrice" jdbcType="DOUBLE" />
+    <result column="CONSUME_NUM" property="consumeNum" jdbcType="INTEGER" />
+    <result column="CONSUME_AMOUNT" property="consumeAmount" jdbcType="DOUBLE" />
+    <result column="CONSUME_PHONE" property="consumePhone" jdbcType="VARCHAR" />
+    <result column="CONSUME_TYPE" property="consumeType" jdbcType="VARCHAR" />
+    <result column="ISP" property="isp" jdbcType="VARCHAR" />
+    <result column="NOTIFY_URL" property="notifyUrl" jdbcType="VARCHAR" />
+    <result column="PRODUCT_ID" property="productId" jdbcType="INTEGER" />
+    <result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+    <result column="STATE" property="state" jdbcType="VARCHAR" />
+    <result column="BALANCE" property="balance" jdbcType="DOUBLE" />
+    <result column="PAYMENT" property="payment" jdbcType="DOUBLE" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+     CONSUME_ID, USER_ID, DISCOUNT, CREATE_TIME, CONSUME_PRICE, CONSUME_NUM, CONSUME_AMOUNT, 
+    CONSUME_PHONE, CONSUME_TYPE, ISP, NOTIFY_URL, PRODUCT_ID, PRODUCT_NAME, STATE, BALANCE, 
+    PAYMENT,REMARK
+  </sql>
+  
+  <sql id="consumeWhere">
+  	<where>
+  		<if test="consumeId != null" >
+        and CONSUME_ID = #{consumeId,jdbcType=VARCHAR}
+      </if>
+  		 <if test="userId != null" >
+        and USER_ID = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="consumePrice != null" >
+        and CONSUME_PRICE = #{consumePrice,jdbcType=DOUBLE}
+      </if>
+      <if test="consumeNum != null" >
+        and CONSUME_NUM = #{consumeNum,jdbcType=INTEGER}
+      </if>
+      <if test="consumeAmount != null" >
+        and CONSUME_AMOUNT = #{consumeAmount,jdbcType=DOUBLE}
+      </if>
+      <if test="consumePhone != null" >
+        and CONSUME_PHONE = #{consumePhone,jdbcType=VARCHAR}
+      </if>
+      <if test="consumeType != null" >
+        and CONSUME_TYPE = #{consumeType,jdbcType=VARCHAR}
+      </if>
+      <if test="isp != null" >
+        and ISP = #{isp,jdbcType=VARCHAR}
+      </if>
+      <if test="notifyUrl != null" >
+        and NOTIFY_URL = #{notifyUrl,jdbcType=VARCHAR}
+      </if>
+      <if test="productId != null" >
+        and PRODUCT_ID = #{productId,jdbcType=INTEGER}
+      </if>
+      <if test="productName != null" >
+        and PRODUCT_NAME = #{productName,jdbcType=VARCHAR}
+      </if>
+      <if test="state != null" >
+        and STATE = #{state,jdbcType=VARCHAR}
+      </if>
+      <if test="balance != null" >
+        and BALANCE = #{balance,jdbcType=DOUBLE}
+      </if>
+  	</where>
+  </sql>
+
+	<select id="selectByQueryPage" resultMap="ConditionsResultMap"
+		parameterType="com.greatwall.recharge.dto.ConsumeConditions">
+		select
+		CONSUME_ID, a.USER_ID, DISCOUNT, a.CREATE_TIME, CONSUME_PRICE, CONSUME_NUM,
+		CONSUME_AMOUNT, CONSUME_PHONE, CONSUME_TYPE, ISP, NOTIFY_URL,
+		PRODUCT_ID, PRODUCT_NAME, STATE, a.BALANCE, PAYMENT,a.REMARK,b.USER_NAME
+		from td_rms_consume_log a ,td_sm_user b
+		<where>
+			a.USER_ID = b.USER_ID
+			<if test="userId != null and userId != '' ">
+				and a.USER_ID = #{userId,jdbcType=INTEGER}
+			</if>
+			<if test="consumePhone != null and consumePhone != '' ">
+				and CONSUME_PHONE = #{consumePhone,jdbcType=INTEGER}
+			</if>
+			<if test="consumeType != null and consumeType != '' ">
+				and CONSUME_TYPE = #{consumeType,jdbcType=VARCHAR}
+			</if>
+			<if test="isp != null and isp != '' ">
+				and ISP = #{isp,jdbcType=VARCHAR}
+			</if>
+			<if test="startTime != null">
+				<![CDATA[ and a.CREATE_TIME > #{startTime,jdbcType=TIMESTAMP} ]]>
+			</if>
+			<if test="endTime != null">
+				<![CDATA[ and a.CREATE_TIME <= #{endTime,jdbcType=TIMESTAMP} ]]>
+			</if>
+		</where>
+		order by CREATE_TIME desc
+	</select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_rms_consume_log
+    where CONSUME_ID = #{consumeId,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from td_rms_consume_log
+    where CONSUME_ID = #{consumeId,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.greatwall.recharge.dto.Consume" >
+   insert into td_rms_consume_log (CONSUME_ID, USER_ID, DISCOUNT, 
+      CREATE_TIME, CONSUME_PRICE, CONSUME_NUM, 
+      CONSUME_AMOUNT, CONSUME_PHONE, CONSUME_TYPE, 
+      ISP, NOTIFY_URL, PRODUCT_ID, 
+      PRODUCT_NAME, STATE, BALANCE, 
+      PAYMENT,REMARK)
+    values (#{consumeId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{discount,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{consumePrice,jdbcType=DOUBLE}, #{consumeNum,jdbcType=INTEGER}, 
+      #{consumeAmount,jdbcType=DOUBLE}, #{consumePhone,jdbcType=VARCHAR}, #{consumeType,jdbcType=VARCHAR}, 
+      #{isp,jdbcType=VARCHAR}, #{notifyUrl,jdbcType=VARCHAR}, #{productId,jdbcType=INTEGER}, 
+      #{productName,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{balance,jdbcType=DOUBLE}, 
+      #{payment,jdbcType=DOUBLE},#{remark})
+  </insert>
+
+  <update id="updateState" parameterType="com.greatwall.recharge.dto.Consume" >
+   	update td_rms_consume_log 
+   	<set >
+      <if test="state != null" >
+        STATE = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark}
+      </if>
+    </set>
+    where CONSUME_ID = #{consumeId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.greatwall.recharge.dto.Consume" >
+    update td_rms_consume_log
+    <set >
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="consumePrice != null" >
+        CONSUME_PRICE = #{consumePrice,jdbcType=DOUBLE},
+      </if>
+      <if test="consumeNum != null" >
+        CONSUME_NUM = #{consumeNum,jdbcType=INTEGER},
+      </if>
+      <if test="consumeAmount != null" >
+        CONSUME_AMOUNT = #{consumeAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="consumePhone != null" >
+        CONSUME_PHONE = #{consumePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="consumeType != null" >
+        CONSUME_TYPE = #{consumeType,jdbcType=VARCHAR},
+      </if>
+      <if test="isp != null" >
+        ISP = #{isp,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyUrl != null" >
+        NOTIFY_URL = #{notifyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null" >
+        PRODUCT_ID = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="productName != null" >
+        PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        STATE = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null" >
+        BALANCE = #{balance,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where CONSUME_ID = #{consumeId,jdbcType=VARCHAR}
+  </update>
+  
+</mapper>

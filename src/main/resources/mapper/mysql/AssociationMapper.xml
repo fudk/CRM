@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="associationMapper" >
+  <resultMap id="BaseResultMap" type="com.greatwall.platform.system.dto.Association" >
+    <id column="association_id" property="associationId" jdbcType="INTEGER" />
+    <result column="destination_type" property="destinationType" jdbcType="VARCHAR" />
+    <result column="destination_value" property="destinationValue" jdbcType="INTEGER" />
+    <result column="source_type" property="sourceType" jdbcType="VARCHAR" />
+    <result column="source_value" property="sourceValue" jdbcType="INTEGER" />
+  </resultMap>
+  
+ 
+  <sql id="Base_Column_List" >
+    association_id, destination_type, destination_value, source_type, source_value
+  </sql>
+  <select id="selectAssociations" resultMap="BaseResultMap" parameterType="com.greatwall.platform.system.dto.Association" >
+    select <include refid="Base_Column_List" />
+	from td_sm_association
+	<where>
+		1=1
+		<if test="associationId != null">
+			and association_id = #{associationId,jdbcType=INTEGER}
+		</if>
+		<if test="destinationType != null">
+			and destination_type = #{destinationType,jdbcType=VARCHAR}
+		</if>
+		<if test="destinationValue != null">
+			and destination_value = #{destinationValue,jdbcType=INTEGER}
+		</if>
+		<if test="sourceType != null">
+			and source_type = #{sourceType,jdbcType=VARCHAR}
+		</if>
+		<if test="sourceValue != null">
+			and source_value = #{sourceValue,jdbcType=INTEGER}
+		</if>
+	</where>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_sm_association
+    where association_id = #{associationId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from td_sm_association
+    where association_id = #{associationId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.greatwall.platform.system.dto.Association" >
+    insert into td_sm_association ( destination_type, destination_value, 
+      source_type, source_value)
+    values ( #{destinationType,jdbcType=VARCHAR}, #{destinationValue,jdbcType=INTEGER}, 
+      #{sourceType,jdbcType=VARCHAR}, #{sourceValue,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.greatwall.platform.system.dto.Association" >
+    insert into td_sm_association
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="associationId != null" >
+        association_id,
+      </if>
+      <if test="destinationType != null" >
+        destination_type,
+      </if>
+      <if test="destinationValue != null" >
+        destination_value,
+      </if>
+      <if test="sourceType != null" >
+        source_type,
+      </if>
+      <if test="sourceValue != null" >
+        source_value,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="associationId != null" >
+        #{associationId,jdbcType=INTEGER},
+      </if>
+      <if test="destinationType != null" >
+        #{destinationType,jdbcType=VARCHAR},
+      </if>
+      <if test="destinationValue != null" >
+        #{destinationValue,jdbcType=INTEGER},
+      </if>
+      <if test="sourceType != null" >
+        #{sourceType,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceValue != null" >
+        #{sourceValue,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update td_sm_association
+    <set >
+      <if test="associationId != null" >
+        association_id = #{associationId,jdbcType=INTEGER},
+      </if>
+      <if test="destinationType != null" >
+        destination_type = #{destinationType,jdbcType=VARCHAR},
+      </if>
+      <if test="destinationValue != null" >
+        destination_value = #{destinationValue,jdbcType=INTEGER},
+      </if>
+      <if test="sourceType != null" >
+        source_type = #{sourceType,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceValue != null" >
+        source_value = #{sourceValue,jdbcType=INTEGER},
+      </if>
+    </set>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update td_sm_association
+    set association_id = #{associationId,jdbcType=INTEGER},
+      destination_type = #{destinationType,jdbcType=VARCHAR},
+      destination_value = #{destinationValue,jdbcType=INTEGER},
+      source_type = #{sourceType,jdbcType=VARCHAR},
+      source_value = #{sourceValue,jdbcType=INTEGER}
+    
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.greatwall.platform.system.dto.Association" >
+    update td_sm_association
+    <set >
+      <if test="destinationType != null" >
+        destination_type = #{destinationType,jdbcType=VARCHAR},
+      </if>
+      <if test="destinationValue != null" >
+        destination_value = #{destinationValue,jdbcType=INTEGER},
+      </if>
+      <if test="sourceType != null" >
+        source_type = #{sourceType,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceValue != null" >
+        source_value = #{sourceValue,jdbcType=INTEGER},
+      </if>
+    </set>
+    where association_id = #{associationId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.greatwall.platform.system.dto.Association" >
+    update td_sm_association
+    set destination_type = #{destinationType,jdbcType=VARCHAR},
+      destination_value = #{destinationValue,jdbcType=INTEGER},
+      source_type = #{sourceType,jdbcType=VARCHAR},
+      source_value = #{sourceValue,jdbcType=INTEGER}
+    where association_id = #{associationId,jdbcType=INTEGER}
+  </update>
+</mapper>

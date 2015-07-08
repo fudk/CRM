@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ProductMapper" >
+  <resultMap id="BaseResultMap" type="com.greatwall.recharge.dto.Product" >
+    <id column="PRODUCT_ID" property="productId" jdbcType="INTEGER" />
+    <result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+    <result column="PRODUCT_IMG" property="productImg" jdbcType="VARCHAR" />
+    <result column="PRODUCT_VALUE" property="productValue" jdbcType="VARCHAR" />
+    <result column="ISP" property="isp" jdbcType="VARCHAR" />
+    <result column="PRODUCT_TYPE" property="productType" jdbcType="VARCHAR" />
+    <result column="PRODUCT_PRICE" property="productPrice" jdbcType="DOUBLE" />
+    <result column="PRODUCT_VALIDITY" property="productValidity" jdbcType="VARCHAR" />
+    <result column="STATE" property="state" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  
+ 
+  <sql id="Base_Column_List" >
+    PRODUCT_ID, PRODUCT_NAME, PRODUCT_IMG, PRODUCT_VALUE, ISP, PRODUCT_TYPE, PRODUCT_PRICE, 
+    PRODUCT_VALIDITY,CREATE_TIME,STATE,REMARK
+  </sql>
+  
+  <sql id="productWhere">
+  	<where>
+  		<if test="productId != null" >
+        and PRODUCT_ID = #{productId,jdbcType=INTEGER}
+      </if>
+      <if test="productName != null" >
+        and PRODUCT_NAME = #{productName,jdbcType=VARCHAR}
+      </if>
+      <if test="productImg != null" >
+        and PRODUCT_IMG = #{productImg,jdbcType=VARCHAR}
+      </if>
+      <if test="productValue != null" >
+        and PRODUCT_VALUE = #{productValue,jdbcType=VARCHAR}
+      </if>
+      <if test="isp != null and isp != '' " >
+        and ISP = #{isp,jdbcType=VARCHAR}
+      </if>
+      <if test="productType != null and productType != '' " >
+        and PRODUCT_TYPE = #{productType,jdbcType=VARCHAR}
+      </if>
+      <if test="productPrice != null" >
+        and PRODUCT_PRICE = #{productPrice,jdbcType=DOUBLE}
+      </if>
+      <if test="productValidity != null" >
+        and PRODUCT_VALIDITY = #{productValidity,jdbcType=VARCHAR}
+      </if>
+      <if test="state != null and state != ''" >
+        and STATE = #{state,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null">
+		AND CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+	  </if>
+  	</where>
+  </sql>
+  <select id="selectByQueryPage" resultMap="BaseResultMap" parameterType="com.greatwall.recharge.dto.Product" >
+    select
+    <include refid="Base_Column_List" />
+    from td_rms_product
+   <include refid="productWhere" />
+  </select>
+  
+  <select id="selectByKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_rms_product
+    where PRODUCT_ID = #{productId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByCondition" resultMap="BaseResultMap" parameterType="com.greatwall.recharge.dto.Product" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_rms_product
+    <include refid="productWhere" />
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from td_rms_product
+    where PRODUCT_ID = #{productId,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="com.greatwall.recharge.dto.Product" >
+    insert into td_rms_product (PRODUCT_ID, PRODUCT_NAME, PRODUCT_IMG, 
+      PRODUCT_VALUE, ISP, PRODUCT_TYPE, 
+      PRODUCT_PRICE, PRODUCT_VALIDITY,CREATE_TIME,STATE,REMARK)
+    values (#{productId,jdbcType=INTEGER}, #{productName,jdbcType=VARCHAR}, #{productImg,jdbcType=VARCHAR}, 
+      #{productValue,jdbcType=VARCHAR}, #{isp,jdbcType=VARCHAR}, #{productType,jdbcType=VARCHAR}, 
+      #{productPrice,jdbcType=DOUBLE}, #{productValidity,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}
+      ,#{state,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR})
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.greatwall.recharge.dto.Product" >
+    update td_rms_product
+    <set >
+      <if test="productName != null" >
+        PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productImg != null" >
+        PRODUCT_IMG = #{productImg,jdbcType=VARCHAR},
+      </if>
+      <if test="productValue != null" >
+        PRODUCT_VALUE = #{productValue,jdbcType=VARCHAR},
+      </if>
+      <if test="isp != null" >
+        ISP = #{isp,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null" >
+        PRODUCT_TYPE = #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="productPrice != null" >
+        PRODUCT_PRICE = #{productPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="productValidity != null" >
+        PRODUCT_VALIDITY = #{productValidity,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        STATE = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where PRODUCT_ID = #{productId,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

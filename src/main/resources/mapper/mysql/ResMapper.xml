@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.1//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="resMapper">
+	<resultMap type="com.greatwall.platform.system.dto.Res" id="res_res">
+		<result property="resId" column="res_id" />
+		<result property="resName" column="res_name" />
+		<result property="resType" column="res_type" />
+		<result property="resVal" column="res_val" />
+	</resultMap>
+
+	<select id="getRes" parameterType="res" resultMap="res_res">
+		select
+		res_id, res_name,res_type,res_val
+		from
+		td_sys_res
+		<where>
+			<if test="resType != null and resType != ''">
+				res_type = #{resType}
+			</if>
+			<if test="resName != null and resName != ''">
+				and res_name = #{resName}
+			</if>
+			<if test="resVal != null and resVal != ''">
+				and res_val = #{resVal}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insertRes" parameterType="res">
+		<![CDATA[
+		insert into td_sm_role (res_name,res_type,res_val) 
+		values	(#{roleName},#{resType},#{resVal})
+		]]>
+	</insert>
+	
+</mapper>

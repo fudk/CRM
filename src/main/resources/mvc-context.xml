@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd  
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd    
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd"
+	default-autowire="byName">
+	<description>Spring-web MVC配置</description>
+
+	<!-- 对所有类进行扫描，以完成Bean创建和自动依赖注入的功能 -->
+	<context:component-scan base-package="com.greatwall">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<!-- 当请求应用程序首页时，将执行/main请求，还可以设定成redirect -->
+	<mvc:view-controller path="/" view-name="forward:/main" />
+	<!-- 拦截器 -->
+	<mvc:interceptors>
+		<!-- 多个拦截器,顺序执行 -->
+		<bean class="com.greatwall.platform.common.interceptor.PermissionsInteceptor">
+			<property name="redirectUrl" value="/login" />
+			<property name="excludeUrl">
+				<list>
+					<value>/login</value>
+					<value>/regist</value>
+					<value>/rechargeapi</value>
+				</list>
+			</property>
+		</bean>
+		<!-- <mvc:interceptor> <mvc:mapping path="/*" /> 如果不配置或/*,将拦截所有的Controller 
+			<bean class="com.fms.web.common.inteceptor.PermissionsInteceptor"> <property 
+			name="loginUrl" value="/login" /> </bean> </mvc:interceptor> -->
+	</mvc:interceptors>
+	
+	<!-- SpringMVC上传文件时，需要配置MultipartResolver处理器 -->  
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+        <property name="defaultEncoding" value="UTF-8"/>  
+        <!-- 指定所上传文件的总大小不能超过1M。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->  
+        <property name="maxUploadSize" value="1000000"/>  
+    </bean>  
+      
+    <!-- SpringMVC在超出上传文件限制时，会抛出org.springframework.web.multipart.MaxUploadSizeExceededException -->  
+    <!-- 该异常是SpringMVC在检查上传的文件信息时抛出来的，而且此时还没有进入到Controller方法中 -->  
+    <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">  
+        <property name="exceptionMappings">  
+            <props>  
+                <!-- 遇到MaxUploadSizeExceededException异常时，自动跳转到/WEB-INF/jsp/error_fileupload.jsp页面 -->  
+                <prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">common/error_fileupload</prop>  
+            </props>  
+        </property>  
+    </bean>  
+
+<!-- 使用ConfigurableWebBindingInitializer注册conversionService -->
+	<bean id="webBindingInitializer"
+		class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+		<property name="validator" ref="validator" />
+	</bean>
+
+<!-- 如果不加默认到 使用classpath下的 ValidationMessages.properties -->
+	<!-- 以下 validator ConversionService 在使用 mvc:annotation-driven 会 自动注册 -->
+	<bean id="validator"
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<property name="providerClass" value="org.hibernate.validator.HibernateValidator" />
+		
+		<property name="validationMessageSource" ref="messageSource" />
+	</bean>
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:messages" />
+		<property name="fileEncodings" value="utf-8" />
+		<property name="cacheSeconds" value="120" />
+	</bean>
+
+	
+	
+
+	<!-- 这两个类用来启动基于Spring MVC的注解功能，将控制器与方法映射加入到容器中 -->
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+	</bean>
+
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean
+					class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes" value="text/html;charset=UTF-8" />
+				</bean>
+				<bean
+					class="org.springframework.http.converter.ResourceHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.xml.SourceHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+			</list>
+		</property>
+		<property name="webBindingInitializer">
+			<bean
+				class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+				<property name="conversionService">
+					<bean
+						class="org.springframework.format.support.FormattingConversionServiceFactoryBean"></bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- 多视图处理器 -->
+	<bean class="com.greatwall.platform.base.view.MixedViewResolver">
+		<property name="resolvers">
+			<map>
+				<entry key="jsp">
+					<bean
+						class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+						<property name="prefix" value="/WEB-INF/jsp/" />
+						<property name="viewClass"
+							value="org.springframework.web.servlet.view.JstlView"></property>
+					</bean>
+				</entry>
+				<entry key="ftl">
+					<bean
+						class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+						<property name="cache" value="true" />
+						<property name="contentType" value="text/html;charset=UTF-8"></property>
+						<!-- 模板后缀，指定html页面为模板 -->
+						<!-- <property name="suffix" value=".html" /> -->
+						<property name="exposeSpringMacroHelpers" value="true" />
+						<!-- 允许访问请求属性，默认为false -->
+						<property name="exposeRequestAttributes" value="true" />
+						<!-- 允许访问会话属性，默认为false -->
+						<property name="exposeSessionAttributes" value="true" />
+						<!-- 页面上下文，类似于request.contextPath -->
+						<property name="viewClass"
+							value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+						<property name="requestContextAttribute" value="rc"></property>
+					</bean>
+				</entry>
+				<entry key="jasper">
+					<bean
+						class="org.springframework.web.servlet.view.jasperreports.JasperReportsViewResolver">
+						<property name="viewClass"
+							value="org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView" />
+						<property name="prefix" value="/WEB-INF/jasper/" />
+						<!--<property name="jdbcDataSource" ref="dataSource" />  -->
+						
+						
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<!-- freemarker config -->
+	<bean id="freeMarkerConfigurer"	class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<!-- 模板文件所在目录 -->
+		<property name="templateLoaderPath" value="/WEB-INF/ftl/" />
+		<!-- 指定FreeMarker模板文件的编码格式 -->
+		<property name="defaultEncoding" value="UTF-8" />
+		<!-- FreeMarker属性配置 -->
+		<property name="freemarkerSettings">
+			<props>
+				<!-- 每隔5小时检查模板是否更新，单位为秒 如果不经常更新模板可将更新的延迟时间设定长一点 -->
+				<prop key="template_update_delay">3600</prop>
+				<!-- 指定地区语言环境，我们的语言是中文 -->
+				<prop key="locale">zh_CN</prop>
+			</props>
+		</property>
+	</bean>
+
+</beans>

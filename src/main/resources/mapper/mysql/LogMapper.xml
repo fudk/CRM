@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="LogMapper">
+	<resultMap id="BaseResultMap" type="com.greatwall.platform.system.dto.Log">
+		<result column="log_id" property="logId" jdbcType="INTEGER" />
+		<result column="log_type" property="logType" jdbcType="VARCHAR" />
+		<result column="log_time" property="logTime" jdbcType="TIMESTAMP" />
+		<result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="log_name" property="logName" jdbcType="VARCHAR" />
+		<result column="from_ip" property="fromIp" jdbcType="VARCHAR" />
+    	<result column="time_consuming" property="timeConsuming" jdbcType="BIGINT" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		log_id, log_type, log_time, start_date, end_date,
+		remark,log_name,fromIp,timeConsuming
+	</sql>
+
+	<sql id="base_where">
+		<where>
+			<if test="logId != null">
+				and log_id = #{logId,jdbcType=INTEGER}
+			</if>
+			<if test="logType != null">
+				and log_type = #{logType,jdbcType=VARCHAR}
+			</if>
+			<if test="logTime != null">
+				and log_time = #{logTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="startDate != null">
+				and start_date = #{startDate,jdbcType=TIMESTAMP}
+			</if>
+			<if test="endDate != null">
+				and end_date = #{endDate,jdbcType=TIMESTAMP}
+			</if>
+			<if test="remark != null">
+				and remark = #{remark,jdbcType=VARCHAR}
+			</if>
+			<if test="logName != null">
+				and log_name = #{logName,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.greatwall.platform.system.dto.Log">
+		select
+		<include refid="Base_Column_List" />
+		from td_sys_log
+	</select>
+
+	<!-- <select id="getLastSynTradeRates" resultMap="BaseResultMap" parameterType="String"> 
+		select <include refid="Base_Column_List" /> from td_sys_log <where> <if test="_parameter 
+		!= null"> log_name = #{logName,jdbcType=VARCHAR} </if> </where> order by 
+		end_date desc </select> -->
+	<select id="getLastSynTradeRates" resultMap="BaseResultMap"
+		parameterType="com.greatwall.platform.system.dto.Log">
+		select
+		<include refid="Base_Column_List" />
+		from td_sys_log
+		<include refid="base_where" />
+		order by end_date desc
+	</select>
+
+	<insert id="insert" parameterType="com.greatwall.platform.system.dto.Log">
+		insert into td_sys_log
+		(log_id, log_type, log_time,
+		start_date, end_date, remark,log_name,from_ip,time_consuming
+		)
+		values (#{logId,jdbcType=INTEGER}, #{logType,jdbcType=VARCHAR},
+		#{logTime,jdbcType=TIMESTAMP},
+		#{startDate,jdbcType=TIMESTAMP},
+		#{endDate,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR},
+		#{logName,jdbcType=VARCHAR},#{fromIp,jdbcType=VARCHAR},#{timeConsuming,jdbcType=BIGINT}
+		)
+	</insert>
+
+	<update id="updateByExampleSelective" parameterType="map">
+		update td_sys_log
+		<set>
+			<if test="logId != null">
+				log_id = #{logId,jdbcType=INTEGER},
+			</if>
+			<if test="logType != null">
+				log_type = #{logType,jdbcType=VARCHAR},
+			</if>
+			<if test="logTime != null">
+				log_time = #{logTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="startDate != null">
+				start_date = #{startDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endDate != null">
+				end_date = #{endDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update td_sys_log
+		set
+		log_id = #{logId,jdbcType=INTEGER},
+		log_type =
+		#{logType,jdbcType=VARCHAR},
+		log_time = #{logTime,jdbcType=TIMESTAMP},
+		start_date = #{startDate,jdbcType=TIMESTAMP},
+		end_date =
+		#{endDate,jdbcType=TIMESTAMP},
+		remark = #{remark,jdbcType=VARCHAR}
+	</update>
+</mapper>

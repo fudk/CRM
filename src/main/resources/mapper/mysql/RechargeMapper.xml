@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="RechargeMapper">
+	<resultMap id="BaseResultMap" type="com.greatwall.recharge.dto.Recharge">
+		<result column="RECHARGE_ID" property="rechargeId" jdbcType="INTEGER" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="RECHARGE_AMOUNT" property="rechargeAmount"
+			jdbcType="DOUBLE" />
+		<result column="OPERATOR" property="operator" jdbcType="INTEGER" />
+		<result column="USER_ID" property="userId" jdbcType="INTEGER" />
+		<result column="REMARK" jdbcType="VARCHAR" property="remark" />
+		<result column="TYPE" jdbcType="VARCHAR" property="type" />
+	</resultMap>
+	
+	<resultMap id="ConditionsResultMap" type="com.greatwall.recharge.dto.RechargeConditions">
+		<result column="RECHARGE_ID" property="rechargeId" jdbcType="INTEGER" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="RECHARGE_AMOUNT" property="rechargeAmount"
+			jdbcType="DOUBLE" />
+		<result column="OPERATOR" property="operator" jdbcType="INTEGER" />
+		<result column="USER_ID" property="userId" jdbcType="INTEGER" />
+		<result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+		<result column="OPERATOR_NAME" jdbcType="VARCHAR" property="operatorName" />
+		<result column="LOGIN_NAME" jdbcType="VARCHAR" property="loginName" />
+		<result column="TYPE" jdbcType="VARCHAR" property="type" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		RECHARGE_ID, CREATE_TIME, RECHARGE_AMOUNT, OPERATOR, USER_ID,REMARK,TYPE
+	</sql>
+
+	<insert id="insert" parameterType="com.greatwall.recharge.dto.Recharge">
+		insert into td_rms_recharge_log ( CREATE_TIME, RECHARGE_AMOUNT,
+		OPERATOR, USER_ID,REMARK,TYPE)
+		values ( #{createTime,jdbcType=TIMESTAMP},
+		#{rechargeAmount,jdbcType=DOUBLE},
+		#{operator,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},#{remark},#{type})
+	</insert>
+
+	<select id="selectByQueryPage" resultMap="ConditionsResultMap"
+		parameterType="com.greatwall.recharge.dto.RechargeConditions">
+		select
+		a.RECHARGE_ID, a.CREATE_TIME, a.RECHARGE_AMOUNT, a.OPERATOR, a.USER_ID,a.REMARK,a.TYPE
+		,b.USER_NAME,b.LOGIN_NAME,c.USER_NAME OPERATOR_NAME
+		from td_rms_recharge_log a ,td_sm_user b ,td_sm_user c
+		<where>
+			a.USER_ID = b.USER_ID and a.OPERATOR = c.USER_ID
+			<if test="startTime != null">
+				<![CDATA[ and a.CREATE_TIME > #{startTime,jdbcType=TIMESTAMP} ]]>
+			</if>
+			<if test="endTime != null">
+				<![CDATA[ and a.CREATE_TIME <= #{endTime,jdbcType=TIMESTAMP} ]]>
+			</if>
+			<if test="operator != null">
+				and OPERATOR = #{operator,jdbcType=INTEGER}
+			</if>
+			<if test="userId != null">
+				and a.USER_ID = #{userId,jdbcType=INTEGER}
+			</if>
+			<if test="recType != null and recType != '' ">
+				and TYPE = #{recType,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+</mapper>

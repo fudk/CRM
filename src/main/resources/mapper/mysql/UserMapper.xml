@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.1//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="userMapper">
+	<resultMap type="com.greatwall.platform.system.dto.User" id="res_user">
+		<id column="USER_ID" jdbcType="INTEGER" property="userId" />
+		<result column="PLAT_ID" jdbcType="VARCHAR" property="platId" />
+		<result column="PARENT_ID" jdbcType="INTEGER" property="parentId" />
+		<result column="LOGIN_NAME" jdbcType="VARCHAR" property="loginName" />
+		<result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+		<result column="USER_PAS" jdbcType="VARCHAR" property="userPas" />
+		<result column="USER_EMAIL" jdbcType="VARCHAR" property="userEmail" />
+		<result column="USER_ADDRESS" jdbcType="VARCHAR" property="userAddress" />
+		<result column="USER_QQ" jdbcType="VARCHAR" property="userQq" />
+		<result column="BALANCE" jdbcType="DOUBLE" property="balance" />
+		<result column="FLOW_BALANCE" jdbcType="DOUBLE" property="flowBalance" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="EFFECTIVE_TIME" jdbcType="TIMESTAMP" property="effectiveTime" />
+		<result column="LAST_LOGIN_TIME" jdbcType="TIMESTAMP" property="lastLoginTime" />
+		<result column="USER_TYPE" jdbcType="INTEGER" property="userType" />
+		<result column="SESSION_KEY" jdbcType="VARCHAR" property="sessionKey" />
+		<result column="PERMIT_IP" jdbcType="VARCHAR" property="permitIp" />
+		<result column="REMARK" jdbcType="VARCHAR" property="remark" />
+		<result column="VERSION" jdbcType="INTEGER" property="version" />
+		<result column="DISCOUNT_PHONE" property="discountPhone" jdbcType="INTEGER" />
+    	<result column="DISCOUNT_FLOW" property="discountFlow" jdbcType="INTEGER" />
+	</resultMap>
+
+	<select id="selectByQueryPage" parameterType="com.greatwall.platform.system.dto.User"
+		resultMap="res_user">
+		select
+		<include refid="Base_Column_List" />
+		from td_sm_user
+		<include refid="userWhere" />
+	</select>
+
+	<select id="getUser" parameterType="com.greatwall.platform.system.dto.User"
+		resultMap="res_user">
+		select
+		<include refid="Base_Column_List" />
+		from td_sm_user
+		<where>
+			<if test="userId != null">
+				USER_ID = #{userId,jdbcType=INTEGER}
+			</if>
+			<if test="platId != null">
+				OR PLAT_ID = #{platId,jdbcType=INTEGER}
+			</if>
+			<if test="loginName != null and loginName != '' ">
+				OR LOGIN_NAME = #{loginName,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<update id="updateBalance" parameterType="java.util.Map">
+		update td_sm_user set BALANCE = BALANCE+${amount},VERSION = ${version} +1
+		<where>
+				USER_ID = #{userId,jdbcType=INTEGER}
+			<![CDATA[and VERSION = ${version}]]>
+		</where> 
+	</update>
+	<update id="updateFlowBalance" parameterType="java.util.Map">
+		update td_sm_user set FLOW_BALANCE = FLOW_BALANCE+${amount},VERSION = ${version} +1
+		<where>
+				USER_ID = #{userId,jdbcType=INTEGER}
+			<![CDATA[and VERSION = ${version}]]>
+		</where> 
+	</update>
+	
+	<sql id="userWhere">
+		<where>
+			<if test="userId != null">
+				AND USER_ID = #{userId,jdbcType=INTEGER}
+			</if>
+			<if test="platId != null">
+				AND PLAT_ID = #{platId,jdbcType=VARCHAR}
+			</if>
+			<if test="parentId != null">
+				AND PARENT_ID = #{parentId,jdbcType=VARCHAR}
+			</if>
+			<if test="loginName != null and loginName != '' ">
+				AND LOGIN_NAME = #{loginName,jdbcType=VARCHAR}
+			</if>
+			<if test="userName != null">
+				AND USER_NAME = #{userName,jdbcType=VARCHAR}
+			</if>
+			<if test="userPas != null">
+				AND USER_PAS = #{userPas,jdbcType=VARCHAR}
+			</if>
+			<if test="userEmail != null">
+				AND USER_EMAIL = #{userEmail,jdbcType=VARCHAR}
+			</if>
+			<if test="userQq != null">
+				AND USER_QQ = #{userQq,jdbcType=VARCHAR}
+			</if>
+			<if test="createTime != null">
+				AND CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="effectiveTime != null">
+				AND EFFECTIVE_TIME =
+				#{effectiveTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="userType != null">
+				AND USER_TYPE = #{userType,jdbcType=INTEGER}
+			</if>
+			<if test="lastLoginTime != null">
+				AND LAST_LOGIN_TIME =
+				#{lastLoginTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="sessionKey != null">
+				AND SESSION_KEY = #{sessionKey,jdbcType=VARCHAR}
+			</if>
+			<if test="userAddress != null">
+				AND USER_ADDRESS = #{userAddress,jdbcType=VARCHAR}
+			</if>
+			<if test="permitIp != null">
+				AND PERMIT_IP like #{permitIp,jdbcType=VARCHAR}
+			</if>
+
+		</where>
+	</sql>
+
+	<sql id="Base_Column_List">
+		USER_ID, PLAT_ID, PARENT_ID, LOGIN_NAME, USER_NAME, USER_PAS, USER_EMAIL, USER_ADDRESS, 
+    	USER_QQ, BALANCE, FLOW_BALANCE,CREATE_TIME, EFFECTIVE_TIME, LAST_LOGIN_TIME, USER_TYPE, SESSION_KEY, 
+    	PERMIT_IP, REMARK, VERSION, DISCOUNT_PHONE, DISCOUNT_FLOW
+	</sql>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		td_sm_user
+		where USER_ID = #{userId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.greatwall.platform.system.dto.User">
+		insert into td_sm_user (USER_ID, PLAT_ID, PARENT_ID, 
+      LOGIN_NAME, USER_NAME, USER_PAS, 
+      USER_EMAIL, USER_ADDRESS, USER_QQ, 
+      BALANCE, FLOW_BALANCE,CREATE_TIME, EFFECTIVE_TIME, 
+      LAST_LOGIN_TIME, USER_TYPE, SESSION_KEY, 
+      PERMIT_IP, REMARK, VERSION, 
+      DISCOUNT_PHONE, DISCOUNT_FLOW)
+    values (#{userId,jdbcType=INTEGER}, #{platId,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, 
+      #{loginName,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{userPas,jdbcType=VARCHAR}, 
+      #{userEmail,jdbcType=VARCHAR}, #{userAddress,jdbcType=VARCHAR}, #{userQq,jdbcType=VARCHAR}, 
+      #{balance,jdbcType=DOUBLE},#{flowBalance,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP}, #{effectiveTime,jdbcType=TIMESTAMP}, 
+      #{lastLoginTime,jdbcType=TIMESTAMP}, #{userType,jdbcType=INTEGER}, #{sessionKey,jdbcType=VARCHAR}, 
+      #{permitIp,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{version,jdbcType=INTEGER}, 
+      #{discountPhone,jdbcType=INTEGER}, #{discountFlow,jdbcType=INTEGER})
+	</insert>
+	
+	<update id="updateByPrimaryKeySelective" parameterType="com.greatwall.platform.system.dto.User">
+		update td_sm_user
+		<set>
+			<!-- <if test="platId != null">
+				PLAT_ID = #{platId,jdbcType=VARCHAR},
+			</if> -->
+			<if test="parentId != null">
+				PARENT_ID = #{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="loginName != null">
+				LOGIN_NAME = #{loginName,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				USER_NAME = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="userPas != null">
+				USER_PAS = #{userPas,jdbcType=VARCHAR},
+			</if>
+			<if test="userEmail != null">
+				USER_EMAIL = #{userEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="userAddress != null">
+				USER_ADDRESS = #{userAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="userQq != null">
+				USER_QQ = #{userQq,jdbcType=VARCHAR},
+			</if>
+			<!-- <if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if> -->
+			<if test="effectiveTime != null">
+				EFFECTIVE_TIME = #{effectiveTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lastLoginTime != null">
+				LAST_LOGIN_TIME = #{lastLoginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="userType != null">
+				USER_TYPE = #{userType,jdbcType=INTEGER},
+			</if>
+			<if test="sessionKey != null">
+				SESSION_KEY = #{sessionKey,jdbcType=VARCHAR},
+			</if>
+			<if test="permitIp != null">
+				PERMIT_IP = #{permitIp,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark,jdbcType=VARCHAR},
+			</if>
+			 <if test="discountPhone != null" >
+        		DISCOUNT_PHONE = #{discountPhone,jdbcType=INTEGER},
+      		</if>
+      		<if test="discountFlow != null" >
+        		DISCOUNT_FLOW = #{discountFlow,jdbcType=INTEGER},
+      		</if>
+		</set>
+		where USER_ID = #{userId,jdbcType=INTEGER}
+	</update>
+	
+	<select id="searchUsersPage" parameterType="com.greatwall.platform.system.dto.User"
+		resultMap="res_user">
+		select
+		<include refid="Base_Column_List" />
+		from td_sm_user
+		<where>
+			<if test="loginName != null and loginName != '' ">
+				OR LOGIN_NAME like #{loginName,jdbcType=VARCHAR}
+			</if>
+			<if test="parentId != null">
+				AND PARENT_ID = #{parentId,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+</mapper>

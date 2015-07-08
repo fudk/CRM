@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+	default-autowire="byName">
+	<description>定时器配置</description>
+
+	<!--  要调用的工作类 
+	<bean id="smsJob" class="com.greatwall.quartz.SmsJob"></bean>
+	要调用的工作类结束
+
+	定义调用对象和调用对象的方法
+	<bean id="tradesCreateDelayJobtask"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		调用的类
+		<property name="targetObject">
+			<ref bean="smsJob" />
+		</property>
+		调用类中的方法
+		<property name="targetMethod">
+			<value>tradesCreateDelay</value>
+		</property>
+	</bean>
+	定义调用对象和调用对象的方法
+	<bean id="searchLogisticsJobtask"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		调用的类
+		<property name="targetObject">
+			<ref bean="smsJob" />
+		</property>
+		调用类中的方法
+		<property name="targetMethod">
+			<value>searchLogistics</value>
+		</property>
+	</bean>
+	定义调用对象和调用对象的方法
+	<bean id="synTradeRatesJobtask"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		调用的类
+		<property name="targetObject">
+			<ref bean="smsJob" />
+		</property>
+		调用类中的方法
+		<property name="targetMethod">
+			<value>synTradeRates</value>
+		</property>
+	</bean>
+	定义调用对象和调用对象的方法
+	<bean id="sendTradeRateSmsJobtask"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		调用的类
+		<property name="targetObject">
+			<ref bean="smsJob" />
+		</property>
+		调用类中的方法
+		<property name="targetMethod">
+			<value>sendTradeRateSms</value>
+		</property>
+	</bean>
+	<bean id="synMembersJobtask"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		调用的类
+		<property name="targetObject">
+			<ref bean="smsJob" />
+		</property>
+		调用类中的方法
+		<property name="targetMethod">
+			<value>synMembers</value>
+		</property>
+	</bean>
+
+	定义调用对象和调用对象的方法结束
+
+	定义触发时间
+	<bean id="doTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="tradesCreateDelayJobtask" />
+		</property>
+		cron表达式 此处定义为一直触发执行任务
+		<property name="cronExpression">
+			<value>0 */1 * * * ?</value>
+		</property>
+	</bean>
+
+	<bean id="doTime1" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="searchLogisticsJobtask" />
+		</property>
+		cron表达式 此处定义为一直触发执行任务
+		<property name="cronExpression">
+			<value>0 0 9,10,11 * * ?</value>
+		</property>
+	</bean>
+	<bean id="doTime2" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="synTradeRatesJobtask" />
+		</property>
+		cron表达式 此处定义为一直触发执行任务
+		<property name="cronExpression">
+			<value>0 0 9 * * ?</value>
+		</property>
+	</bean>
+	定义触发时间
+	<bean id="doTime3" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="sendTradeRateSmsJobtask" />
+		</property>
+		cron表达式 此处定义为一直触发执行任务
+		<property name="cronExpression">
+			<value>0 30 9 * * ?</value>
+		</property>
+	</bean>
+	定义触发时间
+	<bean id="doTime4" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="synMembersJobtask" />
+		</property>
+		cron表达式 此处定义为一直触发执行任务
+		<property name="cronExpression">
+			<value>0 0 10 * * ?</value>
+		</property>
+	</bean>
+	定义触发时间结束
+
+	总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序
+	<bean id="startQuertz" lazy-init="false" autowire="no"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="doTime" />
+				<ref bean="doTime1" />
+				<ref bean="doTime2" />
+				<ref bean="doTime3" />
+				<ref bean="doTime4" />
+			</list>
+		</property>
+	</bean>
+	总管理类结束 -->
+
+</beans>

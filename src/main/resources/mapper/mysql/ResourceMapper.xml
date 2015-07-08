@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.1//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="resourceMapper">
+	<resultMap type="com.greatwall.platform.system.dto.Resource" id="res_resource">
+		<result property="resId" column="RES_ID" />
+		<result property="resName" column="RES_NAME" />
+		<result property="resUrl" column="RES_URL" />
+		<result property="resOrder" column="RES_ORDER" />
+		<result property="dataAccess" column="DATA_ACCESS" />
+		<result property="parentId" column="PARENT_ID" />
+		<result property="level" column="LEVEL" />
+		<result property="resType" column="RES_TYPE" />
+	</resultMap>
+
+	<sql id="resourceWhere">
+		<where>
+			<if test="resId != null">
+				AND RES_ID = #{resId,jdbcType=INTEGER}
+			</if>
+			<if test="resName != null">
+				AND RES_NAME = #{resName,jdbcType=VARCHAR}
+			</if>
+			<if test="resUrl != null">
+				AND RES_URL = #{resUrl,jdbcType=VARCHAR}
+			</if>
+			<if test="resOrder != null">
+				AND RES_ORDER = #{resOrder,jdbcType=INTEGER}
+			</if>
+			<if test="dataAccess != null">
+				AND DATA_ACCESS = #{dataAccess,jdbcType=VARCHAR}
+			</if>
+			<if test="parentId != null">
+				AND PARENT_ID = #{parentId,jdbcType=INTEGER}
+			</if>
+			<if test="level != null">
+				AND LEVEL = #{level,jdbcType=INTEGER}
+			</if>
+			<if test="resType != null">
+				AND RES_TYPE = #{resType,jdbcType=VARCHAR}
+			</if>
+		</where>
+
+	</sql>
+	<select id="getResource" resultMap="res_resource" parameterType="resource">
+		select
+		RES_ID,RES_NAME,RES_URL,RES_ORDER,DATA_ACCESS,PARENT_ID,LEVEL,RES_TYPE
+		from td_sm_resource
+		<include refid="resourceWhere" />
+		ORDER BY PARENT_ID,RES_ORDER
+	</select>
+
+	<insert id="insertResource" parameterType="resource">
+		<![CDATA[
+		insert into td_sm_resource (RES_NAME,RES_URL,RES_ORDER,DATA_ACCESS,PARENT_ID,LEVEL,RES_TYPE) 
+		values	(#{resName},#{resUrl},#{resOrder},#{dataAccess},#{parentId},#{level},#{resType})
+		]]>
+	</insert>
+
+	<select id="getMaxOrder" parameterType="int" resultType="int">
+		select	max(RES_ORDER) from td_sm_resource where PARENT_ID = #{parentId}
+	</select>
+
+	<update id="updateResource" parameterType="resource">
+		update td_sm_resource
+		<set>
+			<if test="resName != null">
+				RES_NAME = #{resName,jdbcType=VARCHAR},
+			</if>
+			<if test="resUrl != null">
+				RES_URL = #{resUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="resOrder != null">
+				RES_ORDER = #{resOrder,jdbcType=INTEGER},
+			</if>
+			<if test="dataAccess != null">
+				DATA_ACCESS = #{dataAccess,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				PARENT_ID = #{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="level != null">
+				LEVEL = #{level,jdbcType=INTEGER},
+			</if>
+			<if test="resType != null">
+				RES_TYPE = #{resType,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where RES_ID = #{resId}
+	</update>
+
+	<update id="updateResourceOrder" >
+		update td_sm_resource set 
+		<choose>
+            <when test="status == 'add' ">
+               RES_ORDER = RES_ORDER+1
+            </when>
+            <otherwise>
+               RES_ORDER = RES_ORDER-1
+            </otherwise>
+        </choose>
+        <![CDATA[
+		where PARENT_ID = #{parentId,jdbcType=INTEGER} 
+		and RES_ORDER >=#{statOrder,jdbcType=INTEGER} 
+		]]>
+		<if test="endOrder != -1">
+		<![CDATA[ and RES_ORDER <=#{endOrder,jdbcType=INTEGER} ]]>
+		</if>
+	</update>
+
+	<delete id="delResource" parameterType="int">
+		delete from td_sm_resource where RES_ID = #{resId}
+	</delete>
+	
+	<select id="getResourceByAssociation" resultMap="res_resource">
+		select * from td_sm_resource a ,(
+			select ta.source_value from td_sm_association ta where ta.destination_type=#{destinationType} 
+				and ta.destination_value in 
+				<foreach collection="destinationValues" item="item" open="(" separator="," close=")">#{item}</foreach>
+		 		) c
+		where a.RES_ID = c.source_value 
+		<if test="resType != null">
+			and (a.RES_TYPE = #{resType} or a.RES_TYPE = 'all') 
+		</if>
+		<if test="resType == null">
+			and a.RES_TYPE = 'all'
+		</if>
+		order by RES_ORDER
+		
+	</select>
+	
+	<select id="getResourceIds" resultMap="res_resource" >
+		select
+		RES_ID,RES_NAME,RES_URL,RES_ORDER,DATA_ACCESS,PARENT_ID,LEVEL,RES_TYPE
+		from td_sm_resource
+		where RES_ID in <foreach collection="ids" item="item" open="(" separator="," close=")">#{item}</foreach>
+		ORDER BY RES_ORDER
+	</select>
+
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserChannelMapper">
+	<resultMap id="BaseResultMap" type="com.greatwall.recharge.dto.UserChannel">
+		<result column="CHANNEL_ID" jdbcType="INTEGER" property="channelId" />
+		<result column="USER_ID" jdbcType="INTEGER" property="userId" />
+		<result column="ISP" jdbcType="VARCHAR" property="isp" />
+		<result column="TYPE" jdbcType="VARCHAR" property="type" />
+	</resultMap>
+
+	<insert id="insert" parameterType="com.greatwall.recharge.dto.UserChannel">
+		insert into td_rms_user_channel (CHANNEL_ID, USER_ID, ISP,TYPE
+		)
+		values (#{channelId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
+		#{isp,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR}
+		)
+	</insert>
+
+
+	<select id="getUserChannel" parameterType="com.greatwall.recharge.dto.UserChannel"
+		resultMap="BaseResultMap">
+		select CHANNEL_ID, USER_ID, ISP,TYPE from td_rms_user_channel
+		<where>
+			<if test="channelId != null">
+				CHANNEL_ID =#{channelId,jdbcType=INTEGER}
+			</if>
+			<if test="userId != null">
+				and USER_ID = #{userId,jdbcType=INTEGER}
+			</if>
+			<if test="isp != null">
+				and ISP = #{isp,jdbcType=VARCHAR}
+			</if>
+			<if test="type != null">
+				and TYPE = #{type,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<delete id="delUserChannel" parameterType="com.greatwall.recharge.dto.UserChannel">
+		delete from td_rms_user_channel
+		<where>
+			<if test="channelId != null">
+				CHANNEL_ID =#{channelId,jdbcType=INTEGER}
+			</if>
+			<if test="userId != null">
+				and USER_ID = #{userId,jdbcType=INTEGER}
+			</if>
+		</where>
+	</delete>
+
+</mapper>

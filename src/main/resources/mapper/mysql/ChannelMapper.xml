@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ChannelMapper" >
+  <resultMap id="BaseResultMap" type="com.greatwall.recharge.dto.Channel" >
+    <id column="CHANNEL_ID" property="channelId" jdbcType="INTEGER" />
+    <result column="CHANNEL_NAME" property="channelName" jdbcType="VARCHAR" />
+    <result column="CHANNEL_PROPERTY" property="channelProperty" jdbcType="VARCHAR" />
+    <result column="ISP" property="isp" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    CHANNEL_ID, CHANNEL_NAME, CHANNEL_PROPERTY, ISP,TYPE
+  </sql>
+  
+  <select id="getChannelsIsp" resultMap="BaseResultMap" parameterType="String" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_rms_channel
+    where ISP like #{isp,jdbcType=VARCHAR} and TYPE = #{type}
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from td_rms_channel
+    where CHANNEL_ID = #{channelId,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from td_rms_channel
+    where CHANNEL_ID = #{channelId,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="com.greatwall.recharge.dto.Channel" >
+    insert into td_rms_channel ( CHANNEL_NAME, CHANNEL_PROPERTY, 
+      ISP,TYPE)
+    values (#{channelName,jdbcType=VARCHAR}, #{channelProperty,jdbcType=VARCHAR}, 
+      #{isp,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR})
+  </insert>
+  
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.greatwall.recharge.dto.Channel" >
+    update td_rms_channel
+    <set >
+      <if test="channelName != null" >
+        CHANNEL_NAME = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelProperty != null" >
+        CHANNEL_PROPERTY = #{channelProperty,jdbcType=VARCHAR},
+      </if>
+      <if test="isp != null" >
+        ISP = #{isp,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where CHANNEL_ID = #{channelId,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

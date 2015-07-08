@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.1//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="roleMapper">
+	<resultMap type="com.greatwall.platform.system.dto.Role" id="res_role">
+		<result property="roleId" column="ROLE_ID" />
+		<result property="userId" column="USER_ID" />
+		<result property="roleName" column="ROLE_NAME" />
+	</resultMap>
+
+	<select id="getRolesPage" parameterType="role" resultMap="res_role">
+		select
+		ROLE_ID, ROLE_NAME
+		from
+		td_sm_role
+		<where>
+			<if test="roleId != null and roleId != ''">
+				ROLE_ID = #{roleId}
+			</if>
+			<if test="roleName != null and roleName != ''">
+				ROLE_NAME = #{roleName}
+			</if>
+		</where>
+	</select>
+	<select id="getRoles" parameterType="role" resultMap="res_role">
+		select
+		ROLE_ID, ROLE_NAME
+		from
+		td_sm_role
+		<where>
+			<if test="roleId != null and roleId != ''">
+				ROLE_ID = #{roleId}
+			</if>
+			<if test="roleName != null and roleName != ''">
+				ROLE_NAME = #{roleName}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insertRole" parameterType="role">
+		<![CDATA[
+		insert into td_sm_role (ROLE_NAME) 
+		values	(#{roleName})
+		]]>
+	</insert>
+	
+	<insert id="insertRoleUser" parameterType="role">
+		<![CDATA[
+		insert into td_sm_role_user (ROLE_ID,USER_ID) 
+		values	(#{roleId},#{userId})
+		]]>
+	</insert>
+	
+</mapper>
