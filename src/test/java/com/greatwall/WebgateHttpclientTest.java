@@ -38,7 +38,7 @@ public class WebgateHttpclientTest {
 		String char_set = "00";
 		String merc_id = "800865";
 		String req_id = UUID.randomUUID().toString().replaceAll("-", "");
-		String inq_req_id = "12345678";
+		String inq_req_id = "05fd9e688e0f4ece935ceaae85b8ee11";
 		String inq_req_dt = DateFormatUtils.format(new Date(), "yyyyMMdd");
 		String sign_typ = "MD5";
 		String itf_code = "flx_result_query";

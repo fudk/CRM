@@ -3,8 +3,12 @@ package com.greatwall.recharge.client.impl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -22,6 +26,7 @@ import org.springframework.stereotype.Service;
 import com.greatwall.recharge.client.LiulService;
 import com.greatwall.recharge.dto.Consume;
 import com.greatwall.util.CryptUtil;
+import com.greatwall.util.RMSConstant;
 
 @Service("liulService")
 public class LiulServiceImpl implements LiulService {
@@ -104,6 +109,93 @@ public class LiulServiceImpl implements LiulService {
 		this.signKey = signKey;
 	}
 
+	public String searchState(Consume consume) throws Exception{
+		//创建HttpClientBuilder  
+		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();  
+		//HttpClient  
+		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();  
+
+		HttpPost httpPost = new HttpPost(httpUrl);  
+		RequestConfig requestConfig = RequestConfig.custom()  
+				.setConnectionRequestTimeout(3000).setConnectTimeout(3000)  
+				.setSocketTimeout(3000).build(); 
+		httpPost.setConfig(requestConfig);  
+		try {  
+			String reqId = UUID.randomUUID().toString().replaceAll("-", "");
+			String inqReqId = consume.getConsumeId();
+			String inqReqDt = DateFormatUtils.format(consume.getCreateTime(), "yyyyMMdd");
+			String itf_code = "flx_result_query";
+			
+			String signData = charSet +  mercId+ reqId + inqReqId + inqReqDt 
+	                + signTyp + itf_code + verNo;
+			CryptUtil util = new CryptUtil();
+			String hmac = util.MD5Sign(signData, signKey);
+			System.out.println(hmac);
+			
+			List<NameValuePair> formparams = new ArrayList<NameValuePair>();  
+			formparams.add(new BasicNameValuePair("char_set", charSet));  
+			formparams.add(new BasicNameValuePair("merc_id", mercId));  
+			formparams.add(new BasicNameValuePair("req_id", reqId));  
+			formparams.add(new BasicNameValuePair("inq_req_id", inqReqId));  
+			formparams.add(new BasicNameValuePair("inq_req_dt", inqReqDt));  
+			formparams.add(new BasicNameValuePair("sign_typ", signTyp));  
+			formparams.add(new BasicNameValuePair("itf_code", itf_code));  
+			formparams.add(new BasicNameValuePair("ver_no", verNo));  
+			formparams.add(new BasicNameValuePair("hmac", hmac));  
+			
+			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "GBK");  
+			httpPost.setEntity(entity);  
+
+			HttpResponse httpResponse;  
+			//post请求  
+			httpResponse = closeableHttpClient.execute(httpPost);  
+
+			//getEntity()  
+			HttpEntity httpEntity = httpResponse.getEntity();  
+			if (httpEntity != null) {  
+				//打印响应内容  
+				
+				String restr = EntityUtils.toString(httpEntity, "GBK");
+				
+//				System.out.println("response:" + restr);  
+				consume.setRemark(restr);
+				if(restr.contains("FLX00000")){
+					String[] resArr = StringUtils.split(restr, "&");
+
+				    Map<String,String> resMap = new HashMap<String,String>();
+				    for (int i = 0; i < resArr.length; i++) {
+				      String data = resArr[i];
+				      int index = StringUtils.indexOf(data, '=');
+				      String nm = StringUtils.substring(data, 0, index);
+				      String val = StringUtils.substring(data, index + 1);
+				      resMap.put(nm, val);
+				    }
+				    String chgSts = (String)resMap.get("chg_sts") == null ? "" : (String)resMap.get("chg_sts");
+				    if("U".equals(chgSts.toUpperCase())){
+				    	return RMSConstant.CONSUME_STATE_SENDED_WAIT;
+				    }else  if("P".equals(chgSts.toUpperCase())){
+				    	return RMSConstant.CONSUME_STATE_SENDED_PROCESSING;
+				    }else  if("S".equals(chgSts.toUpperCase())){
+				    	return RMSConstant.CONSUME_STATE_SUC;
+				    }else  if("F".equals(chgSts.toUpperCase())){
+				    	return RMSConstant.CONSUME_STATE_SENDED_FAIL;
+				    }
+				    return RMSConstant.CONSUME_STATE_FAIL;
+				}
+				
+			}
+			
+		} catch (Exception e) {  
+			throw new Exception(e);
+		}  finally {  
+			try {
+				//释放资源  
+				closeableHttpClient.close();
+			} catch (IOException e) {
+			}  
+		}  
+		return RMSConstant.CONSUME_STATE_FAIL;
+	}
 	
 	public Boolean sendMsg(Consume consume) throws Exception{
 		//创建HttpClientBuilder  

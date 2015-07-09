@@ -28,6 +28,7 @@ import com.greatwall.recharge.service.RechargeConsumeService;
 import com.greatwall.util.MathUtil;
 import com.greatwall.util.NetworkUtil;
 import com.greatwall.util.PhoneUtil;
+import com.greatwall.util.RMSConstant;
 import com.greatwall.util.StringUtil;
 
 @Controller
@@ -74,7 +75,8 @@ public class RechargeApiController {
 		
 		Map<String,String> remap = new HashMap<String,String>();
 		if(DigestUtils.md5Hex(sb.toString()).equals(sign)){
-			rechargeConsumeService.confirmConsume(thirdstreamid, opstatus);
+			String status = "1".equals(opstatus)?RMSConstant.CONSUME_STATE_SUC:RMSConstant.CONSUME_STATE_FAIL;
+			rechargeConsumeService.confirmConsume(thirdstreamid, status);
 			remap.put("retcode", "10000000");
 			remap.put("retmsg", "交易成功");
 		}else{

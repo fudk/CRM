@@ -42,6 +42,21 @@
 			$(this).removeClass("tr3");
 		});
 	}
+	
+	function searchState(consumeId,createTime){
+		$.ajax({
+			type : "POST",
+			url : "${ctx}/client/searchState",
+			data : {consumeId:consumeId,createTime:createTime},
+			success : function(msg) {
+				if (msg == 'success') {
+					alert('查询成功！');
+				}else{
+					alert('查询失败！'+msg);
+				}
+			}
+		});
+	}
 
 	function operatorUser(){
 		$("#operatorName").autocomplete("/system/user/searchUsers", {

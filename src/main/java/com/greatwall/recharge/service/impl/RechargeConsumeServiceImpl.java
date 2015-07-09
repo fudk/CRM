@@ -221,7 +221,8 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 	public Boolean confirmConsume(String consumeId,String opstatus){
 		Consume consume = consumeDao.getConsume(consumeId);
 		if(consume!=null){
-			consume.setState("1".equals(opstatus)?RMSConstant.CONSUME_STATE_SUC:RMSConstant.CONSUME_STATE_FAIL);
+//			consume.setState("1".equals(opstatus)?RMSConstant.CONSUME_STATE_SUC:RMSConstant.CONSUME_STATE_FAIL);
+			consume.setState(opstatus);
 			consumeDao.updateState(consume);
 			return true;
 		}else{

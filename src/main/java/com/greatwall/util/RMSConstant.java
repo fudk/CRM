@@ -59,6 +59,18 @@ public class RMSConstant {
 	 */ 
 	public static final String CONSUME_STATE_SENDED = "sended";
 	/** 
+	 * @Fields CONSUME_STATE_SENDED_WAIT : 接口已调用 ,待充值
+	 */ 
+	public static final String CONSUME_STATE_SENDED_WAIT = "sended_wait";
+	/** 
+	 * @Fields CONSUME_STATE_SENDED_PROCESSING : 接口已调用 ,充值中
+	 */ 
+	public static final String CONSUME_STATE_SENDED_PROCESSING = "sended_processing";
+	/** 
+	 * @Fields CONSUME_STATE_SENDED_FAIL : 接口充值返回失败
+	 */ 
+	public static final String CONSUME_STATE_SENDED_FAIL = "sended_fail";
+	/** 
 	 * @Fields CONSUME_STATE_FAIL : 接口调用失败 
 	 */ 
 	public static final String CONSUME_STATE_FAIL = "fail";
