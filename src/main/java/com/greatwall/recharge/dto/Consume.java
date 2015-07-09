@@ -2,13 +2,15 @@ package com.greatwall.recharge.dto;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class Consume {
     private String consumeId;
 
     private Integer userId;
 
     private Integer discount;
-
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date createTime;
 
     private Double consumePrice;

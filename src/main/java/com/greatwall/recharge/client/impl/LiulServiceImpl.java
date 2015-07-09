@@ -109,6 +109,11 @@ public class LiulServiceImpl implements LiulService {
 		this.signKey = signKey;
 	}
 
+	public String getHmac(String signData){
+		CryptUtil util = new CryptUtil();
+		return util.MD5Sign(signData, signKey);
+	}
+	
 	public String searchState(Consume consume) throws Exception{
 		//创建HttpClientBuilder  
 		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();  
@@ -126,11 +131,21 @@ public class LiulServiceImpl implements LiulService {
 			String inqReqDt = DateFormatUtils.format(consume.getCreateTime(), "yyyyMMdd");
 			String itf_code = "flx_result_query";
 			
-			String signData = charSet +  mercId+ reqId + inqReqId + inqReqDt 
-	                + signTyp + itf_code + verNo;
+			StringBuffer signData = new StringBuffer();
+			signData.append(charSet);
+			signData.append(mercId);
+			signData.append(reqId);
+			signData.append(inqReqId);
+			signData.append(inqReqDt);
+			signData.append(signTyp);
+			signData.append(itfCode);
+			signData.append(verNo);
+			
+//			String signData = charSet +  mercId+ reqId + inqReqId + inqReqDt 
+//	                + signTyp + itf_code + verNo;
 			CryptUtil util = new CryptUtil();
-			String hmac = util.MD5Sign(signData, signKey);
-			System.out.println(hmac);
+			String hmac = util.MD5Sign(signData.toString(), signKey);
+			
 			
 			List<NameValuePair> formparams = new ArrayList<NameValuePair>();  
 			formparams.add(new BasicNameValuePair("char_set", charSet));  
@@ -157,7 +172,7 @@ public class LiulServiceImpl implements LiulService {
 				
 				String restr = EntityUtils.toString(httpEntity, "GBK");
 				
-//				System.out.println("response:" + restr);  
+				System.out.println("response:" + restr);  
 				consume.setRemark(restr);
 				if(restr.contains("FLX00000")){
 					String[] resArr = StringUtils.split(restr, "&");
@@ -216,13 +231,28 @@ public class LiulServiceImpl implements LiulService {
 			String flxTyp = "";
 			if(consume.getProductName().contains("月包")){
 				flxTyp = "M";
+			}else if(consume.getProductName().contains("季包")){
+				flxTyp = "Q";
+			}else if(consume.getProductName().contains("半年包")){
+				flxTyp = "H";
 			}
-			
-			String signData = charSet + notifyUrl + mercId+ reqId + reqDt
-	                 + signTyp + itfCode + verNo +mblNo+flxTyp+flxNum;
+			StringBuffer signData = new StringBuffer();
+			signData.append(charSet);
+			signData.append(notifyUrl);
+			signData.append(mercId);
+			signData.append(reqId);
+			signData.append(reqDt);
+			signData.append(signTyp);
+			signData.append(itfCode);
+			signData.append(verNo);
+			signData.append(mblNo);
+			signData.append(flxTyp);
+			signData.append(flxNum);
+//			String signData = charSet + notifyUrl + mercId+ reqId + reqDt
+//	                 + signTyp + itfCode + verNo +mblNo+flxTyp+flxNum;
 			
 			CryptUtil util = new CryptUtil();
-			String hmac = util.MD5Sign(signData, signKey);
+			String hmac = util.MD5Sign(signData.toString(), signKey);
 			
 			// 创建参数队列  
 			List<NameValuePair> formparams = new ArrayList<NameValuePair>();  

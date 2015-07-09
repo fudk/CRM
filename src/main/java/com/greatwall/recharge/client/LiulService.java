@@ -8,4 +8,6 @@ public interface LiulService {
 	
 	public String searchState(Consume consume) throws Exception;
 	
+	public String getHmac(String signData);
+	
 }

@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
+import com.greatwall.api.domain.LiulNotify;
 import com.greatwall.api.domain.RechargeCondition;
 import com.greatwall.platform.system.dto.User;
 import com.greatwall.platform.system.service.UserService;
+import com.greatwall.recharge.client.LiulService;
 import com.greatwall.recharge.client.ShunpanService;
 import com.greatwall.recharge.dto.Consume;
 import com.greatwall.recharge.dto.Product;
@@ -47,7 +49,44 @@ public class RechargeApiController {
 	private ProductService productService;
 	@Autowired
 	private PhoneUtil phoneUtil;
+	@Autowired
+	private LiulService liulService;
 	
+	@RequestMapping("/callbacknotify")
+	public@ResponseBody String flowCallbackNotify(LiulNotify liulNotify){
+		if(liulNotify!=null && liulNotify.getReq_id()!=null){
+			StringBuffer signData = new StringBuffer();
+			signData.append(liulNotify.getChar_set());
+			signData.append(liulNotify.getMerc_id());
+			signData.append(liulNotify.getReq_id());
+			signData.append(liulNotify.getReq_dt());
+			signData.append(liulNotify.getSign_typ());
+			signData.append(liulNotify.getItf_code());
+			signData.append(liulNotify.getMbl_no());
+			signData.append(liulNotify.getFlx_typ());
+			signData.append(liulNotify.getFlx_num());
+			signData.append(liulNotify.getChg_sts());
+			signData.append(liulNotify.getDebit_amt());
+			
+			String hmac = liulService.getHmac(signData.toString());
+			if(hmac.equals(liulNotify.getHmac())){
+				System.out.println(hmac);
+			}
+			String status = "";
+			if("S".equals(liulNotify.getChg_sts().toUpperCase())){
+				status = RMSConstant.CONSUME_STATE_SUC;
+			}else if("S".equals(liulNotify.getChg_sts().toUpperCase())){
+				status = RMSConstant.CONSUME_STATE_SENDED_FAIL;
+			}
+			if(!"".equals(status)){
+				rechargeConsumeService.confirmConsume(liulNotify.getReq_id(), status);
+			}
+			return "SUCCESS";
+			
+		}
+		 
+		return "FAIL";
+	}
 	/** 
 	* @Title: callbackNotify 
 	* @Description: 舜联通信充值回调接口 

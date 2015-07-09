@@ -18,6 +18,7 @@
     <th>账户</th>
     <th>状态</th>
     <th>消费时间</th>
+    <th>操作</th>
   </tr>
 	<c:forEach items="${consumes}" var="consume" varStatus="status">
 		<tr>
@@ -44,7 +45,8 @@
 			<c:if test="${consume.state == 'fail'}">充值失败</c:if>
 			<c:if test="${consume.state == 'success'}">充值成功</c:if>
 			</td>
-			<td><fmt:formatDate value="${consume.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/><input type="button" value="状态" onclick="searchState('${consume.consumeId}','${consume.createTime}')"></td>
+			<td><fmt:formatDate value="${consume.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+			<td><input type="button" value="状态" onclick="searchState('${consume.consumeId}','<fmt:formatDate value="${consume.createTime}" pattern="yyyy-MM-dd"/>')"></td>
 		</tr>
 	</c:forEach>
 </table>

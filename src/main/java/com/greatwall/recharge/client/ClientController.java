@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.greatwall.recharge.dto.Consume;
 import com.greatwall.recharge.service.RechargeConsumeService;
@@ -21,7 +22,7 @@ public class ClientController {
 	private RechargeConsumeService rechargeConsumeService;
 	
 	@RequestMapping("/searchState")
-	public String searchState(Consume consume){
+	public@ResponseBody String searchState(Consume consume){
 		try {
 			String status = liulService.searchState(consume);
 			
