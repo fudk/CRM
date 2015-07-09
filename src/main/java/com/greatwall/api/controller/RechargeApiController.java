@@ -52,7 +52,7 @@ public class RechargeApiController {
 	@Autowired
 	private LiulService liulService;
 	
-	@RequestMapping("/callbacknotify")
+	@RequestMapping("/flowCallbackNotify")
 	public@ResponseBody String flowCallbackNotify(LiulNotify liulNotify){
 		if(liulNotify!=null && liulNotify.getReq_id()!=null){
 			StringBuffer signData = new StringBuffer();
