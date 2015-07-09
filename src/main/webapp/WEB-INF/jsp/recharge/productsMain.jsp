@@ -7,8 +7,8 @@
 	<c:forEach items="${products}" var="product" varStatus="status">
 		<li class="lileft"><a href="javascript:addConsume('${product.productId}')" > <img class="liimg"
 				src="${basePath}con/getImg/${fn:replace(product.productImg,'.', '/')}" /> 
-				<div style="display:block; ">名称：${product.productName}<br/>
-				价格：<span style="color: red;font-size:16px;">${product.productPrice}元</span> 
+				<div style="display:block; ">${product.productName}<br/>
+				<span style="color: red;font-size:16px;">${product.productPrice}元</span> 
 				<%-- <span style="text-decoration:line-through">${product.productPrice}</span>/
 				<span style="color: red;font-size:16px;">
 				<c:if test="${product.productType == 'phone'}"><fmt:formatNumber value="${product.productPrice*sessionScope.user.discountPhone/100}" /></c:if>

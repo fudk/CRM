@@ -47,6 +47,17 @@ public class RechargeApiController {
 	@Autowired
 	private PhoneUtil phoneUtil;
 	
+	/** 
+	* @Title: callbackNotify 
+	* @Description: 舜联通信充值回调接口 
+	* @param streameid
+	* @param thirdstreamid
+	* @param opstatus
+	* @param sign
+	* @return    设定文件
+	* @return Map<String,String>    返回类型 
+	* @throws 
+	*/
 	@RequestMapping("/callbacknotify")
 	public@ResponseBody Map<String,String> callbackNotify(String streameid,
 			String thirdstreamid,String opstatus,String sign){
@@ -74,6 +85,15 @@ public class RechargeApiController {
 		return remap;
 	}
 	
+	/** 
+	* @Title: recharge 
+	* @Description: 对外提供的充值接口 
+	* @param rechargeCondition
+	* @param request
+	* @return    设定文件
+	* @return Map<String,String>    返回类型 
+	* @throws 
+	*/
 	@RequestMapping(value = "/recharge",method = { RequestMethod.GET, RequestMethod.POST })
 	public@ResponseBody Map<String,String> recharge(RechargeCondition rechargeCondition,HttpServletRequest request){
 		

@@ -5,10 +5,10 @@
 <table width="100%" border="0" class="list_table" cellpadding="0" cellspacing="0" totalCount="${page.totalCount }" pageSize="${page.pageSize }">
 	<tr>
     <th>序号</th>
-    <th>登录账号</th>
-    <th>充值用户名</th>
-    <th>充值类型</th>
-    <th>充值金额</th>
+    <th>缴费用户账号</th>
+    <th>缴费用户名</th>
+    <th>缴费类型</th>
+    <th>缴费金额</th>
     <th>操作员</th>
     <th>充值时间</th>
     <th width="180px">说明</th>

@@ -94,7 +94,7 @@
 	<div class="top">
 		<%@ include file="../common/top.jsp"%>
 		<div class="main" >
-			<div class="page_title">消费记录查询</div>
+			<div class="page_title">充值记录</div>
 			<form action="" id="consumeForm">
 			<div id="Search">
 				手机号：<input type="text" name="consumePhone" id="consumePhone" value=""
@@ -107,12 +107,12 @@
 				<option value="CU">中国联通</option>
 				<option value="CT">中国电信</option>
 				</select>
-				消费类型：<select name="consumeType">
+				充值类型：<select name="consumeType">
 				<option value="">全部</option>
 				<option value="phone">话费</option>
 				<option value="flow">流量</option>
 				</select>	
-					 消费时间：<input type="text" size="12" readonly="readonly"
+					 充值时间：<input type="text" size="12" readonly="readonly"
 					id="startTime" name="startTime" class="Wdate"
 					onFocus="startDate(this)"   value="" /> 
 					 至<input type="text" size="12" readonly="readonly"
