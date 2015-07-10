@@ -95,7 +95,7 @@ public class ShunpayServiceImpl implements ShunpanService {
 		//HttpClient  
 		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();  
 
-		HttpPost httpPost = new HttpPost(httpUrl);  
+		HttpPost httpPost = new HttpPost(searchhttpurl);  
 		RequestConfig requestConfig = RequestConfig.custom()  
 				.setConnectionRequestTimeout(3000).setConnectTimeout(3000)  
 				.setSocketTimeout(3000).build(); 
