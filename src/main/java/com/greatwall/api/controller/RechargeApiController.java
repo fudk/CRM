@@ -112,12 +112,21 @@ public class RechargeApiController {
 		sb.append("&");
 		sb.append(shunpanService.getKey());
 		
+		//TODO 失败后需要还回余额
 		Map<String,String> remap = new HashMap<String,String>();
 		if(DigestUtils.md5Hex(sb.toString()).equals(sign)){
-			String status = "1".equals(opstatus)?RMSConstant.CONSUME_STATE_SUC:RMSConstant.CONSUME_STATE_FAIL;
-			rechargeConsumeService.confirmConsume(thirdstreamid, status);
-			remap.put("retcode", "10000000");
-			remap.put("retmsg", "交易成功");
+			String status = "";
+			if("1".equals(opstatus)){
+				status = RMSConstant.CONSUME_STATE_SUC;
+			}else if("0".equals(opstatus)){
+				status = RMSConstant.CONSUME_STATE_SENDED_FAIL;
+			}
+			if(StringUtils.isNotBlank(status)){
+				rechargeConsumeService.confirmConsume(thirdstreamid, status);
+				remap.put("retcode", "10000000");
+				remap.put("retmsg", "交易成功");
+			}
+			
 		}else{
 			remap.put("retcode", "10000001");
 			remap.put("retmsg", "交易失败");

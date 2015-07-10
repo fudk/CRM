@@ -49,10 +49,10 @@ public class ShunpayServiceImpl implements ShunpanService {
 	public String getHttpUrl() {
 		return httpUrl;
 	}
-	@Value("#{propertiesReader['shunpay.searchhttpurl']}") 
 	public String getSearchhttpurl() {
 		return searchhttpurl;
 	}
+	@Value("#{propertiesReader['shunpay.searchhttpurl']}") 
 	public void setSearchhttpurl(String searchhttpurl) {
 		this.searchhttpurl = searchhttpurl;
 	}
@@ -137,6 +137,15 @@ public class ShunpayServiceImpl implements ShunpanService {
 				Gson gson = new Gson();
 				Map<String,Object> requestMap = gson.fromJson(restr, Map.class);
 				if(requestMap!=null&&"10000000".equals(requestMap.get("retcode"))){
+					if("9".equals(requestMap.get("state"))){
+						return RMSConstant.CONSUME_STATE_SUC;
+					}else if("8".equals(requestMap.get("state"))){
+						
+					}else if("0".equals(requestMap.get("state"))){
+						return RMSConstant.CONSUME_STATE_SUC;
+					}else if("9".equals(requestMap.get("state"))){
+						
+					}
 					return RMSConstant.CONSUME_STATE_SUC;
 				}else{
 					consume.setRemark(restr);

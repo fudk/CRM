@@ -49,13 +49,18 @@ public class RMSConstant {
 	*/ 
 	public static final String DEFAULT_ROLE = "3,";
 	
+	
 	/** 
 	* @Fields CONSUME_STATE_PROCESSING : 等待调用接口 
 	*/ 
 	public static final String CONSUME_STATE_PROCESSING = "processing";
+	/** 
+	 * @Fields CONSUME_STATE_SEND_FAIL : 接口调用失败 
+	 */ 
+	public static final String CONSUME_STATE_SEND_FAIL = "send_fail";
 	
 	/** 
-	 * @Fields CONSUME_STATE_SENDED : 接口已调用 
+	 * @Fields CONSUME_STATE_SENDED : 接口调用成功
 	 */ 
 	public static final String CONSUME_STATE_SENDED = "sended";
 	/** 
@@ -71,14 +76,13 @@ public class RMSConstant {
 	 */ 
 	public static final String CONSUME_STATE_SENDED_FAIL = "sended_fail";
 	/** 
-	 * @Fields CONSUME_STATE_FAIL : 接口调用失败 
+	 * @Fields CONSUME_STATE_PART_SUC : 接口调用成功 
 	 */ 
-	public static final String CONSUME_STATE_FAIL = "fail";
+	public static final String CONSUME_STATE_PART_SUC = "part_suc";
 	/** 
 	 * @Fields CONSUME_STATE_SUC : 接口调用成功 
 	 */ 
 	public static final String CONSUME_STATE_SUC = "success";
-	
 	
 	
 	

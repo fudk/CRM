@@ -202,11 +202,11 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 					if(shunpanService.sendMsg(consume)){
 						consume.setState(RMSConstant.CONSUME_STATE_SENDED);
 					}else{
-						consume.setState(RMSConstant.CONSUME_STATE_FAIL);
+						consume.setState(RMSConstant.CONSUME_STATE_SEND_FAIL);
 					}
 				} catch (Exception e) {  
 					e.printStackTrace();  
-					consume.setState(RMSConstant.CONSUME_STATE_FAIL);
+					consume.setState(RMSConstant.CONSUME_STATE_SEND_FAIL);
 					consume.setRemark(e.getMessage().length()>500?e.getMessage().substring(0, 499):e.getMessage());
 				}finally{
 					consumeDao.updateState(consume);
