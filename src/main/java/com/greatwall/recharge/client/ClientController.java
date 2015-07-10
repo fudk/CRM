@@ -1,5 +1,6 @@
 package com.greatwall.recharge.client;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,16 +18,24 @@ public class ClientController {
 	
 	@Autowired
 	private LiulService liulService;
+	@Autowired
+	private ShunpanService shunpanService;
 	
 	@Autowired
 	private RechargeConsumeService rechargeConsumeService;
 	
 	@RequestMapping("/searchState")
-	public@ResponseBody String searchState(Consume consume){
+	public@ResponseBody String searchState(Consume consume,String interfaceName){
 		try {
-			String status = liulService.searchState(consume);
-			
-			rechargeConsumeService.confirmConsume(consume.getConsumeId(), status);
+			String status = "";
+			if("liul".equals(interfaceName)){
+				status = liulService.searchState(consume);
+			}else if("shunpan".equals(interfaceName)){
+				status = shunpanService.searchState(consume);
+			}
+			if(StringUtils.isNotBlank(status)){
+				rechargeConsumeService.confirmConsume(consume.getConsumeId(), status);
+			}
 			return "success";
 		} catch (Exception e) {
 			logger.error("",e);

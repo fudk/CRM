@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.greatwall.recharge.client.ShunpanService;
 import com.greatwall.recharge.dto.Consume;
+import com.greatwall.util.RMSConstant;
 
 @Service("shunpayService")
 public class ShunpayServiceImpl implements ShunpanService {
@@ -30,6 +31,7 @@ public class ShunpayServiceImpl implements ShunpanService {
 	 * @Fields httpUrl : 接口调用地址 
 	 */ 
 	private String httpUrl;
+	private String searchhttpurl;
 	private String key;
 	private String platformname;
 	private String agtphone;
@@ -46,6 +48,13 @@ public class ShunpayServiceImpl implements ShunpanService {
 	}
 	public String getHttpUrl() {
 		return httpUrl;
+	}
+	@Value("#{propertiesReader['shunpay.searchhttpurl']}") 
+	public String getSearchhttpurl() {
+		return searchhttpurl;
+	}
+	public void setSearchhttpurl(String searchhttpurl) {
+		this.searchhttpurl = searchhttpurl;
 	}
 	@Value("#{propertiesReader['shunpay.httpurl']}") 
 	public void setHttpUrl(String httpUrl) {
@@ -80,6 +89,73 @@ public class ShunpayServiceImpl implements ShunpanService {
 		this.agtpasswd = agtpasswd;
 	}
 
+	public String searchState(Consume consume)throws Exception{
+		//创建HttpClientBuilder  
+		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();  
+		//HttpClient  
+		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();  
+
+		HttpPost httpPost = new HttpPost(httpUrl);  
+		RequestConfig requestConfig = RequestConfig.custom()  
+				.setConnectionRequestTimeout(3000).setConnectTimeout(3000)  
+				.setSocketTimeout(3000).build(); 
+		httpPost.setConfig(requestConfig);  
+		
+		// 创建参数队列  
+		List<NameValuePair> formparams = new ArrayList<NameValuePair>();  
+		formparams.add(new BasicNameValuePair("platformname", platformname));  
+		formparams.add(new BasicNameValuePair("flag", "2"));  
+		formparams.add(new BasicNameValuePair("myordernum", ""));  
+		formparams.add(new BasicNameValuePair("busordernum", consume.getConsumeId().trim()));  
+
+		StringBuffer sb = new StringBuffer();
+		for(NameValuePair nameValuePair:formparams){
+			sb.append(nameValuePair.getName());
+			sb.append("=");
+			sb.append(nameValuePair.getValue());
+			sb.append("&");
+		}
+		sb.append(key);
+		System.out.println(sb.toString());
+		formparams.add(new BasicNameValuePair("sign", DigestUtils.md5Hex(sb.toString())));  
+
+		UrlEncodedFormEntity entity;  
+		try {  
+			entity = new UrlEncodedFormEntity(formparams, "UTF-8");  
+			httpPost.setEntity(entity);  
+
+			HttpResponse httpResponse;  
+			//post请求  
+			httpResponse = closeableHttpClient.execute(httpPost);  
+
+			//getEntity()  
+			HttpEntity httpEntity = httpResponse.getEntity();  
+			if (httpEntity != null) {  
+				//打印响应内容  
+				String restr = EntityUtils.toString(httpEntity, "UTF-8");
+				System.out.println("response:" + restr);  
+				Gson gson = new Gson();
+				Map<String,Object> requestMap = gson.fromJson(restr, Map.class);
+				if(requestMap!=null&&"10000000".equals(requestMap.get("retcode"))){
+					return RMSConstant.CONSUME_STATE_SUC;
+				}else{
+					consume.setRemark(restr);
+				}
+			}  
+			//释放资源  
+//			closeableHttpClient.close();  
+		} catch (Exception e) {  
+			throw new Exception(e);
+		}  finally {  
+			try {
+				//释放资源  
+				closeableHttpClient.close();
+			} catch (IOException e) {
+			}  
+		}  
+		return "";
+	}
+
 	public Boolean sendMsg(Consume consume) throws Exception{
 		//创建HttpClientBuilder  
 		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();  
@@ -88,8 +164,8 @@ public class ShunpayServiceImpl implements ShunpanService {
 
 		HttpPost httpPost = new HttpPost(httpUrl);  
 		RequestConfig requestConfig = RequestConfig.custom()  
-			    .setConnectionRequestTimeout(3000).setConnectTimeout(3000)  
-			    .setSocketTimeout(3000).build(); 
+				.setConnectionRequestTimeout(3000).setConnectTimeout(3000)  
+				.setSocketTimeout(3000).build(); 
 		httpPost.setConfig(requestConfig);  
 		try {  
 
@@ -123,7 +199,7 @@ public class ShunpayServiceImpl implements ShunpanService {
 				sb.append("&");
 			}
 			sb.append(key);
-//			System.out.println(sb.toString());
+			//			System.out.println(sb.toString());
 			formparams.add(new BasicNameValuePair("sign", DigestUtils.md5Hex(sb.toString())));  
 
 			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");  
@@ -137,9 +213,9 @@ public class ShunpayServiceImpl implements ShunpanService {
 			HttpEntity httpEntity = httpResponse.getEntity();  
 			if (httpEntity != null) {  
 				//打印响应内容  
-				
+
 				String restr = EntityUtils.toString(httpEntity, "UTF-8");
-//				System.out.println("response:" + restr);  
+				System.out.println("response:" + restr);  
 				Gson gson = new Gson();
 				Map<String,Object> requestMap = gson.fromJson(restr, Map.class);
 				if(requestMap!=null&&"10000000".equals(requestMap.get("retcode"))){

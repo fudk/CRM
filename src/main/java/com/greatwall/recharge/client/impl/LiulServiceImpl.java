@@ -195,7 +195,7 @@ public class LiulServiceImpl implements LiulService {
 				    }else  if("F".equals(chgSts.toUpperCase())){
 				    	return RMSConstant.CONSUME_STATE_SENDED_FAIL;
 				    }
-				    return RMSConstant.CONSUME_STATE_FAIL;
+				    return "";
 				}
 				
 			}
@@ -209,7 +209,7 @@ public class LiulServiceImpl implements LiulService {
 			} catch (IOException e) {
 			}  
 		}  
-		return RMSConstant.CONSUME_STATE_FAIL;
+		return "";
 	}
 	
 	public Boolean sendMsg(Consume consume) throws Exception{

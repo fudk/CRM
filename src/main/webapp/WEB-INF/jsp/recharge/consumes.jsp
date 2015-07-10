@@ -46,7 +46,7 @@
 			<c:if test="${consume.state == 'success'}">充值成功</c:if>
 			</td>
 			<td><fmt:formatDate value="${consume.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-			<td><input type="button" value="状态" onclick="searchState('${consume.consumeId}','<fmt:formatDate value="${consume.createTime}" pattern="yyyy-MM-dd"/>')"></td>
+			<td><input type="button" value="状态" onclick="searchState('${consume.consumeId}','<fmt:formatDate value="${consume.createTime}" pattern="yyyy-MM-dd"/>','${consume.consumeType}')"></td>
 		</tr>
 	</c:forEach>
 </table>

@@ -43,11 +43,18 @@
 		});
 	}
 	
-	function searchState(consumeId,createTime){
+	function searchState(consumeId,createTime,consumeType){
+		var interfaceName = '';
+		if(consumeType = 'flow'){
+			interfaceName = 'liul';
+		}
+		if(consumeType = 'phone'){
+			interfaceName = 'shunpan';
+		}
 		$.ajax({
 			type : "POST",
 			url : "${ctx}/client/searchState",
-			data : {consumeId:consumeId,createTime:createTime},
+			data : {consumeId:consumeId,createTime:createTime,interfaceName:interfaceName},
 			success : function(msg) {
 				if (msg == 'success') {
 					alert('查询成功！');

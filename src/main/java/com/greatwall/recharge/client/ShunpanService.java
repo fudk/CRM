@@ -6,5 +6,7 @@ public interface ShunpanService {
 
 	public Boolean sendMsg(Consume consume) throws Exception;
 	
+	public String searchState(Consume consume)throws Exception;
+	
 	public String getKey();
 }
