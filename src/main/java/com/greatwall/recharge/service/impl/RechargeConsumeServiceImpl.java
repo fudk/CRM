@@ -46,6 +46,12 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 
 	ExecutorService fixedThreadPool = Executors.newFixedThreadPool(30);
 
+//	@Transactional(rollbackFor=Exception.class)
+//	public Boolean offsetConsume(Consume consume) throws Exception{
+//		
+//		return true;
+//	}
+
 	@Transactional(rollbackFor=Exception.class)
 	public Boolean saveRecharge(Recharge recharge,Integer agentId) throws Exception{
 		User user = new User();
@@ -69,11 +75,12 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 			throw new DaoException(RMSConstant.ERROR_CODE_101+" 更新数量为："+updateBalanceCount);
 		}
 		recharge.setCreateTime(new Date());
-		if(agentId!=null && agentId>0){
-			recharge.setRemark("会从操作者扣除相应金额");
-		}else{
-			recharge.setRemark("充值后金额为"+balance);
-		}
+		recharge.setRemark(recharge.getRemark()+"充值后金额为"+balance);
+//		if(agentId!=null && agentId>0){
+//			recharge.setRemark("会从操作者扣除相应金额");
+//		}else{
+//			recharge.setRemark("充值后金额为"+balance);
+//		}
 		int updateRechargeCount = rechargeDao.insert(recharge);
 		if(updateRechargeCount!=1){
 			throw new DaoException(RMSConstant.ERROR_CODE_103+"插入充值消息记录数："+updateRechargeCount);
@@ -104,6 +111,7 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 		//		throw new Exception(RMSConstant.ERROR_CODE_103+"事物管理测试");
 		return true;
 	}
+	
 	private Double getTypeBalance(User user ,String type) throws Exception{
 		if(RMSConstant.PRODUCT_TYPE_FLOW.equals(type)){
 			return user.getFlowBalance();
@@ -217,6 +225,7 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 		});  
 		//threadPool.shutdown();// 任务执行完毕，关闭线程池  
 	}
+	
 	
 	public Boolean confirmConsume(String consumeId,String opstatus){
 		Consume consume = consumeDao.getConsume(consumeId);

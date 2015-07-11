@@ -21,6 +21,8 @@ public interface RechargeConsumeService {
 	public List<ConsumeConditions> getConsumesPage(ConsumeConditions consume, PageParameter page)
 			throws DaoException;
 	
+	public Consume getConsume(String consumeId);
+	
 	public Boolean confirmConsume(String consumeId,String opstatus);
 	
 }

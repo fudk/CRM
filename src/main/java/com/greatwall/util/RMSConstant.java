@@ -76,11 +76,15 @@ public class RMSConstant {
 	 */ 
 	public static final String CONSUME_STATE_SENDED_FAIL = "sended_fail";
 	/** 
-	 * @Fields CONSUME_STATE_PART_SUC : 接口调用成功 
+	 * @Fields CONSUME_STATE_PART_SUC : 部分成功 
 	 */ 
 	public static final String CONSUME_STATE_PART_SUC = "part_suc";
 	/** 
-	 * @Fields CONSUME_STATE_SUC : 接口调用成功 
+	 * @Fields CONSUME_STATE_FAIL : 失败 
+	 */ 
+	public static final String CONSUME_STATE_FAIL = "fail";
+	/** 
+	 * @Fields CONSUME_STATE_SUC : 成功 
 	 */ 
 	public static final String CONSUME_STATE_SUC = "success";
 	
