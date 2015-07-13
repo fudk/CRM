@@ -149,6 +149,7 @@ public class RechargeConsumeController {
 				consume.setProductName(product.getProductName());
 				consume.setProductValue(product.getProductValue());
 				consume.setConsumePrice(product.getProductPrice());
+				consume.setProductValidity(product.getProductValidity());
 				consume.setConsumeNum(1);//默认消费数量为1个
 //				consume.setConsumeAmount(MathUtil.mul(product.getProductPrice(), new Double(1), 2));
 				consume.setConsumeAmount(product.getProductPrice());
