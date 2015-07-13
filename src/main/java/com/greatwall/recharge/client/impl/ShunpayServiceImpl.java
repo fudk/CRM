@@ -133,7 +133,7 @@ public class ShunpayServiceImpl implements ShunpanService {
 			if (httpEntity != null) {  
 				//打印响应内容  
 				String restr = EntityUtils.toString(httpEntity, "UTF-8");
-				System.out.println("response:" + restr);  
+				System.out.println("shunpay searchState response:" + restr);  
 				Gson gson = new Gson();
 				Map<String,Object> requestMap = gson.fromJson(restr, Map.class);
 				if(requestMap!=null&&"10000000".equals(requestMap.get("retcode"))){

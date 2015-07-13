@@ -45,10 +45,10 @@
 	
 	function searchState(consumeId,createTime,consumeType){
 		var interfaceName = '';
-		if(consumeType = 'flow'){
+		if(consumeType == 'flow'){
 			interfaceName = 'liul';
 		}
-		if(consumeType = 'phone'){
+		if(consumeType == 'phone'){
 			interfaceName = 'shunpan';
 		}
 		$.ajax({

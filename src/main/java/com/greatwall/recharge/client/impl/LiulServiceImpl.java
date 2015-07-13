@@ -172,7 +172,7 @@ public class LiulServiceImpl implements LiulService {
 				
 				String restr = EntityUtils.toString(httpEntity, "GBK");
 				
-				System.out.println("response:" + restr);  
+				System.out.println("liul searchState response:" + restr);  
 				consume.setRemark(restr);
 				if(restr.contains("FLX00000")){
 					String[] resArr = StringUtils.split(restr, "&");
@@ -228,14 +228,14 @@ public class LiulServiceImpl implements LiulService {
 			String reqDt = DateFormatUtils.format(new Date(), "yyyyMMdd");
 			String mblNo = consume.getConsumePhone();
 			String flxNum = consume.getProductValue();
-			String flxTyp = "";
-			if(consume.getProductName().contains("月包")){
-				flxTyp = "M";
-			}else if(consume.getProductName().contains("季包")){
-				flxTyp = "Q";
-			}else if(consume.getProductName().contains("半年包")){
-				flxTyp = "H";
-			}
+			String flxTyp = consume.getProductValidity();
+//			if(consume.getProductName().contains("月包")){
+//				flxTyp = "M";
+//			}else if(consume.getProductName().contains("季包")){
+//				flxTyp = "Q";
+//			}else if(consume.getProductName().contains("半年包")){
+//				flxTyp = "H";
+//			}
 			StringBuffer signData = new StringBuffer();
 			signData.append(charSet);
 			signData.append(notifyUrl);

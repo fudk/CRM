@@ -188,7 +188,6 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 			}
 		}
 		
-		
 		int insertConsume = consumeDao.insert(consume);
 		if(insertConsume !=1 ){
 			throw new DaoException(RMSConstant.ERROR_CODE_103+" 插入消费记录数："+insertConsume);

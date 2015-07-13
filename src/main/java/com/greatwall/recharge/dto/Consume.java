@@ -32,6 +32,8 @@ public class Consume {
     private String productName;
     
     private String productValue;
+    
+    private String productValidity;
 
     private String state;
 
@@ -184,5 +186,14 @@ public class Consume {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+
+	public String getProductValidity() {
+		return productValidity;
+	}
+
+	public void setProductValidity(String productValidity) {
+		this.productValidity = productValidity;
+	}
+	
     
 }

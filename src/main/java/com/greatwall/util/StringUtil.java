@@ -36,6 +36,8 @@ public class StringUtil {
 		sb.append(rechargeCondition.getOrderId());
 		sb.append("&opType=");
 		sb.append(rechargeCondition.getOpType());
+		sb.append("&flxTyp=");
+		sb.append(rechargeCondition.getFlxTyp());
 		sb.append("&custPhone=");
 		sb.append(rechargeCondition.getCustPhone());
 		sb.append("&opPrice=");

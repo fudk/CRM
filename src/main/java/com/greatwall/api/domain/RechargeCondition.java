@@ -6,6 +6,7 @@ public class RechargeCondition {
 	private String timestamp;
 	private String orderId;
 	private String opType;
+	private String flxTyp;
 	private String custPhone;
 	private String opPrice;
 	private Integer opNum;
@@ -65,6 +66,12 @@ public class RechargeCondition {
 	}
 	public void setSign(String sign) {
 		this.sign = sign;
+	}
+	public String getFlxTyp() {
+		return flxTyp;
+	}
+	public void setFlxTyp(String flxTyp) {
+		this.flxTyp = flxTyp;
 	}
 	
 

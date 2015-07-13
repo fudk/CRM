@@ -190,7 +190,8 @@ public class RechargeApiController {
 		}else{
 			product.setProductValue(rechargeCondition.getOpPrice());
 		}
-		
+		product.setState("enable");
+		product.setProductValidity(rechargeCondition.getFlxTyp());
 		product.setIsp(phoneUtil.isPhoneNum(phones[0]));
 		product.setProductType(rechargeCondition.getOpType());
 		product = productService.getProduct(product);
@@ -201,6 +202,7 @@ public class RechargeApiController {
 		consume.setProductName(product.getProductName());
 		consume.setProductValue(product.getProductValue());
 		consume.setConsumePrice(product.getProductPrice());
+		consume.setProductValidity(product.getProductValidity());
 		consume.setConsumeNum(rechargeCondition.getOpNum());//默认消费数量为1个
 		consume.setConsumeAmount(MathUtil.mul(product.getProductPrice(), new Double(1), 2));
 		consume.setConsumeType(product.getProductType());
@@ -220,7 +222,6 @@ public class RechargeApiController {
 				consume.setConsumePhone(phone);
 				
 				rechargeConsumeService.addConsume(consume);
-					
 			}catch (ClassCastException e) {
 				logger.error(phone+" "+e.getMessage());
 				errorMsgs.add(phone+" "+e.getMessage());
