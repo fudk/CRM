@@ -32,7 +32,7 @@
       <if test="productImg != null" >
         and PRODUCT_IMG = #{productImg,jdbcType=VARCHAR}
       </if>
-      <if test="productValue != null" >
+      <if test="productValue != null and productValue != ''" >
         and PRODUCT_VALUE = #{productValue,jdbcType=VARCHAR}
       </if>
       <if test="isp != null and isp != '' " >
@@ -44,7 +44,7 @@
       <if test="productPrice != null" >
         and PRODUCT_PRICE = #{productPrice,jdbcType=DOUBLE}
       </if>
-      <if test="productValidity != null" >
+      <if test="productValidity != null and productValidity != ''" >
         and PRODUCT_VALIDITY = #{productValidity,jdbcType=VARCHAR}
       </if>
       <if test="state != null and state != ''" >

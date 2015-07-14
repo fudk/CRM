@@ -49,7 +49,7 @@ public class StringUtil {
 		sb.append("&");
 		sb.append(key);
 		
-		if(DigestUtils.md5Hex(sb.toString()).equals(rechargeCondition.getSign().toLowerCase())){
+		if(DigestUtils.md5Hex(sb.toString()).toLowerCase().equals(rechargeCondition.getSign().toLowerCase())){
 			return true;
 		}
 		return false;

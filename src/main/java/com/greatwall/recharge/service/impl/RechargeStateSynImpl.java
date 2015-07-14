@@ -10,12 +10,13 @@ import com.greatwall.recharge.service.RechargeStateSynService;
 @Service("rechargeStateSynService")
 public class RechargeStateSynImpl implements RechargeStateSynService {
 
-	ExecutorService fixedThreadPool = Executors.newFixedThreadPool(30);
+//	ExecutorService fixedThreadPool = Executors.newFixedThreadPool(30);
 
 	ExecutorService singleThreadPool = Executors.newSingleThreadExecutor();
 
 	public void synState(){
-		run(fixedThreadPool,"");
+
+//		run(fixedThreadPool,"");
 	}
 
 	private void run(ExecutorService threadPool,final String consume) {
