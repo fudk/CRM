@@ -5,7 +5,7 @@ public class Channel {
 
     private String channelName;
 
-    private String channelProperty;
+    private String interfaceName;
 
     private String isp;
     
@@ -26,16 +26,16 @@ public class Channel {
     public void setChannelName(String channelName) {
         this.channelName = channelName == null ? null : channelName.trim();
     }
+    
+    public String getInterfaceName() {
+		return interfaceName;
+	}
 
-    public String getChannelProperty() {
-        return channelProperty;
-    }
+	public void setInterfaceName(String interfaceName) {
+		this.interfaceName = interfaceName;
+	}
 
-    public void setChannelProperty(String channelProperty) {
-        this.channelProperty = channelProperty == null ? null : channelProperty.trim();
-    }
-
-    public String getIsp() {
+	public String getIsp() {
         return isp;
     }
 

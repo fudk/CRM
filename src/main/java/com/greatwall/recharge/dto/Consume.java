@@ -42,6 +42,8 @@ public class Consume {
     private Double payment;
     
     private String remark;
+    
+    private String interfaceName;
 
     public String getConsumeId() {
         return consumeId;
@@ -193,6 +195,14 @@ public class Consume {
 
 	public void setProductValidity(String productValidity) {
 		this.productValidity = productValidity;
+	}
+
+	public String getInterfaceName() {
+		return interfaceName;
+	}
+
+	public void setInterfaceName(String interfaceName) {
+		this.interfaceName = interfaceName;
 	}
 	
     

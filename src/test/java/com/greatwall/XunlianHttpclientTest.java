@@ -18,8 +18,8 @@ import org.apache.http.util.EntityUtils;
 public class XunlianHttpclientTest {
 
 	public static void main(String[] args) {
-		//		sendMsg();
-		search();
+				sendMsg();
+//		search();
 	}
 
 	public static void search(){

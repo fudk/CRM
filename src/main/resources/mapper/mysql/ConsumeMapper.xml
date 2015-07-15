@@ -19,6 +19,7 @@
     <result column="BALANCE" property="balance" jdbcType="DOUBLE" />
     <result column="PAYMENT" property="payment" jdbcType="DOUBLE" />
     <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="INTERFACE_NAME" property="interfaceName" jdbcType="VARCHAR" />
   </resultMap>
  
  <resultMap id="ConditionsResultMap" type="com.greatwall.recharge.dto.ConsumeConditions" >
@@ -40,12 +41,13 @@
     <result column="PAYMENT" property="payment" jdbcType="DOUBLE" />
     <result column="REMARK" property="remark" jdbcType="VARCHAR" />
     <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="INTERFACE_NAME" property="interfaceName" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
      CONSUME_ID, USER_ID, DISCOUNT, CREATE_TIME, CONSUME_PRICE, CONSUME_NUM, CONSUME_AMOUNT, 
     CONSUME_PHONE, CONSUME_TYPE, ISP, NOTIFY_URL, PRODUCT_ID, PRODUCT_NAME, STATE, BALANCE, 
-    PAYMENT,REMARK
+    PAYMENT,REMARK,INTERFACE_NAME
   </sql>
   
   <sql id="consumeWhere">
@@ -100,7 +102,7 @@
 		select
 		CONSUME_ID, a.USER_ID, DISCOUNT, a.CREATE_TIME, CONSUME_PRICE, CONSUME_NUM,
 		CONSUME_AMOUNT, CONSUME_PHONE, CONSUME_TYPE, ISP, NOTIFY_URL,
-		PRODUCT_ID, PRODUCT_NAME, STATE, a.BALANCE, PAYMENT,a.REMARK,b.USER_NAME
+		PRODUCT_ID, PRODUCT_NAME, STATE, a.BALANCE, PAYMENT,a.REMARK,a.INTERFACE_NAME,b.USER_NAME
 		from td_rms_consume_log a ,td_sm_user b
 		<where>
 			a.USER_ID = b.USER_ID
@@ -144,13 +146,13 @@
       CONSUME_AMOUNT, CONSUME_PHONE, CONSUME_TYPE, 
       ISP, NOTIFY_URL, PRODUCT_ID, 
       PRODUCT_NAME, STATE, BALANCE, 
-      PAYMENT,REMARK)
+      PAYMENT,REMARK,INTERFACE_NAME)
     values (#{consumeId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{discount,jdbcType=INTEGER}, 
       #{createTime,jdbcType=TIMESTAMP}, #{consumePrice,jdbcType=DOUBLE}, #{consumeNum,jdbcType=INTEGER}, 
       #{consumeAmount,jdbcType=DOUBLE}, #{consumePhone,jdbcType=VARCHAR}, #{consumeType,jdbcType=VARCHAR}, 
       #{isp,jdbcType=VARCHAR}, #{notifyUrl,jdbcType=VARCHAR}, #{productId,jdbcType=INTEGER}, 
       #{productName,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{balance,jdbcType=DOUBLE}, 
-      #{payment,jdbcType=DOUBLE},#{remark})
+      #{payment,jdbcType=DOUBLE},#{remark},#{interfaceName})
   </insert>
 
   <update id="updateState" parameterType="com.greatwall.recharge.dto.Consume" >

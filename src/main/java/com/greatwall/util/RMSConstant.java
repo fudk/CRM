@@ -26,6 +26,14 @@ public class RMSConstant {
 	*/ 
 	public static final String PRODUCT_TYPE_FLOW = "flow";
 	
+	/**
+	 * @Fields INTERFACE_NAME_SHUNPAN : 瞬联 话费接口
+	 */
+	public static final String INTERFACE_NAME_SHUNPAN = "shunpan";
+	/**
+	 * @Fields INTERFACE_NAME_LIUL : 流量接口1
+	 */
+	public static final String INTERFACE_NAME_LIUL= "liul";
 	
 	
 	/** 

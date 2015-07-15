@@ -23,18 +23,18 @@ public class ClientController {
 	@Autowired
 	private LiulService liulService;
 	@Autowired
-	private ShunpanService shunpanService;
+	private ShunpayService shunpanService;
 
 	@Autowired
 	private RechargeConsumeService rechargeConsumeService;
 
 	@RequestMapping("/searchState")
-	public@ResponseBody String searchState(Consume consume,String interfaceName){
+	public@ResponseBody String searchState(Consume consume){
 		try {
 			String status = "";
-			if("liul".equals(interfaceName)){
+			if(RMSConstant.INTERFACE_NAME_LIUL.equals(consume.getInterfaceName())){
 				status = liulService.searchState(consume);
-			}else if("shunpan".equals(interfaceName)){
+			}else if(RMSConstant.INTERFACE_NAME_SHUNPAN.equals(consume.getInterfaceName())){
 				status = shunpanService.searchState(consume);
 			}
 //			String status = RMSConstant.CONSUME_STATE_SENDED_FAIL;

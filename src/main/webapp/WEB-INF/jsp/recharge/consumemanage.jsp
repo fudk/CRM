@@ -43,14 +43,14 @@
 		});
 	}
 	
-	function searchState(consumeId,createTime,consumeType){
-		var interfaceName = '';
+	function searchState(consumeId,createTime,interfaceName){
+		/* var interfaceName = '';
 		if(consumeType == 'flow'){
 			interfaceName = 'liul';
 		}
 		if(consumeType == 'phone'){
 			interfaceName = 'shunpan';
-		}
+		} */
 		$.ajax({
 			type : "POST",
 			url : "${ctx}/client/searchState",

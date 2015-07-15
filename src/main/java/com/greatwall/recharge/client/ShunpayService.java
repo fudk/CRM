@@ -2,7 +2,7 @@ package com.greatwall.recharge.client;
 
 import com.greatwall.recharge.dto.Consume;
 
-public interface ShunpanService {
+public interface ShunpayService {
 
 	public Boolean sendMsg(Consume consume) throws Exception;
 	

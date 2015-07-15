@@ -8,6 +8,8 @@ public class UserChannel {
     private String isp;
     
     private String type;
+    
+    private String interfaceName;
 
     public Integer getChannelId() {
         return channelId;
@@ -39,6 +41,14 @@ public class UserChannel {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getInterfaceName() {
+		return interfaceName;
+	}
+
+	public void setInterfaceName(String interfaceName) {
+		this.interfaceName = interfaceName;
 	}
     
     

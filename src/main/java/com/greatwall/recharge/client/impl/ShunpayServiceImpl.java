@@ -20,12 +20,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
-import com.greatwall.recharge.client.ShunpanService;
+import com.greatwall.recharge.client.ShunpayService;
 import com.greatwall.recharge.dto.Consume;
 import com.greatwall.util.RMSConstant;
 
 @Service("shunpayService")
-public class ShunpayServiceImpl implements ShunpanService {
+public class ShunpayServiceImpl implements ShunpayService {
 
 	/** 
 	 * @Fields httpUrl : 接口调用地址 
@@ -224,7 +224,7 @@ public class ShunpayServiceImpl implements ShunpanService {
 				//打印响应内容  
 
 				String restr = EntityUtils.toString(httpEntity, "UTF-8");
-				System.out.println("response:" + restr);  
+				System.out.println("shunpay sendMsg response:" + restr);  
 				Gson gson = new Gson();
 				Map<String,Object> requestMap = gson.fromJson(restr, Map.class);
 				if(requestMap!=null&&"10000000".equals(requestMap.get("retcode"))){

@@ -22,11 +22,13 @@ import com.greatwall.api.domain.RechargeCondition;
 import com.greatwall.platform.system.dto.User;
 import com.greatwall.platform.system.service.UserService;
 import com.greatwall.recharge.client.LiulService;
-import com.greatwall.recharge.client.ShunpanService;
+import com.greatwall.recharge.client.ShunpayService;
 import com.greatwall.recharge.dto.Consume;
 import com.greatwall.recharge.dto.Product;
+import com.greatwall.recharge.dto.UserChannel;
 import com.greatwall.recharge.service.ProductService;
 import com.greatwall.recharge.service.RechargeConsumeService;
+import com.greatwall.recharge.service.UserChannelService;
 import com.greatwall.util.MathUtil;
 import com.greatwall.util.NetworkUtil;
 import com.greatwall.util.PhoneUtil;
@@ -40,7 +42,7 @@ public class RechargeApiController {
 	Logger logger = Logger.getLogger(RechargeApiController.class);
 			
 	@Autowired
-	private ShunpanService shunpanService;
+	private ShunpayService shunpanService;
 	@Autowired
 	private RechargeConsumeService rechargeConsumeService;
 	@Autowired
@@ -51,6 +53,8 @@ public class RechargeApiController {
 	private PhoneUtil phoneUtil;
 	@Autowired
 	private LiulService liulService;
+	@Autowired
+	private UserChannelService userChannelService;
 	
 	@RequestMapping("/flowCallbackNotify")
 	public@ResponseBody String flowCallbackNotify(LiulNotify liulNotify){
@@ -182,6 +186,7 @@ public class RechargeApiController {
 			remap.put("resMsg", "校验失败");
 			return remap;
 		}
+		
 		String[] phones = StringUtil.getRepStrings(rechargeCondition.getCustPhone());
 		
 		Product product = new Product();
@@ -190,11 +195,36 @@ public class RechargeApiController {
 		}else{
 			product.setProductValue(rechargeCondition.getOpPrice());
 		}
+		String isp = phoneUtil.isPhoneNum(phones[0]);
 		product.setState("enable");
 		product.setProductValidity(rechargeCondition.getFlxTyp());
-		product.setIsp(phoneUtil.isPhoneNum(phones[0]));
+		product.setIsp(isp);
 		product.setProductType(rechargeCondition.getOpType());
 		product = productService.getProduct(product);
+		
+		if(product==null){
+			remap.put("resCode", "07");
+			remap.put("resMsg", "充值产品不存在");
+			return remap;
+		}
+		
+		UserChannel userChannel = new UserChannel();
+		userChannel.setUserId(u.getUserId());
+		userChannel.setIsp(isp);
+		List<UserChannel> uclist = userChannelService.getUserChannel(userChannel);
+		String interfaceName = "";
+		if(uclist!=null&&uclist.size()>0){
+			for(UserChannel uc:uclist){
+				if(isp.equals(uc.getIsp())){
+					interfaceName = uc.getInterfaceName();
+				}
+			}
+		}
+		if("".equals(interfaceName)){
+			remap.put("resCode", "08");
+			remap.put("resMsg", "用户未配置通道");
+			return remap;
+		}
 		
 		Consume consume = new Consume();
 		
@@ -209,6 +239,7 @@ public class RechargeApiController {
 		consume.setIsp(product.getIsp());
 		consume.setState("processing");//处理中
 		consume.setUserId(u.getUserId());
+		consume.setInterfaceName(interfaceName);
 		
 		List<String> errorMsgs = new ArrayList<String>();
 		//获取相应产品信息

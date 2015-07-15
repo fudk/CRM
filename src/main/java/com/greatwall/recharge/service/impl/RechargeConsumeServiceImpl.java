@@ -16,7 +16,7 @@ import com.greatwall.platform.system.dao.UserDao;
 import com.greatwall.platform.system.dto.User;
 import com.greatwall.recharge.client.JudianService;
 import com.greatwall.recharge.client.LiulService;
-import com.greatwall.recharge.client.ShunpanService;
+import com.greatwall.recharge.client.ShunpayService;
 import com.greatwall.recharge.dao.ConsumeDao;
 import com.greatwall.recharge.dao.ProductDao;
 import com.greatwall.recharge.dao.RechargeDao;
@@ -40,7 +40,7 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 	@Autowired
 	private ProductDao productDao;
 	@Autowired
-	private ShunpanService shunpanService;
+	private ShunpayService shunpayService;
 	@Autowired
 	private LiulService liulService;
 
@@ -175,16 +175,25 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 		
 		//TODO 调用电话或流量接口充值
 		if("phone".equals(consume.getConsumeType())){
-			if(shunpanService.sendMsg(consume)){
-				consume.setState(RMSConstant.CONSUME_STATE_SENDED);
+			
+			if(RMSConstant.INTERFACE_NAME_SHUNPAN.equals(consume.getInterfaceName())){
+				if(shunpayService.sendMsg(consume)){
+					consume.setState(RMSConstant.CONSUME_STATE_SENDED);
+				}else{
+					throw new DaoException(RMSConstant.ERROR_CODE_104+" "+consume.getRemark());
+				}
 			}else{
-				throw new DaoException(RMSConstant.ERROR_CODE_104+" "+consume.getRemark());
+				throw new Exception("未找到对应接口");
 			}
 		}else if("flow".equals(consume.getConsumeType())){
-			if(liulService.sendMsg(consume)){
-				consume.setState(RMSConstant.CONSUME_STATE_SENDED);
+			if(RMSConstant.INTERFACE_NAME_LIUL.equals(consume.getInterfaceName())){
+				if(liulService.sendMsg(consume)){
+					consume.setState(RMSConstant.CONSUME_STATE_SENDED);
+				}else{
+					throw new DaoException(RMSConstant.ERROR_CODE_104+" "+consume.getRemark());
+				}
 			}else{
-				throw new DaoException(RMSConstant.ERROR_CODE_104+" "+consume.getRemark());
+				throw new Exception("未找到对应接口");
 			}
 		}
 		
@@ -206,7 +215,7 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 			public void run() {  
 
 				try {  
-					if(shunpanService.sendMsg(consume)){
+					if(shunpayService.sendMsg(consume)){
 						consume.setState(RMSConstant.CONSUME_STATE_SENDED);
 					}else{
 						consume.setState(RMSConstant.CONSUME_STATE_SEND_FAIL);

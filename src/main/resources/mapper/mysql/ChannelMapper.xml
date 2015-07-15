@@ -4,12 +4,12 @@
   <resultMap id="BaseResultMap" type="com.greatwall.recharge.dto.Channel" >
     <id column="CHANNEL_ID" property="channelId" jdbcType="INTEGER" />
     <result column="CHANNEL_NAME" property="channelName" jdbcType="VARCHAR" />
-    <result column="CHANNEL_PROPERTY" property="channelProperty" jdbcType="VARCHAR" />
+    <result column="INTERFACE_NAME" property="interfaceName" jdbcType="VARCHAR" />
     <result column="ISP" property="isp" jdbcType="VARCHAR" />
     <result column="TYPE" property="type" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    CHANNEL_ID, CHANNEL_NAME, CHANNEL_PROPERTY, ISP,TYPE
+    CHANNEL_ID, CHANNEL_NAME, INTERFACE_NAME, ISP,TYPE
   </sql>
   
   <select id="getChannelsIsp" resultMap="BaseResultMap" parameterType="String" >
@@ -32,9 +32,9 @@
   </delete>
   
   <insert id="insert" parameterType="com.greatwall.recharge.dto.Channel" >
-    insert into td_rms_channel ( CHANNEL_NAME, CHANNEL_PROPERTY, 
+    insert into td_rms_channel ( CHANNEL_NAME, INTERFACE_NAME, 
       ISP,TYPE)
-    values (#{channelName,jdbcType=VARCHAR}, #{channelProperty,jdbcType=VARCHAR}, 
+    values (#{channelName,jdbcType=VARCHAR}, #{interfaceName,jdbcType=VARCHAR}, 
       #{isp,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR})
   </insert>
   
@@ -45,8 +45,8 @@
       <if test="channelName != null" >
         CHANNEL_NAME = #{channelName,jdbcType=VARCHAR},
       </if>
-      <if test="channelProperty != null" >
-        CHANNEL_PROPERTY = #{channelProperty,jdbcType=VARCHAR},
+      <if test="interfaceName != null" >
+        INTERFACE_NAME = #{interfaceName,jdbcType=VARCHAR},
       </if>
       <if test="isp != null" >
         ISP = #{isp,jdbcType=VARCHAR},

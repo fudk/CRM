@@ -23,8 +23,10 @@ import com.greatwall.recharge.dto.ConsumeConditions;
 import com.greatwall.recharge.dto.Product;
 import com.greatwall.recharge.dto.Recharge;
 import com.greatwall.recharge.dto.RechargeConditions;
+import com.greatwall.recharge.dto.UserChannel;
 import com.greatwall.recharge.service.ProductService;
 import com.greatwall.recharge.service.RechargeConsumeService;
+import com.greatwall.recharge.service.UserChannelService;
 import com.greatwall.util.PhoneUtil;
 import com.greatwall.util.StringUtil;
 import com.greatwall.util.ValidateUtil;
@@ -46,6 +48,9 @@ public class RechargeConsumeController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private UserChannelService userChannelService;
 	
 
 	@RequestMapping("/initAddRecharge/{userId}/{loginName}")
@@ -169,6 +174,24 @@ public class RechargeConsumeController {
 							throw new ClassCastException("手机号码与运营商不匹配");
 						}
 						consume.setConsumePhone(phone);
+						
+						UserChannel userChannel = new UserChannel();
+						userChannel.setUserId(u.getUserId());
+						userChannel.setIsp(product.getIsp());
+						userChannel.setType(product.getProductType());
+						List<UserChannel> uclist = userChannelService.getUserChannel(userChannel);
+						String interfaceName = "";
+						if(uclist!=null&&uclist.size()>0){
+							for(UserChannel uc:uclist){
+								if(product.getIsp().equals(uc.getIsp())){
+									interfaceName = uc.getInterfaceName();
+								}
+							}
+						}
+						if("".equals(interfaceName)){
+							throw new ClassCastException("用户未分配通道");
+						}
+						consume.setInterfaceName(interfaceName);
 						
 						rechargeConsumeService.addConsume(consume);
 						
