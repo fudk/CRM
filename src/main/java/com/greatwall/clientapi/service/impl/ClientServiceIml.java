@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.greatwall.clientapi.service.ClientService;
 import com.greatwall.clientapi.service.LiulService;
 import com.greatwall.clientapi.service.ShunpayService;
 import com.greatwall.recharge.dto.Consume;
@@ -15,7 +16,7 @@ import com.greatwall.recharge.service.RechargeConsumeService;
 import com.greatwall.util.RMSConstant;
 
 @Service("clientService")
-public class ClientServiceIml {
+public class ClientServiceIml implements ClientService {
 
 	Logger logger = Logger.getLogger(ClientServiceIml.class);
 
