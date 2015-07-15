@@ -1,4 +1,4 @@
-package com.greatwall.recharge.client;
+package com.greatwall.clientapi.controller;
 
 import java.util.Date;
 
@@ -9,6 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.greatwall.clientapi.service.ClientService;
+import com.greatwall.clientapi.service.LiulService;
+import com.greatwall.clientapi.service.ShunpayService;
 import com.greatwall.recharge.dto.Consume;
 import com.greatwall.recharge.dto.Recharge;
 import com.greatwall.recharge.service.RechargeConsumeService;
@@ -20,18 +23,21 @@ public class ClientController {
 
 	Logger logger = Logger.getLogger(ClientController.class);
 
-	@Autowired
+	/*@Autowired
 	private LiulService liulService;
 	@Autowired
 	private ShunpayService shunpanService;
 
 	@Autowired
-	private RechargeConsumeService rechargeConsumeService;
+	private RechargeConsumeService rechargeConsumeService;*/
+
+	@Autowired
+	private ClientService clientService;
 
 	@RequestMapping("/searchState")
 	public@ResponseBody String searchState(Consume consume){
 		try {
-			String status = "";
+			/*String status = "";
 			if(RMSConstant.INTERFACE_NAME_LIUL.equals(consume.getInterfaceName())){
 				status = liulService.searchState(consume);
 			}else if(RMSConstant.INTERFACE_NAME_SHUNPAY.equals(consume.getInterfaceName())){
@@ -56,11 +62,17 @@ public class ClientController {
 						rechargeConsumeService.saveRecharge(rec, null);
 						status = RMSConstant.CONSUME_STATE_FAIL;
 					}
-					
+
 				}
 				rechargeConsumeService.confirmConsume(consume.getConsumeId(), status);
+			}*/
+
+			if(clientService.searchState(consume)){
+				return "success";
+			}else{
+				return "fail";
 			}
-			return "success";
+			
 		} catch (Exception e) {
 			logger.error("",e);
 			return "fail";

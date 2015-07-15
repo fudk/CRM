@@ -10,13 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.greatwall.clientapi.service.JudianService;
+import com.greatwall.clientapi.service.LiulService;
+import com.greatwall.clientapi.service.ShunpayService;
 import com.greatwall.platform.base.dao.DaoException;
 import com.greatwall.platform.domain.PageParameter;
 import com.greatwall.platform.system.dao.UserDao;
 import com.greatwall.platform.system.dto.User;
-import com.greatwall.recharge.client.JudianService;
-import com.greatwall.recharge.client.LiulService;
-import com.greatwall.recharge.client.ShunpayService;
 import com.greatwall.recharge.dao.ConsumeDao;
 import com.greatwall.recharge.dao.ProductDao;
 import com.greatwall.recharge.dao.RechargeDao;

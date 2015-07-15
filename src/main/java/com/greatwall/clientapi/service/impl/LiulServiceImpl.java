@@ -1,4 +1,4 @@
-package com.greatwall.recharge.client.impl;
+package com.greatwall.clientapi.service.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.greatwall.recharge.client.LiulService;
+import com.greatwall.clientapi.service.LiulService;
 import com.greatwall.recharge.dto.Consume;
 import com.greatwall.util.CryptUtil;
 import com.greatwall.util.RMSConstant;

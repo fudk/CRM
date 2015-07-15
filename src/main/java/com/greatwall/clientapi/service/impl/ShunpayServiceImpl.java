@@ -1,4 +1,4 @@
-package com.greatwall.recharge.client.impl;
+package com.greatwall.clientapi.service.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
-import com.greatwall.recharge.client.ShunpayService;
+import com.greatwall.clientapi.service.ShunpayService;
 import com.greatwall.recharge.dto.Consume;
 import com.greatwall.util.RMSConstant;
 

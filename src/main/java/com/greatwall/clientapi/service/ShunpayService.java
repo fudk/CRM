@@ -1,4 +1,4 @@
-package com.greatwall.recharge.client;
+package com.greatwall.clientapi.service;
 
 import com.greatwall.recharge.dto.Consume;
 
