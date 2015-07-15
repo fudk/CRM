@@ -34,7 +34,7 @@ public class ClientController {
 			String status = "";
 			if(RMSConstant.INTERFACE_NAME_LIUL.equals(consume.getInterfaceName())){
 				status = liulService.searchState(consume);
-			}else if(RMSConstant.INTERFACE_NAME_SHUNPAN.equals(consume.getInterfaceName())){
+			}else if(RMSConstant.INTERFACE_NAME_SHUNPAY.equals(consume.getInterfaceName())){
 				status = shunpanService.searchState(consume);
 			}
 //			String status = RMSConstant.CONSUME_STATE_SENDED_FAIL;

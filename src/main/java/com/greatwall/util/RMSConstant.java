@@ -29,7 +29,7 @@ public class RMSConstant {
 	/**
 	 * @Fields INTERFACE_NAME_SHUNPAN : 瞬联 话费接口
 	 */
-	public static final String INTERFACE_NAME_SHUNPAN = "shunpan";
+	public static final String INTERFACE_NAME_SHUNPAY = "shunpay";
 	/**
 	 * @Fields INTERFACE_NAME_LIUL : 流量接口1
 	 */

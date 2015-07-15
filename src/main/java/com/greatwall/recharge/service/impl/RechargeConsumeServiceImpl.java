@@ -176,7 +176,7 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 		//TODO 调用电话或流量接口充值
 		if("phone".equals(consume.getConsumeType())){
 			
-			if(RMSConstant.INTERFACE_NAME_SHUNPAN.equals(consume.getInterfaceName())){
+			if(RMSConstant.INTERFACE_NAME_SHUNPAY.equals(consume.getInterfaceName())){
 				if(shunpayService.sendMsg(consume)){
 					consume.setState(RMSConstant.CONSUME_STATE_SENDED);
 				}else{
