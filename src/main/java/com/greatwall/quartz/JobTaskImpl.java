@@ -1,5 +1,6 @@
 package com.greatwall.quartz;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -28,10 +29,10 @@ public class JobTaskImpl implements JobTask {
 	@Override  
 	public void synState(){  
 		if(GlobalParamsUtil.getSearchLock()){
-			System.out.println("获取定时任务锁成功");
+			System.out.println(new Date() +"获取定时任务锁成功");
 			try {
 				searchState();
-				Thread.sleep(400000);
+				//Thread.sleep(40000);
 			} catch (Exception e) {
 				logger.error("充值状态查询定时任务错误 ", e);
 			}

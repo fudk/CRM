@@ -150,14 +150,14 @@
 				<td colspan="3"><textarea name="remark" rows="3" cols="53"
 						class="validate[maxSize[500]]">${updateUser.remark}</textarea></td>
 			</tr>
-			<%-- <tr>
+			<tr>
 				<td align="right">话费折扣:</td>
 				<td><input type="text" id="discountPhone" name="discountPhone"
 					value="${updateUser.discountPhone }" class="validate[required,maxSize[3],custom[integer]]" /></td>
 				<td align="right">流量折扣:</td>
 				<td><input type="text" id="discountFlow" name="discountFlow"
 					value="${updateUser.discountFlow}" class="validate[required,maxSize[3],custom[integer]]" /></td>
-			</tr> --%>
+			</tr>
 			<c:if test="${fn:contains(roleIds,'1,') }">
 			<tr>
 				<td align="right">话费通道：</td>

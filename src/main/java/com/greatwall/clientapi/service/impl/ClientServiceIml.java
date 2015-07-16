@@ -30,17 +30,20 @@ public class ClientServiceIml implements ClientService {
 
 	public Boolean searchState(Consume consume) throws Exception{
 		String status = "";
-		if(RMSConstant.INTERFACE_NAME_LIUL.equals(consume.getInterfaceName())){
-			status = liulService.searchState(consume);
-		}else if(RMSConstant.INTERFACE_NAME_SHUNPAY.equals(consume.getInterfaceName())){
-			status = shunpanService.searchState(consume);
+		try {
+			if(RMSConstant.INTERFACE_NAME_LIUL.equals(consume.getInterfaceName())){
+				status = liulService.searchState(consume);
+			}else if(RMSConstant.INTERFACE_NAME_SHUNPAY.equals(consume.getInterfaceName())){
+				status = shunpanService.searchState(consume);
+			}
+		} catch (Exception e) {
+			logger.error("调研查询接口错误", e);
+			status = RMSConstant.CONSUME_STATE_ERROR;
 		}
 		//		String status = RMSConstant.CONSUME_STATE_SENDED_FAIL;
-		System.out.println(status);
 		if(StringUtils.isNotBlank(status)){
 			if(RMSConstant.CONSUME_STATE_SENDED_FAIL.equals(status)){
 				//如果充值失败需要冲抵余额
-
 				Consume cons =rechargeConsumeService.getConsume(consume.getConsumeId());
 
 				if(cons.getState().contains(RMSConstant.CONSUME_STATE_SENDED)){//如果接口已经调用，而且状态为失败才能冲抵，并且只能冲抵1次
@@ -55,7 +58,6 @@ public class ClientServiceIml implements ClientService {
 					rechargeConsumeService.saveRecharge(rec, null);
 					status = RMSConstant.CONSUME_STATE_FAIL;
 				}
-
 			}
 			rechargeConsumeService.confirmConsume(consume.getConsumeId(), status);
 		}

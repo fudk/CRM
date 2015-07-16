@@ -75,7 +75,7 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 			throw new DaoException(RMSConstant.ERROR_CODE_101+" 更新数量为："+updateBalanceCount);
 		}
 		recharge.setCreateTime(new Date());
-		recharge.setRemark(recharge.getRemark()+"充值后金额为"+balance);
+		recharge.setRemark((recharge.getRemark()==null?"":recharge.getRemark()) +"充值后金额为" +balance);
 //		if(agentId!=null && agentId>0){
 //			recharge.setRemark("会从操作者扣除相应金额");
 //		}else{

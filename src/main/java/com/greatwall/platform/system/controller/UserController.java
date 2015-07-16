@@ -212,8 +212,6 @@ public class UserController {
 	@RequestMapping("/updateUser")
 	public@ResponseBody String updateUser(User user,ChannelCondition channelCondition,HttpSession session,ModelMap model){
 		try {
-			user.setDiscountFlow(100);
-			user.setDiscountPhone(100);
 			userService.updateUserAndChannel(user,channelCondition);
 		} catch (Exception e) {
 			logger.error("保存用户失败",e);

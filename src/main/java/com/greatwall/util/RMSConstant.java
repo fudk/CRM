@@ -99,7 +99,10 @@ public class RMSConstant {
 	 * @Fields CONSUME_STATE_SUC : 成功 
 	 */ 
 	public static final String CONSUME_STATE_SUC = "success";
-	
+	/** 
+	 * @Fields CONSUME_STATE_ERROR : 程序错误
+	 */ 
+	public static final String CONSUME_STATE_ERROR = "error";
 	
 	
 	/** 
