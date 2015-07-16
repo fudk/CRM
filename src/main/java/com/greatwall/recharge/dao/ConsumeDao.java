@@ -17,5 +17,8 @@ public interface ConsumeDao {
 	
 	public List<ConsumeConditions> getConsumes(ConsumeConditions consume,PageParameter page) throws DaoException;
 	
+	public List<ConsumeConditions> getConsumesByStatePage(ConsumeConditions consume, PageParameter page)
+			throws DaoException ;
+	
 	public Consume getConsume(String consumeId);
 }

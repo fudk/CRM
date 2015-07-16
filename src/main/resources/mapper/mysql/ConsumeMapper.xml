@@ -127,6 +127,17 @@
 		</where>
 		order by CREATE_TIME desc
 	</select>
+
+	<select id="selectByStatePage" resultMap="ConditionsResultMap"
+		parameterType="com.greatwall.recharge.dto.ConsumeConditions">
+		select
+		<include refid="Base_Column_List" />
+		from td_rms_consume_log
+		<where>
+			STATE like #{state,jdbcType=VARCHAR}
+			<![CDATA[and STATE <> 'sended_fail']]>
+		</where>
+	</select>
   
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 

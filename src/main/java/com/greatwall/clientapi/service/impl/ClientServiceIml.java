@@ -36,6 +36,7 @@ public class ClientServiceIml implements ClientService {
 			status = shunpanService.searchState(consume);
 		}
 		//		String status = RMSConstant.CONSUME_STATE_SENDED_FAIL;
+		System.out.println(status);
 		if(StringUtils.isNotBlank(status)){
 			if(RMSConstant.CONSUME_STATE_SENDED_FAIL.equals(status)){
 				//如果充值失败需要冲抵余额

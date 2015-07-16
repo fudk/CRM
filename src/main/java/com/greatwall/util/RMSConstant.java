@@ -84,6 +84,10 @@ public class RMSConstant {
 	 */ 
 	public static final String CONSUME_STATE_SENDED_FAIL = "sended_fail";
 	/** 
+	 * @Fields CONSUME_STATE_SENDED_ERROR : 接口充值无正确返回
+	 */ 
+	public static final String CONSUME_STATE_SENDED_ERROR = "s_error";
+	/** 
 	 * @Fields CONSUME_STATE_PART_SUC : 部分成功 
 	 */ 
 	public static final String CONSUME_STATE_PART_SUC = "part_suc";

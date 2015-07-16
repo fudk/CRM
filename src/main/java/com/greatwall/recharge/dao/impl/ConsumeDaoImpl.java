@@ -33,6 +33,11 @@ public class ConsumeDaoImpl extends MyBatisDao implements ConsumeDao {
 		return this.getListPage("ConsumeMapper.selectByQueryPage",consume,page);
 	}
 	
+	public List<ConsumeConditions> getConsumesByStatePage(ConsumeConditions consume, PageParameter page)
+			throws DaoException {
+		return this.getListPage("ConsumeMapper.selectByStatePage",consume,page);
+	}
+	
 	public Consume getConsume(String consumeId){
 		return this.get("ConsumeMapper.selectByPrimaryKey", consumeId);
 	}

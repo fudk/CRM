@@ -194,8 +194,11 @@ public class LiulServiceImpl implements LiulService {
 				    	return RMSConstant.CONSUME_STATE_SUC;
 				    }else  if("F".equals(chgSts.toUpperCase())){
 				    	return RMSConstant.CONSUME_STATE_SENDED_FAIL;
+				    }else{
+				    	return RMSConstant.CONSUME_STATE_SENDED_ERROR;
 				    }
-				    return "";
+				}else{
+					return RMSConstant.CONSUME_STATE_SENDED_ERROR;
 				}
 				
 			}

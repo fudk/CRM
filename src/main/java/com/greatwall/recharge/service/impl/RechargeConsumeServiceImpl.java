@@ -255,4 +255,8 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 	public List<ConsumeConditions> getConsumesPage(ConsumeConditions consume,PageParameter page) throws DaoException {
 		return consumeDao.getConsumes(consume, page);
 	}
+	
+	public List<ConsumeConditions> getConsumesByStatePage(ConsumeConditions consume,PageParameter page) throws DaoException {
+		return consumeDao.getConsumesByStatePage(consume, page);
+	}
 }

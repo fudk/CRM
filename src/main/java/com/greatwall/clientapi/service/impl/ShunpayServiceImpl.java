@@ -138,17 +138,20 @@ public class ShunpayServiceImpl implements ShunpayService {
 				Map<String,Object> requestMap = gson.fromJson(restr, Map.class);
 				if(requestMap!=null&&"10000000".equals(requestMap.get("retcode"))){
 					if("9".equals(requestMap.get("state"))){
-						return RMSConstant.CONSUME_STATE_SUC;
+						return RMSConstant.CONSUME_STATE_SENDED_WAIT;
 					}else if("8".equals(requestMap.get("state"))){
-						
+						return RMSConstant.CONSUME_STATE_SENDED_PROCESSING;
 					}else if("0".equals(requestMap.get("state"))){
 						return RMSConstant.CONSUME_STATE_SUC;
-					}else if("9".equals(requestMap.get("state"))){
-						
-					}
-					return RMSConstant.CONSUME_STATE_SUC;
+					}else if("6".equals(requestMap.get("state"))){
+						return "";//部分成功暂不处理
+					}else{
+				    	return RMSConstant.CONSUME_STATE_SENDED_ERROR;
+				    }
+					//return RMSConstant.CONSUME_STATE_SUC;
 				}else{
 					consume.setRemark(restr);
+				    return RMSConstant.CONSUME_STATE_SENDED_ERROR;
 				}
 			}  
 			//释放资源  
