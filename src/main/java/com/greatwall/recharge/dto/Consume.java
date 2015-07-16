@@ -44,6 +44,8 @@ public class Consume {
     private String remark;
     
     private String interfaceName;
+    
+    private String orderId;
 
     public String getConsumeId() {
         return consumeId;
@@ -203,6 +205,14 @@ public class Consume {
 
 	public void setInterfaceName(String interfaceName) {
 		this.interfaceName = interfaceName;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 	
     

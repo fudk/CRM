@@ -26,7 +26,7 @@ public class LocalHttpclientTest {
 		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();  
 
 //		HttpPost httpPost = new HttpPost("http://115.29.43.62:8080/rechargeapi/recharge");  
-		HttpPost httpPost = new HttpPost("http://localhost:8080/rechargeapi/recharge");  
+		HttpPost httpPost = new HttpPost("http://localhost/rechargeapi/recharge");  
 		//httpPost.setConfig();  
 		
 //		RequestConfig requestConfig = RequestConfig.custom()  
@@ -37,7 +37,7 @@ public class LocalHttpclientTest {
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>(); 
 		
 		 //话费测试
-		formparams.add(new BasicNameValuePair("platId", "TEST1"));  
+		/*formparams.add(new BasicNameValuePair("platId", "TEST1"));  
 		formparams.add(new BasicNameValuePair("timestamp", new Date().getTime()+""));  
 		formparams.add(new BasicNameValuePair("orderId", UUID.randomUUID().toString()));  
 		formparams.add(new BasicNameValuePair("opType", "phone"));  
@@ -45,18 +45,18 @@ public class LocalHttpclientTest {
 		formparams.add(new BasicNameValuePair("custPhone", "15067127829"));  
 		formparams.add(new BasicNameValuePair("opPrice", "50"));  
 		formparams.add(new BasicNameValuePair("opNum", "1"));  
-		formparams.add(new BasicNameValuePair("notifyUrl", "http://qweer"));  
+		formparams.add(new BasicNameValuePair("notifyUrl", "http://127.0.0.1/rechargeapi/callback"));*/  
 		
 		//流量测试
-		/*formparams.add(new BasicNameValuePair("platId", "TEST1"));  
+		formparams.add(new BasicNameValuePair("platId", "TEST1"));  
 		formparams.add(new BasicNameValuePair("timestamp", new Date().getTime()+""));  
 		formparams.add(new BasicNameValuePair("orderId", UUID.randomUUID().toString()));  
 		formparams.add(new BasicNameValuePair("opType", "flow"));  
 		formparams.add(new BasicNameValuePair("flxTyp", "M")); 
 		formparams.add(new BasicNameValuePair("custPhone", "13682202050"));  
-		formparams.add(new BasicNameValuePair("opPrice", "10M"));  
+		formparams.add(new BasicNameValuePair("opPrice", "30M"));  
 		formparams.add(new BasicNameValuePair("opNum", "1"));  
-		formparams.add(new BasicNameValuePair("notifyUrl", ""));  */
+		formparams.add(new BasicNameValuePair("notifyUrl", "http://127.0.0.1/rechargeapi/callback"));  
 
 		
 		/*formparams.add(new BasicNameValuePair("platId", "YHNNIK"));  

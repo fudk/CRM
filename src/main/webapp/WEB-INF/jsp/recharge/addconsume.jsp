@@ -73,8 +73,11 @@
 	<div class="div" >
 		<span >有效期:</span><span class="span">${product.productValidity }</span>
 		<span class="span1">价格:</span>
-		<span class="span2" style="text-decoration:line-through">${product.productPrice}</span>/
-		<span class="span2"><fmt:formatNumber value="${product.productPrice*sessionScope.user.discountPhone/100}" />元</span>
+		<span class="span2" style="text-decoration:line-through">${product.productPrice}元</span>/
+		<span class="span2">
+		<c:if test="${product.productType == 'phone'}"><fmt:formatNumber value="${product.productPrice*sessionScope.user.discountPhone/100}" /></c:if>
+				<c:if test="${product.productType == 'flow'}"><fmt:formatNumber value="${product.productPrice*sessionScope.user.discountFlow/100}" /></c:if>
+				元</span>
 	</div>
 	<div class="div" >
 		<span >详细说明:</span><span class="span">${product.remark }</span>

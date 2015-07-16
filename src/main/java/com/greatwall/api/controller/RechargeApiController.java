@@ -56,6 +56,47 @@ public class RechargeApiController {
 	@Autowired
 	private UserChannelService userChannelService;
 	
+	@RequestMapping("/callback")
+	public@ResponseBody Map<String,String> resultQuery(){
+		
+		Map<String,String> remap = new HashMap<String,String>();
+		return remap;
+	}
+	@RequestMapping("/callback")
+	public@ResponseBody Map<String,String> callback(String consumeId,
+			String orderId,String opstatus,String sign){
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("consumeId=");
+		sb.append(consumeId);
+		sb.append("&orderId=");
+		sb.append(orderId);
+		sb.append("&opstatus=");
+		sb.append(opstatus);
+		sb.append("&");
+		sb.append("C6914624EB90000116D71D90141B3FC0");
+		
+		Map<String,String> remap = new HashMap<String,String>();
+		if(DigestUtils.md5Hex(sb.toString()).equals(sign)){
+			String status = "";
+			if("1".equals(opstatus)){
+				status = RMSConstant.CONSUME_STATE_SUC;
+			}else if("0".equals(opstatus)){
+				status = RMSConstant.CONSUME_STATE_SENDED_FAIL;
+			}
+			if(StringUtils.isNotBlank(status)){
+				//TODO 保存充值状态
+				remap.put("retcode", "01");
+				remap.put("retmsg", "交易成功");
+			}
+			
+		}else{
+			remap.put("retcode", "00");
+			remap.put("retmsg", "交易失败");
+		}
+		return remap;
+	}
+	
 	@RequestMapping("/flowCallbackNotify")
 	public@ResponseBody String flowCallbackNotify(LiulNotify liulNotify){
 		if(liulNotify!=null && liulNotify.getReq_id()!=null){
@@ -79,11 +120,19 @@ public class RechargeApiController {
 			String status = "";
 			if("S".equals(liulNotify.getChg_sts().toUpperCase())){
 				status = RMSConstant.CONSUME_STATE_SUC;
-			}else if("S".equals(liulNotify.getChg_sts().toUpperCase())){
+			}else if("F".equals(liulNotify.getChg_sts().toUpperCase())){
 				status = RMSConstant.CONSUME_STATE_SENDED_FAIL;
 			}
 			if(!"".equals(status)){
-				rechargeConsumeService.confirmConsume(liulNotify.getReq_id(), status);
+				Consume consume = rechargeConsumeService.getConsume(liulNotify.getReq_id());
+				if(consume!=null){
+					consume.setState(status);
+					rechargeConsumeService.updateState(consume);
+				}
+				User u = userService.getUser(consume.getUserId());
+				
+				
+//				rechargeConsumeService.confirmConsume(liulNotify.getReq_id(), status);
 			}
 			return "SUCCESS";
 			
@@ -237,9 +286,11 @@ public class RechargeApiController {
 		consume.setConsumeAmount(MathUtil.mul(product.getProductPrice(), new Double(1), 2));
 		consume.setConsumeType(product.getProductType());
 		consume.setIsp(product.getIsp());
-		consume.setState("processing");//处理中
+		consume.setState(RMSConstant.CONSUME_STATE_PROCESSING);//处理中
 		consume.setUserId(u.getUserId());
 		consume.setInterfaceName(interfaceName);
+		consume.setNotifyUrl(rechargeCondition.getNotifyUrl());
+		consume.setOrderId(rechargeCondition.getPlatId()+"_"+rechargeCondition.getOrderId());
 		
 		List<String> errorMsgs = new ArrayList<String>();
 		//获取相应产品信息
@@ -274,4 +325,5 @@ public class RechargeApiController {
 		
 		return remap;
 	}
+	
 }

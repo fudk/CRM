@@ -247,6 +247,12 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 		}
 	}
 	
+	public Boolean updateState(Consume consume){
+		if(consumeDao.updateState(consume)==1)
+			return true;
+		return false;
+	}
+	
 	public Consume getConsume(String consumeId){
 		return consumeDao.getConsume(consumeId);
 	}
