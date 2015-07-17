@@ -67,7 +67,7 @@ public class ClientController {
 				rechargeConsumeService.confirmConsume(consume.getConsumeId(), status);
 			}*/
 
-			if(clientService.searchState(consume)){
+			if(!clientService.searchState(consume).equals("")){
 				return "success";
 			}else{
 				return "fail";

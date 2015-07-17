@@ -44,6 +44,7 @@
     <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
     <result column="INTERFACE_NAME" property="interfaceName" jdbcType="VARCHAR" />
     <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="SESSION_KEY" property="sessionKey" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -133,10 +134,13 @@
 	<select id="selectByStatePage" resultMap="ConditionsResultMap"
 		parameterType="com.greatwall.recharge.dto.ConsumeConditions">
 		select
-		<include refid="Base_Column_List" />
-		from td_rms_consume_log
+		CONSUME_ID, a.USER_ID, DISCOUNT, a.CREATE_TIME, CONSUME_PRICE, CONSUME_NUM,
+		CONSUME_AMOUNT, CONSUME_PHONE, CONSUME_TYPE, ISP, NOTIFY_URL,
+		PRODUCT_ID, PRODUCT_NAME, STATE, a.BALANCE, PAYMENT,a.REMARK,a.INTERFACE_NAME,a.ORDER_ID,b.SESSION_KEY
+		from td_rms_consume_log a ,td_sm_user b
 		<where>
-			STATE like #{state,jdbcType=VARCHAR}
+			a.USER_ID = b.USER_ID
+			and STATE like #{state,jdbcType=VARCHAR}
 			<![CDATA[and STATE <> 'sended_fail']]>
 		</where>
 	</select>

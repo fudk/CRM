@@ -18,10 +18,12 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 public class LocalHttpclientTest {
+	
+	private static String hosts = "http://127.0.0.1:8080";
 
 	public static void main(String[] args) {
-//		 regFlow();
-		requesQuery();
+		 regFlow();
+//		requesQuery();
 	}
 
 	public static void regPhone(){
@@ -31,7 +33,7 @@ public class LocalHttpclientTest {
 		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();  
 
 		//				HttpPost httpPost = new HttpPost("http://115.29.43.62:8080/rechargeapi/recharge");  
-		HttpPost httpPost = new HttpPost("http://localhost/rechargeapi/recharge");  
+		HttpPost httpPost = new HttpPost(hosts+"/rechargeapi/recharge");  
 		// 创建参数队列  
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>(); 
 
@@ -44,7 +46,7 @@ public class LocalHttpclientTest {
 		formparams.add(new BasicNameValuePair("custPhone", "15067127829"));  
 		formparams.add(new BasicNameValuePair("opPrice", "50"));  
 		formparams.add(new BasicNameValuePair("opNum", "1"));  
-		formparams.add(new BasicNameValuePair("notifyUrl", "http://127.0.0.1/rechargeapi/callback"));  
+		formparams.add(new BasicNameValuePair("notifyUrl", hosts+"/rechargeapi/callback"));  
 
 		StringBuffer sb = new StringBuffer();
 		for(NameValuePair nameValuePair:formparams){
@@ -87,7 +89,7 @@ public class LocalHttpclientTest {
 		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();  
 
 		//				HttpPost httpPost = new HttpPost("http://115.29.43.62:8080/rechargeapi/recharge");  
-		HttpPost httpPost = new HttpPost("http://localhost:8080/rechargeapi/recharge");  
+		HttpPost httpPost = new HttpPost( hosts+"/rechargeapi/recharge");  
 		// 创建参数队列  
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>(); 
 
@@ -155,7 +157,7 @@ public class LocalHttpclientTest {
 		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();  
 
 		//		HttpPost httpPost = new HttpPost("http://115.29.43.62:8080/rechargeapi/recharge");  
-		HttpPost httpPost = new HttpPost("http://localhost:8080/rechargeapi/resultQuery");  
+		HttpPost httpPost = new HttpPost( hosts+"/rechargeapi/resultQuery");  
 		// 创建参数队列  
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>(); 
 

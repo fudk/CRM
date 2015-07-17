@@ -10,6 +10,9 @@ public class ConsumeConditions extends Consume {
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date endTime;
 	private String userName;
+	private String sessionKey;
+	
+	
 	public Date getStartTime() {
 		return startTime;
 	}
@@ -27,6 +30,12 @@ public class ConsumeConditions extends Consume {
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	public String getSessionKey() {
+		return sessionKey;
+	}
+	public void setSessionKey(String sessionKey) {
+		this.sessionKey = sessionKey;
 	}
 	
 	

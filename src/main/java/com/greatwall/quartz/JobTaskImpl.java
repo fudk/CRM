@@ -2,28 +2,38 @@ package com.greatwall.quartz;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.greatwall.api.service.CallbackNotifyService;
 import com.greatwall.clientapi.service.ClientService;
 import com.greatwall.platform.domain.PageParameter;
+import com.greatwall.recharge.dto.Consume;
 import com.greatwall.recharge.dto.ConsumeConditions;
 import com.greatwall.recharge.service.RechargeConsumeService;
 import com.greatwall.util.GlobalParamsUtil;
+import com.greatwall.util.RMSConstant;
 
 @Component
 public class JobTaskImpl implements JobTask {
 
 	Logger logger = Logger.getLogger(JobTaskImpl.class);
 
+	ExecutorService fixedThreadPool = Executors.newFixedThreadPool(30);
+	
 	@Autowired
 	private ClientService clientService;
 
 	@Autowired
 	private RechargeConsumeService rechargeConsumeService;
+	
+	@Autowired
+	private CallbackNotifyService callbackNotifyService;
 
 	@Scheduled(cron="0/30 * *  * * ? ")   //每5秒执行一次  
 	@Override  
@@ -62,7 +72,8 @@ public class JobTaskImpl implements JobTask {
 			}
 
 			for(ConsumeConditions ccd:consumeList){
-				clientService.searchState(ccd);
+				String status =clientService.searchState(ccd);
+				run(fixedThreadPool,ccd,status);
 			}
 
 			if(page.getCurrentPage()>page.getTotalPage()){
@@ -75,6 +86,23 @@ public class JobTaskImpl implements JobTask {
 				break;
 			}
 		}
+	}
+	
+	private void run(ExecutorService threadPool,final ConsumeConditions consumeConditions,final String opstatus) {
+		threadPool.execute(new Runnable() {  
+			@Override
+			public void run() {  
+				try {  
+					callbackNotifyService.callbackNotify(consumeConditions, opstatus);
+				} catch (Exception e) {  
+					logger.error("充值状态回调错误", e);
+				}finally{
+					
+				}
 
+
+			}  
+		});  
+		//threadPool.shutdown();// 任务执行完毕，关闭线程池  
 	}
 }

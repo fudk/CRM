@@ -2,12 +2,10 @@ package com.greatwall.api.service.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -18,13 +16,16 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
-import com.greatwall.recharge.dto.Consume;
+import com.greatwall.api.service.CallbackNotifyService;
+import com.greatwall.recharge.dto.ConsumeConditions;
 
-public class CallbackNotifyServiceImpl {
+@Service("callbackNotifyService")
+public class CallbackNotifyServiceImpl implements CallbackNotifyService {
 
-	public Boolean callbackNotify(Consume consume,String key,String opstatus) throws Exception{
+	public Boolean callbackNotify(ConsumeConditions consume,String opstatus) throws Exception{
 		if(consume == null || consume.getNotifyUrl() == null){
 			
 		}
@@ -55,7 +56,7 @@ public class CallbackNotifyServiceImpl {
 				sb.append(nameValuePair.getValue());
 				sb.append("&");
 			}
-			sb.append(key);
+			sb.append(consume.getSessionKey());
 //			System.out.println(sb.toString());
 			formparams.add(new BasicNameValuePair("sign", DigestUtils.md5Hex(sb.toString())));  
 

@@ -28,7 +28,7 @@ public class ClientServiceIml implements ClientService {
 	@Autowired
 	private RechargeConsumeService rechargeConsumeService;
 
-	public Boolean searchState(Consume consume) throws Exception{
+	public String searchState(Consume consume) throws Exception{
 		String status = "";
 		try {
 			if(RMSConstant.INTERFACE_NAME_LIUL.equals(consume.getInterfaceName())){
@@ -62,6 +62,6 @@ public class ClientServiceIml implements ClientService {
 			rechargeConsumeService.confirmConsume(consume.getConsumeId(), status);
 		}
 
-		return true;
+		return status;
 	}
 }

@@ -4,6 +4,6 @@ import com.greatwall.recharge.dto.Consume;
 
 public interface ClientService {
 
-	public Boolean searchState(Consume consume) throws Exception;
+	public String searchState(Consume consume) throws Exception;
 	
 }
