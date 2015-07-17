@@ -29,7 +29,7 @@ public class JobTaskImpl implements JobTask {
 	@Override  
 	public void synState(){  
 		if(GlobalParamsUtil.getSearchLock()){
-			System.out.println(new Date() +"获取定时任务锁成功");
+			//System.out.println(new Date() +"获取定时任务锁成功");
 			try {
 				searchState();
 				//Thread.sleep(40000);

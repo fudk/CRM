@@ -56,46 +56,65 @@ public class RechargeApiController {
 	@Autowired
 	private UserChannelService userChannelService;
 	
-	@RequestMapping("/callback")
-	public@ResponseBody Map<String,String> resultQuery(){
+	@RequestMapping("/resultQuery")
+	public@ResponseBody Map<String,String> resultQuery(String platId,String timestamp,String orderId,String sign){
 		
 		Map<String,String> remap = new HashMap<String,String>();
-		return remap;
-	}
-	@RequestMapping("/callback")
-	public@ResponseBody Map<String,String> callback(String consumeId,
-			String orderId,String opstatus,String sign){
+		if(StringUtils.isBlank(platId)||StringUtils.isBlank(timestamp)
+				||StringUtils.isBlank(orderId)||StringUtils.isBlank(sign)){
+			remap.put("retcode", "02");
+			remap.put("retmsg", "参数不能为空");
+			return remap;
+		}
+		
+		User u = userService.getUser(platId);
+		if(u==null){
+			remap.put("retcode", "03");
+			remap.put("retmsg", "用户不存在");
+			return remap;
+		}
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("consumeId=");
-		sb.append(consumeId);
+		sb.append("platId=");
+		sb.append(platId);
+		sb.append("&timestamp=");
+		sb.append(timestamp);
 		sb.append("&orderId=");
 		sb.append(orderId);
-		sb.append("&opstatus=");
-		sb.append(opstatus);
 		sb.append("&");
-		sb.append("C6914624EB90000116D71D90141B3FC0");
+		sb.append(u.getSessionKey());
 		
-		Map<String,String> remap = new HashMap<String,String>();
-		if(DigestUtils.md5Hex(sb.toString()).equals(sign)){
-			String status = "";
-			if("1".equals(opstatus)){
-				status = RMSConstant.CONSUME_STATE_SUC;
-			}else if("0".equals(opstatus)){
-				status = RMSConstant.CONSUME_STATE_SENDED_FAIL;
-			}
-			if(StringUtils.isNotBlank(status)){
-				//TODO 保存充值状态
-				remap.put("retcode", "01");
-				remap.put("retmsg", "交易成功");
-			}
-			
-		}else{
-			remap.put("retcode", "00");
-			remap.put("retmsg", "交易失败");
+		if(!DigestUtils.md5Hex(sb.toString()).equals(sign)){
+			remap.put("retcode", "06");
+			remap.put("retmsg", "校验失败");
+			return remap;
 		}
-		return remap;
+		
+		Consume co = new Consume();
+		co.setOrderId(platId+"_"+orderId);
+		Consume consume = rechargeConsumeService.getConsumeBy(co);
+		if(consume==null){
+			remap.put("retcode", "04");
+			remap.put("retmsg", "单号不存在");
+			return remap;
+		}
+		
+		if(RMSConstant.CONSUME_STATE_SUC.equals(consume.getState())){
+			remap.put("retcode", "01");
+			remap.put("retmsg", "充值成功");
+			return remap;
+		} else if(consume.getState().contains("fail")||consume.getState().contains("error")){
+			remap.put("retcode", "00");
+			remap.put("retmsg", "充值失败");
+			return remap;
+		}else{
+			remap.put("retcode", "05");
+			remap.put("retmsg", "充值中");
+			return remap;
+		}
 	}
+	
+	
 	
 	@RequestMapping("/flowCallbackNotify")
 	public@ResponseBody String flowCallbackNotify(LiulNotify liulNotify){
@@ -323,6 +342,50 @@ public class RechargeApiController {
 			remap.put("resMsg", "充值成功");
 		}
 		
+		return remap;
+	}
+	
+	
+	/**
+	 * 测试用
+	 * @param consumeId
+	 * @param orderId
+	 * @param opstatus
+	 * @param sign
+	 * @return
+	 */
+	@RequestMapping("/callback")
+	public@ResponseBody Map<String,String> callback(String consumeId,
+			String orderId,String opstatus,String sign){
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("consumeId=");
+		sb.append(consumeId);
+		sb.append("&orderId=");
+		sb.append(orderId);
+		sb.append("&opstatus=");
+		sb.append(opstatus);
+		sb.append("&");
+		sb.append("C6914624EB90000116D71D90141B3FC0");
+		
+		Map<String,String> remap = new HashMap<String,String>();
+		if(DigestUtils.md5Hex(sb.toString()).equals(sign)){
+			String status = "";
+			if("1".equals(opstatus)){
+				status = RMSConstant.CONSUME_STATE_SUC;
+			}else if("0".equals(opstatus)){
+				status = RMSConstant.CONSUME_STATE_SENDED_FAIL;
+			}
+			if(StringUtils.isNotBlank(status)){
+				//TODO 保存充值状态
+				remap.put("retcode", "01");
+				remap.put("retmsg", "交易成功");
+			}
+			
+		}else{
+			remap.put("retcode", "00");
+			remap.put("retmsg", "交易失败");
+		}
 		return remap;
 	}
 	

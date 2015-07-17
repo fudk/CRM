@@ -28,4 +28,6 @@ public interface RechargeConsumeService {
 	public List<ConsumeConditions> getConsumesByStatePage(ConsumeConditions consume,PageParameter page) throws DaoException;
 	
 	public Boolean updateState(Consume consume);
+	
+	public Consume getConsumeBy(Consume consume);
 }

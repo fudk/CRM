@@ -41,5 +41,9 @@ public class ConsumeDaoImpl extends MyBatisDao implements ConsumeDao {
 	public Consume getConsume(String consumeId){
 		return this.get("ConsumeMapper.selectByPrimaryKey", consumeId);
 	}
+	
+	public Consume getConsumeBy(Consume consume){
+		return this.get("ConsumeMapper.selectByConsume", consume);
+	}
 
 }

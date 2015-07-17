@@ -21,4 +21,6 @@ public interface ConsumeDao {
 			throws DaoException ;
 	
 	public Consume getConsume(String consumeId);
+	
+	public Consume getConsumeBy(Consume consume);
 }
