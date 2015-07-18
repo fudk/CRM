@@ -22,8 +22,8 @@ public class LocalHttpclientTest {
 	private static String hosts = "http://127.0.0.1:8080";
 
 	public static void main(String[] args) {
-//		 regFlow();
-		requesQuery();
+		 regFlow();
+//		requesQuery();
 	}
 
 	public static void regPhone(){
