@@ -64,6 +64,9 @@ public class JobTaskImpl implements JobTask {
 		page.setPageSize(2);
 		//page.setCurrentPage(1);
 
+		String status = "";
+		String opstatus = "";
+		
 		while(flag){
 			//System.out.println("业务处理"+page.getCurrentPage()+" maxpage="+page.getTotalPage());
 			List<ConsumeConditions> consumeList = rechargeConsumeService.getConsumesByStatePage(cc, page);
@@ -72,8 +75,15 @@ public class JobTaskImpl implements JobTask {
 			}
 
 			for(ConsumeConditions ccd:consumeList){
-				String status =clientService.searchState(ccd);
-				run(fixedThreadPool,ccd,status);
+				status = clientService.searchState(ccd);
+				if(status.contains("fail")){
+					opstatus = "00";
+				}else if("success".equals(status)){
+					opstatus = "01";
+				}else{
+					continue;
+				}
+				run(fixedThreadPool,ccd,opstatus);
 			}
 
 			if(page.getCurrentPage()>page.getTotalPage()){

@@ -62,7 +62,7 @@ public class RechargeApiController {
 		Map<String,String> remap = new HashMap<String,String>();
 		if(StringUtils.isBlank(platId)||StringUtils.isBlank(timestamp)
 				||StringUtils.isBlank(orderId)||StringUtils.isBlank(sign)){
-			remap.put("retcode", "02");
+			remap.put("retcode", "05");
 			remap.put("retmsg", "参数不能为空");
 			return remap;
 		}
@@ -108,7 +108,7 @@ public class RechargeApiController {
 			remap.put("retmsg", "充值失败");
 			return remap;
 		}else{
-			remap.put("retcode", "05");
+			remap.put("retcode", "02");
 			remap.put("retmsg", "充值中");
 			return remap;
 		}
@@ -133,8 +133,9 @@ public class RechargeApiController {
 			signData.append(liulNotify.getDebit_amt());
 			
 			String hmac = liulService.getHmac(signData.toString());
-			if(hmac.equals(liulNotify.getHmac())){
+			if(!hmac.equals(liulNotify.getHmac())){
 				System.out.println(hmac);
+				return "FAIL";
 			}
 			String status = "";
 			if("S".equals(liulNotify.getChg_sts().toUpperCase())){
@@ -143,15 +144,13 @@ public class RechargeApiController {
 				status = RMSConstant.CONSUME_STATE_SENDED_FAIL;
 			}
 			if(!"".equals(status)){
-				Consume consume = rechargeConsumeService.getConsume(liulNotify.getReq_id());
-				if(consume!=null){
-					consume.setState(status);
-					rechargeConsumeService.updateState(consume);
-				}
-				User u = userService.getUser(consume.getUserId());
-				
-				
-//				rechargeConsumeService.confirmConsume(liulNotify.getReq_id(), status);
+//				Consume consume = rechargeConsumeService.getConsume(liulNotify.getReq_id());
+//				if(consume!=null){
+//					consume.setState(status);
+//					rechargeConsumeService.updateState(consume);
+//				}
+//				User u = userService.getUser(consume.getUserId());
+				rechargeConsumeService.confirmConsume(liulNotify.getReq_id(), status);
 			}
 			return "SUCCESS";
 			
@@ -261,7 +260,7 @@ public class RechargeApiController {
 		if("phone".equals(rechargeCondition.getOpType())){
 			product.setProductPrice(new Double(rechargeCondition.getOpPrice()));
 		}else{
-			product.setProductValue(rechargeCondition.getOpPrice());
+			product.setProductValue(rechargeCondition.getOpPrice()+rechargeCondition.getFlxTyp());
 		}
 		String isp = phoneUtil.isPhoneNum(phones[0]);
 		product.setState("enable");

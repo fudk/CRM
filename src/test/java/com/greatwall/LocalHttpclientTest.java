@@ -9,7 +9,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -19,11 +18,11 @@ import org.apache.http.util.EntityUtils;
 
 public class LocalHttpclientTest {
 	
-	private static String hosts = "http://127.0.0.1:8080";
+	private static String hosts = "http://127.0.0.1";
 
 	public static void main(String[] args) {
-		 regFlow();
-//		requesQuery();
+//		 regFlow();
+		requesQuery();
 	}
 
 	public static void regPhone(){
@@ -164,7 +163,7 @@ public class LocalHttpclientTest {
 		//流量测试
 		formparams.add(new BasicNameValuePair("platId", "TEST1"));  
 		formparams.add(new BasicNameValuePair("timestamp", new Date().getTime()+""));  
-		formparams.add(new BasicNameValuePair("orderId", "947fa546-35d5-458f-9739-e758a3b053bc"));  
+		formparams.add(new BasicNameValuePair("orderId", "d3638659-33b1-4ab4-93e4-4b61a5e88936"));  
 
 		StringBuffer sb = new StringBuffer();
 		for(NameValuePair nameValuePair:formparams){
