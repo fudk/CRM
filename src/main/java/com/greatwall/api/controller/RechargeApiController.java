@@ -260,7 +260,7 @@ public class RechargeApiController {
 		if("phone".equals(rechargeCondition.getOpType())){
 			product.setProductPrice(new Double(rechargeCondition.getOpPrice()));
 		}else{
-			product.setProductValue(rechargeCondition.getOpPrice()+rechargeCondition.getFlxTyp());
+			product.setProductValue(rechargeCondition.getOpPrice());
 		}
 		String isp = phoneUtil.isPhoneNum(phones[0]);
 		product.setState("enable");
