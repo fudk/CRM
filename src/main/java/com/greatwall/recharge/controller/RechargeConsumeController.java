@@ -78,7 +78,7 @@ public class RechargeConsumeController {
 			
 		} catch (Exception e) {
 			logger.error("充值错误",e);
-			return e.getMessage();
+			return "充值失败";
 		}
 		return "充值失败";
 	}
