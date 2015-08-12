@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService {
 	public User getUser(String platId){
 		User user = new User();
 		user.setPlatId(platId);
+		user.setUserType(1);//有效用户
 		return userDao.getUser(user);
 	}
 	
@@ -62,6 +63,18 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		int num = userDao.updateUser(newPasUser);
+		if(num==1){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	public Boolean disableUser(Integer userId){
+		User disUser = new User();
+		disUser.setUserId(userId);
+		disUser.setUserType(2);
+		int num = userDao.updateUser(disUser);
 		if(num==1){
 			return true;
 		}else{

@@ -48,6 +48,9 @@
 			<if test="loginName != null and loginName != '' ">
 				OR LOGIN_NAME = #{loginName,jdbcType=VARCHAR}
 			</if>
+			<if test="userType != null ">
+				and USER_TYPE = #{userType,jdbcType=INTEGER}
+			</if>
 		</where>
 	</select>
 	

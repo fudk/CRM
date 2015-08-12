@@ -33,6 +33,7 @@
 			<c:if test="${fn:contains(roleIds,'1,') || fn:contains(roleIds,'2,') }">
    				<a href="javascript:addOrUpdateUser('updateUserInit/${user.userId}')">编辑</a>
    				<a href="javascript:recharge('${user.userId}','${user.loginName}')">充值</a>	
+   				<a href="javascript:disableUser('${user.userId}')">删除</a>	
 			</c:if>
 			<c:if test="${fn:contains(roleIds,'1,') }">
    				<a href="javascript:changeRole('${user.userId}')">授权</a>

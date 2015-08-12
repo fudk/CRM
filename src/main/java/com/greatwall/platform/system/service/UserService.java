@@ -44,4 +44,6 @@ public interface UserService {
 	public User getUser(String platId);
 	
 	public Boolean updatePassowrd(Integer userId,String oldPassword,String newPassword);
+	
+	public Boolean disableUser(Integer userId);
 }

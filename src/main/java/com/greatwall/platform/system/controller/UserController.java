@@ -63,7 +63,7 @@ public class UserController {
 				User u = (User)session.getAttribute("user");
 				user.setParentId(u.getUserId());
 			}
-			
+			user.setUserType(1);//查询有效用户
 			model.addAttribute("users", userService.getUsers(user, page));
 			model.addAttribute("page", page);
 		} catch (DaoException e) {
@@ -245,5 +245,14 @@ public class UserController {
 		}
 		
 		
+	}
+	
+	@RequestMapping("/disableUser")
+	public@ResponseBody String disableUser(Integer userId){
+		if(userService.disableUser(userId)){
+			return "success";
+		}else{
+			return "删除错误";
+		}
 	}
 }

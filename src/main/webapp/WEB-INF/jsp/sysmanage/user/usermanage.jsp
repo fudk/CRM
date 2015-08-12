@@ -51,6 +51,17 @@
 					+ userId
 		});
 	}
+	
+	function disableUser(userId){
+		$.post("/system/user/disableUser", { userId: userId },
+			function(data){
+			if(data == 'success'){
+				alert("删除成功");
+			}else{
+				alert(data);
+			}
+		});
+	}
 
 	var rechargeDialog;
 	function recharge(userId, loginName) {
