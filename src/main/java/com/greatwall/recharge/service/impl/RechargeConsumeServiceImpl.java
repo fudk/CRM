@@ -180,7 +180,8 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 				if(shunpayService.sendMsg(consume)){
 					consume.setState(RMSConstant.CONSUME_STATE_SENDED);
 				}else{
-					throw new DaoException(RMSConstant.ERROR_CODE_104+" "+consume.getRemark());
+//					throw new DaoException(RMSConstant.ERROR_CODE_104+" "+consume.getRemark());
+					throw new DaoException(RMSConstant.ERROR_CODE_104+" 接口调用失败");
 				}
 			}else{
 				throw new Exception("未找到对应接口");
@@ -190,7 +191,8 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 				if(liulService.sendMsg(consume)){
 					consume.setState(RMSConstant.CONSUME_STATE_SENDED);
 				}else{
-					throw new DaoException(RMSConstant.ERROR_CODE_104+" "+consume.getRemark());
+//					throw new DaoException(RMSConstant.ERROR_CODE_104+" "+consume.getRemark());
+					throw new DaoException(RMSConstant.ERROR_CODE_104+" 接口调用失败");
 				}
 			}else{
 				throw new Exception("未找到对应接口");
