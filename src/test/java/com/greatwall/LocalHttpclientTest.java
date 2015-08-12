@@ -21,8 +21,8 @@ public class LocalHttpclientTest {
 	private static String hosts = "http://127.0.0.1";
 
 	public static void main(String[] args) {
-//		 regFlow();
-		requesQuery();
+		 regFlow();
+//		requesQuery();
 	}
 
 	public static void regPhone(){
@@ -93,7 +93,7 @@ public class LocalHttpclientTest {
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>(); 
 
 		//流量测试
-		formparams.add(new BasicNameValuePair("platId", "TEST1"));  
+		formparams.add(new BasicNameValuePair("platId", "1234"));  
 		formparams.add(new BasicNameValuePair("timestamp", new Date().getTime()+""));  
 		formparams.add(new BasicNameValuePair("orderId", UUID.randomUUID().toString()));  
 		formparams.add(new BasicNameValuePair("opType", "flow"));  
