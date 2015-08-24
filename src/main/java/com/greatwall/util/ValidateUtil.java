@@ -17,6 +17,14 @@ public class ValidateUtil {
 		}
 	}
 	
+	public static Boolean isAdmin(String roleIds){
+		if(roleIds.contains("1,")){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
 	
 	private static void main(String[] args) {
 
