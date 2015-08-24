@@ -68,7 +68,7 @@ public class RechargeConsumeController {
 			recharge.setOperator(u.getUserId());
 			Integer agentId = null;
 			String roleIds = session.getAttribute("roleIds").toString();
-			if(ValidateUtil.isAgent(roleIds)){//如果是代理商
+			if(!ValidateUtil.isAdmin(roleIds)){//如果是代理商
 				agentId = u.getUserId();
 			}
 			if(rechargeConsumeService.saveRecharge(recharge,agentId)){
@@ -94,7 +94,7 @@ public class RechargeConsumeController {
 		try {
 			User u = (User)session.getAttribute("user");
 			String roleIds = session.getAttribute("roleIds").toString();
-			if(ValidateUtil.isAgent(roleIds)){//如果是代理商
+			if(!ValidateUtil.isAdmin(roleIds)){//如果是代理商
 				rechargeConditions.setOperator(u.getUserId());
 			}
 			model.addAttribute("recharges", rechargeConsumeService.getRechargesPage(rechargeConditions, page));
@@ -117,7 +117,7 @@ public class RechargeConsumeController {
 		try {
 			User u = (User)session.getAttribute("user");
 			String roleIds = session.getAttribute("roleIds").toString();
-			if(ValidateUtil.isAgent(roleIds)){//如果是代理商
+			if(!ValidateUtil.isAdmin(roleIds)){//如果是代理商
 				consume.setUserId(u.getUserId());
 			}
 			model.addAttribute("consumes", rechargeConsumeService.getConsumesPage(consume, page));

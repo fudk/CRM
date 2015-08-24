@@ -59,7 +59,7 @@ public class UserController {
 	public ModelAndView getUsers(User user,PageParameter page,HttpSession session,ModelMap model){
 		try {
 			String roleIds = session.getAttribute("roleIds").toString();
-			if(ValidateUtil.isAgent(roleIds)){
+			if(!ValidateUtil.isAdmin(roleIds)){
 				User u = (User)session.getAttribute("user");
 				user.setParentId(u.getUserId());
 			}
@@ -80,7 +80,7 @@ public class UserController {
 		User user = new User();
 		user.setLoginName(q.trim());
 		String roleIds = session.getAttribute("roleIds").toString();
-		if(ValidateUtil.isAgent(roleIds)){
+		if(!ValidateUtil.isAdmin(roleIds)){
 			User u = (User)session.getAttribute("user");
 			user.setParentId(u.getUserId());
 		}
@@ -144,7 +144,7 @@ public class UserController {
 				
 				//如果是代理商新增普通用户，用户的通道与创建代理商通道默认一致。
 				String roleIds = session.getAttribute("roleIds").toString();
-				if(ValidateUtil.isAgent(roleIds)){//不是管理员，是代理商,1是管理员角色ID，2是代理商角色ID
+				if(!ValidateUtil.isAdmin(roleIds)){//不是管理员，是代理商,1是管理员角色ID，2是代理商角色ID
 					UserChannel userChannel = new UserChannel();
 					userChannel.setUserId(u.getUserId());
 					List<UserChannel> uclist = userChannelService.getUserChannel(userChannel);
