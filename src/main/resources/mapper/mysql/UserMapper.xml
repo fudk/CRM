@@ -153,9 +153,9 @@
 	<update id="updateByPrimaryKeySelective" parameterType="com.greatwall.platform.system.dto.User">
 		update td_sm_user
 		<set>
-			<!-- <if test="platId != null">
+			<if test="platId != null">
 				PLAT_ID = #{platId,jdbcType=VARCHAR},
-			</if> -->
+			</if>
 			<if test="parentId != null">
 				PARENT_ID = #{parentId,jdbcType=INTEGER},
 			</if>
