@@ -231,7 +231,7 @@ public class JinPiaoServiceImpl implements JinPiaoService {
 				
 				String restr = EntityUtils.toString(httpEntity, "UTF-8");
 				
-//				System.out.println("response:" + restr);  
+				System.out.println("response:" + restr);  
 				consume.setRemark(restr);
 				Gson gson = new Gson();
 				Map map = gson.fromJson(restr, Map.class);
