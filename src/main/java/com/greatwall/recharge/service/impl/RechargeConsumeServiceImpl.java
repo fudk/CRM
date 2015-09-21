@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.greatwall.clientapi.service.JinPiaoService;
 import com.greatwall.clientapi.service.JudianService;
 import com.greatwall.clientapi.service.LiulService;
 import com.greatwall.clientapi.service.ShunpayService;
@@ -43,6 +44,8 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 	private ShunpayService shunpayService;
 	@Autowired
 	private LiulService liulService;
+	@Autowired
+	private JinPiaoService jinPiaoService;
 
 	ExecutorService fixedThreadPool = Executors.newFixedThreadPool(30);
 
@@ -192,6 +195,12 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 					consume.setState(RMSConstant.CONSUME_STATE_SENDED);
 				}else{
 //					throw new DaoException(RMSConstant.ERROR_CODE_104+" "+consume.getRemark());
+					throw new DaoException(RMSConstant.ERROR_CODE_104+" 接口调用失败");
+				}
+			}else if(RMSConstant.INTERFACE_NAME_JINPIAO.equals(consume.getInterfaceName())){
+				if(jinPiaoService.sendMsg(consume)){
+					consume.setState(RMSConstant.CONSUME_STATE_SENDED);
+				}else{
 					throw new DaoException(RMSConstant.ERROR_CODE_104+" 接口调用失败");
 				}
 			}else{
