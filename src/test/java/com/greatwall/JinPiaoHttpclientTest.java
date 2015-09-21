@@ -23,8 +23,8 @@ public class JinPiaoHttpclientTest {
 
 	public static void main(String[] args) {
 		
-		add();
-//		search();
+//		add();
+		search();
 	}
 	
 
@@ -35,17 +35,12 @@ public class JinPiaoHttpclientTest {
 
 		HttpPost httpPost = new HttpPost("http://122.224.5.41:8080/api.aspx");  
 		//httpPost.setConfig();  
-//		String char_set = "GBK";
 		String action = "getPackage";
 		String v = "1.1";
 		String account = "zhiqi";
 		String type = "0";
 		
 		StringBuffer sb = new StringBuffer();
-//		sb.append("action=");
-//		sb.append(action);
-//		sb.append("&v=");
-//		sb.append(v);
 		sb.append("account=");
 		sb.append(account);
 		sb.append("&type=");
@@ -79,8 +74,7 @@ public class JinPiaoHttpclientTest {
 			HttpEntity httpEntity = httpResponse.getEntity();  
 			if (httpEntity != null) {  
 				//打印响应内容  
-//				System.out.println("response:" + EntityUtils.toString(httpEntity, "UTF-8"));  
-				System.out.println("response:" + EntityUtils.toString(httpEntity, "GBK"));  
+				System.out.println("response:" + EntityUtils.toString(httpEntity, "UTF-8"));  
 			}  
 			//释放资源  
 			closeableHttpClient.close();  
@@ -95,7 +89,6 @@ public class JinPiaoHttpclientTest {
 		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();  
 		//HttpClient  
 		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();  
-//http://122.224.5.41:8080/api.aspx?v=1.1&action=charge&account=zhiqi&mobile=15914400880&package=100&sign=c6df89ce310f1f3aa83c2ec6493e79ea
 		HttpPost httpPost = new HttpPost("http://122.224.5.41:8080/api.aspx");  
 		
 		String action = "charge";
@@ -107,15 +100,10 @@ public class JinPiaoHttpclientTest {
 		StringBuffer sb = new StringBuffer();
 		sb.append("account=");
 		sb.append(account);
-//		sb.append("&action=");
-//		sb.append(action);
 		sb.append("&mobile=");
 		sb.append(mobile);
 		sb.append("&package=");
 		sb.append(packageV);
-//		sb.append("&v=");
-//		sb.append(v);
-		
 		
 		String signKey = "4b27d66b8c91435f81a8852e0a9f247c";
 		sb.append("&key=");
@@ -125,8 +113,6 @@ public class JinPiaoHttpclientTest {
 		String sign = DigestUtils.md5Hex(sb.toString());
 		System.out.println(sign);
 
-//		 String hmac = DigestUtils.md5Hex(signData).toUpperCase();
-		 
 		// 创建参数队列  
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>();  
 		formparams.add(new BasicNameValuePair("v", v));  
@@ -150,7 +136,6 @@ public class JinPiaoHttpclientTest {
 			HttpEntity httpEntity = httpResponse.getEntity();  
 			if (httpEntity != null) {  
 				//打印响应内容  
-//				System.out.println("response:" + EntityUtils.toString(httpEntity, "UTF-8"));  
 				System.out.println("response:" + EntityUtils.toString(httpEntity, "UTF-8"));  
 			}  
 			//释放资源  

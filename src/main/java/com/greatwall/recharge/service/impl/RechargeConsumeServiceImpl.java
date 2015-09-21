@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +17,9 @@ import com.greatwall.clientapi.service.LiulService;
 import com.greatwall.clientapi.service.ShunpayService;
 import com.greatwall.platform.base.dao.DaoException;
 import com.greatwall.platform.domain.PageParameter;
+import com.greatwall.platform.system.dao.LogDao;
 import com.greatwall.platform.system.dao.UserDao;
+import com.greatwall.platform.system.dto.Log;
 import com.greatwall.platform.system.dto.User;
 import com.greatwall.recharge.dao.ConsumeDao;
 import com.greatwall.recharge.dao.ProductDao;
@@ -32,6 +35,7 @@ import com.greatwall.util.RMSConstant;
 @Service("rechargeConsumeService")
 public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 
+	Logger logger = Logger.getLogger(RechargeConsumeServiceImpl.class);
 	@Autowired
 	private RechargeDao rechargeDao;
 
@@ -46,6 +50,8 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 	private LiulService liulService;
 	@Autowired
 	private JinPiaoService jinPiaoService;
+	@Autowired
+	private LogDao logDao;
 
 	ExecutorService fixedThreadPool = Executors.newFixedThreadPool(30);
 
@@ -176,6 +182,8 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 		consume.setBalance(balance);
 		consume.setConsumeId(UUID.randomUUID().toString().replaceAll("-", ""));
 		
+		
+		long startTimeMillis = System.currentTimeMillis(); // 开始时间  
 		//TODO 调用电话或流量接口充值
 		if("phone".equals(consume.getConsumeType())){
 			
@@ -183,7 +191,7 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 				if(shunpayService.sendMsg(consume)){
 					consume.setState(RMSConstant.CONSUME_STATE_SENDED);
 				}else{
-//					throw new DaoException(RMSConstant.ERROR_CODE_104+" "+consume.getRemark());
+					run(fixedThreadPool,"shunpay",startTimeMillis,System.currentTimeMillis(),consume.getRemark());
 					throw new DaoException(RMSConstant.ERROR_CODE_104+" 接口调用失败");
 				}
 			}else{
@@ -194,13 +202,14 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 				if(liulService.sendMsg(consume)){
 					consume.setState(RMSConstant.CONSUME_STATE_SENDED);
 				}else{
-//					throw new DaoException(RMSConstant.ERROR_CODE_104+" "+consume.getRemark());
+					run(fixedThreadPool,"liul",startTimeMillis,System.currentTimeMillis(),consume.getRemark());
 					throw new DaoException(RMSConstant.ERROR_CODE_104+" 接口调用失败");
 				}
 			}else if(RMSConstant.INTERFACE_NAME_JINPIAO.equals(consume.getInterfaceName())){
 				if(jinPiaoService.sendMsg(consume)){
 					consume.setState(RMSConstant.CONSUME_STATE_SENDED);
 				}else{
+					run(fixedThreadPool,"jinPiao",startTimeMillis,System.currentTimeMillis(),consume.getRemark());
 					throw new DaoException(RMSConstant.ERROR_CODE_104+" 接口调用失败");
 				}
 			}else{
@@ -220,23 +229,24 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 	}
 
 
-	private void run(ExecutorService threadPool,final Consume consume) {
+	private void run(ExecutorService threadPool,final String methodName,final Long startTimeMillis,final Long endTimeMillis
+			,final String remark) {
 		threadPool.execute(new Runnable() {  
 			@Override
 			public void run() {  
 
 				try {  
-					if(shunpayService.sendMsg(consume)){
-						consume.setState(RMSConstant.CONSUME_STATE_SENDED);
-					}else{
-						consume.setState(RMSConstant.CONSUME_STATE_SEND_FAIL);
-					}
+					Log log = new Log();
+					log.setLogType(methodName);
+					log.setLogTime(new Date(startTimeMillis));
+					log.setRemark(remark);
+					log.setTimeConsuming(endTimeMillis - startTimeMillis);
+					
+					logDao.saveLog(log);
 				} catch (Exception e) {  
-					e.printStackTrace();  
-					consume.setState(RMSConstant.CONSUME_STATE_SEND_FAIL);
-					consume.setRemark(e.getMessage().length()>500?e.getMessage().substring(0, 499):e.getMessage());
+					logger.error("", e);
 				}finally{
-					consumeDao.updateState(consume);
+					
 				}
 
 
