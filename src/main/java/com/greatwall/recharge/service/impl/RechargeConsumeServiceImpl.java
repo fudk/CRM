@@ -207,7 +207,7 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 				}
 			}else if(RMSConstant.INTERFACE_NAME_JINPIAO.equals(consume.getInterfaceName())){
 				if(jinPiaoService.sendMsg(consume)){
-					consume.setState(RMSConstant.CONSUME_STATE_SENDED);
+					consume.setState(RMSConstant.CONSUME_STATE_SUC);
 				}else{
 					run(fixedThreadPool,"jinPiao",startTimeMillis,System.currentTimeMillis(),consume.getRemark());
 					throw new DaoException(RMSConstant.ERROR_CODE_104+" 接口调用失败");
