@@ -18,10 +18,11 @@ import org.apache.http.util.EntityUtils;
 
 public class LocalHttpclientTest {
 	
-	private static String hosts = "http://127.0.0.1";
+	private static String hosts = "http://115.29.43.62:8080";
 
 	public static void main(String[] args) {
-		 regFlow();
+		regPhone();
+//		 regFlow();
 //		requesQuery();
 	}
 
@@ -37,15 +38,16 @@ public class LocalHttpclientTest {
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>(); 
 
 		//话费测试
-		formparams.add(new BasicNameValuePair("platId", "TEST1"));  
+		formparams.add(new BasicNameValuePair("platId", "ANQING"));  
 		formparams.add(new BasicNameValuePair("timestamp", new Date().getTime()+""));  
 		formparams.add(new BasicNameValuePair("orderId", UUID.randomUUID().toString()));  
 		formparams.add(new BasicNameValuePair("opType", "phone"));  
 		formparams.add(new BasicNameValuePair("flxTyp", "")); 
-		formparams.add(new BasicNameValuePair("custPhone", "15067127829"));  
-		formparams.add(new BasicNameValuePair("opPrice", "50"));  
+		formparams.add(new BasicNameValuePair("custPhone", "18173116167"));  
+		formparams.add(new BasicNameValuePair("opPrice", "10"));  
 		formparams.add(new BasicNameValuePair("opNum", "1"));  
-		formparams.add(new BasicNameValuePair("notifyUrl", hosts+"/rechargeapi/callback"));  
+//		formparams.add(new BasicNameValuePair("notifyUrl", hosts+"/rechargeapi/callback"));  
+		formparams.add(new BasicNameValuePair("notifyUrl",""));  
 
 		StringBuffer sb = new StringBuffer();
 		for(NameValuePair nameValuePair:formparams){
@@ -54,7 +56,7 @@ public class LocalHttpclientTest {
 			sb.append(nameValuePair.getValue());
 			sb.append("&");
 		}
-		sb.append("C6914624EB90000116D71D90141B3FC0");
+		sb.append("C6B84C250D400001FC4C1E701DD99F10");
 		formparams.add(new BasicNameValuePair("sign", DigestUtils.md5Hex(sb.toString())));  
 		System.out.println("====");
 
