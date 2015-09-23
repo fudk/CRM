@@ -134,9 +134,9 @@
 				<td align="right"><c:if test="${empty updateUser }">角色:</c:if></td>
 				<td><c:if test="${empty updateUser && fn:contains(roleIds,'1,') }">
 						<select name="roleId" id="roleId">
-							<option value="1">管理员</option>
-							<option value="2">代理商</option>
 							<option value="3">普通用户</option>
+							<option value="2">代理商</option>
+							<option value="1">管理员</option>
 						</select>
 					</c:if> <c:if
 						test="${empty updateUser && fn:contains(roleIds,'2,') && !fn:contains(roleIds,'1,')}">
