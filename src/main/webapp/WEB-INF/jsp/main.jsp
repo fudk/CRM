@@ -16,6 +16,12 @@
 	$(document).ready(function() {
 		var searchData = {pageSize:8};
 		searchPage("${ctx}/product/getProductsMain",searchData,"","ul");
+		
+		$("select").change( function() {
+			searchData.isp = $("#isp").val();
+			searchData.productType = $("#productType").val();
+			searchPage("${ctx}/product/getProductsMain",searchData,"","ul");
+		});
 	});
 
 	var consumeDialog;
@@ -57,6 +63,11 @@
 		<div class="main">
 			<%@ include file="common/left.jsp"%>
 			<div class="index_content">
+			<div>运营商：<select name="isp" id="isp"><option value="">全部</option>
+			<option value="CM">移动</option><option value="CU">联通</option><option value="CT">电信</option></select> 
+				类型：<select name="productType" id="productType"><option value="">全部</option>
+				<option value="phone">话费</option><option value="flow">流量</option></select> 
+			</div>
 				<div id="Searchresult"></div>
 				<div style="clear:both" id="Pagination"></div>
 			</div>

@@ -5,7 +5,7 @@
 <ul class="ulmain" totalCount="${page.totalCount }"
 	pageSize="${page.pageSize }">
 	<c:forEach items="${products}" var="product" varStatus="status">
-		<li class="lileft"><a href="javascript:addConsume('${product.productId}')" > <img class="liimg"
+		<li class="lileft"><a href="javascript:addConsume('${product.productId}')" > <img class="liimg" width="200px;" height="200px;"
 				src="${basePath}con/getImg/${fn:replace(product.productImg,'.', '/')}" /> 
 				<div style="display:block; ">${product.productName}<br/>
 				<%-- <span style="color: red;font-size:16px;">${product.productPrice}元</span> --%> 
