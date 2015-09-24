@@ -16,6 +16,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ import com.greatwall.util.RMSConstant;
 @Service("shunpayService")
 public class ShunpayServiceImpl implements ShunpayService {
 
+	Logger logger = Logger.getLogger(ShunpayServiceImpl.class);
 	/** 
 	 * @Fields httpUrl : 接口调用地址 
 	 */ 
@@ -227,12 +229,17 @@ public class ShunpayServiceImpl implements ShunpayService {
 				//打印响应内容  
 
 				String restr = EntityUtils.toString(httpEntity, "UTF-8");
-				System.out.println("shunpay sendMsg response:" + restr);  
+				logger.info("shunpay sendMsg response:" + restr);
 				Gson gson = new Gson();
-				Map<String,Object> requestMap = gson.fromJson(restr, Map.class);
-				if(requestMap!=null&&"10000000".equals(requestMap.get("retcode"))){
-					return true;
-				}else{
+				try {
+					Map<String,Object> requestMap = gson.fromJson(restr, Map.class);
+					if(requestMap!=null&&"10000000".equals(requestMap.get("retcode"))){
+						return true;
+					}else{
+						consume.setRemark(restr);
+					}
+				} catch (Exception e) {
+					//logger.error("", e);
 					consume.setRemark(restr);
 				}
 			}  

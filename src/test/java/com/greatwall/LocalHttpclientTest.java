@@ -19,6 +19,7 @@ import org.apache.http.util.EntityUtils;
 public class LocalHttpclientTest {
 	
 	private static String hosts = "http://115.29.43.62:8080";
+//	private static String hosts = "http://127.0.0.1";
 
 	public static void main(String[] args) {
 		regPhone();

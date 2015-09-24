@@ -278,6 +278,7 @@ public class RechargeApiController {
 		UserChannel userChannel = new UserChannel();
 		userChannel.setUserId(u.getUserId());
 		userChannel.setIsp(isp);
+		userChannel.setType(rechargeCondition.getOpType());
 		List<UserChannel> uclist = userChannelService.getUserChannel(userChannel);
 		String interfaceName = "";
 		if(uclist!=null&&uclist.size()>0){
