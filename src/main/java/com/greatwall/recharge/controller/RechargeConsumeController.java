@@ -28,6 +28,7 @@ import com.greatwall.recharge.service.ProductService;
 import com.greatwall.recharge.service.RechargeConsumeService;
 import com.greatwall.recharge.service.UserChannelService;
 import com.greatwall.util.PhoneUtil;
+import com.greatwall.util.RMSConstant;
 import com.greatwall.util.StringUtil;
 import com.greatwall.util.ValidateUtil;
 
@@ -161,6 +162,7 @@ public class RechargeConsumeController {
 				consume.setConsumeType(product.getProductType());
 				consume.setIsp(product.getIsp());
 				consume.setState("processing");//处理中
+				consume.setDiscount(RMSConstant.DEFAULT_DISCOUNT);//默认折扣
 				
 				User u = (User)session.getAttribute("user");
 				consume.setUserId(u.getUserId());
@@ -185,6 +187,7 @@ public class RechargeConsumeController {
 							for(UserChannel uc:uclist){
 								if(product.getIsp().equals(uc.getIsp())){
 									interfaceName = uc.getInterfaceName();
+									consume.setDiscount(uc.getDiscount());
 								}
 							}
 						}

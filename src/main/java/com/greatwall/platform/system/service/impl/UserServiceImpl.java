@@ -85,19 +85,45 @@ public class UserServiceImpl implements UserService {
 	
 	
 	@Transactional
-	public void updateUserAndChannel(User user,ChannelCondition channelCondition) throws DaoException{
+	public void updateUserAndChannel(User user,List<UserChannel> userChannels) throws DaoException{
 		userDao.updateUser(user);
 		
-		if(channelCondition!=null){
+		if(userChannels!=null){
 			UserChannel userChannel = new UserChannel();
 			userChannel.setUserId(user.getUserId());
 			userChannelDao.delUserChannel(userChannel);
-			userChannelService.saveUserChannels(user.getUserId(), channelCondition);
+			userChannelService.saveUserChannels(user.getUserId(),userChannels);
+//			userChannelService.saveUserChannels(user.getUserId(), channelCondition);
 		}
 		
 	}
 	
 	@Transactional
+	public void saveUserAndChannel(User user,List<UserChannel> userChannels,Integer roleId){
+		user.setCreateTime(new Date());
+		user.setUserType(1);
+		if(user.getBalance()==null){
+			user.setBalance(new Double(0));
+		}
+		if(user.getFlowBalance()==null){
+			user.setFlowBalance(new Double(0));
+		}
+		if(user.getVersion()==null){
+			user.setVersion(1);
+		}
+		userDao.saveUser(user);
+		
+		//获取新增用户id
+		User u = userDao.getUser(user);
+		
+		//保存用户通道
+		userChannelService.saveUserChannels(u.getUserId(),userChannels);
+		
+		//保存用户角色
+		roleService.saveUserRole(u.getUserId(), roleId);
+		
+	}
+/*	@Transactional
 	public void saveUserAndChannel(User user,ChannelCondition channelCondition,Integer roleId){
 		user.setCreateTime(new Date());
 		user.setUserType(1);
@@ -122,7 +148,7 @@ public class UserServiceImpl implements UserService {
 		roleService.saveUserRole(u.getUserId(), roleId);
 		
 	}
-	
+*/	
 	
 	public Boolean hasUser(User user){
 		User u = userDao.getUser(user);

@@ -31,6 +31,17 @@
 			show();
 		}
 		
+		$.each( $("input[name='phoneDiscount']"), function(i, n){
+			if(n.value==""){
+				n.value = "100";
+			}
+		});
+		$.each( $("input[name='flowDiscount']"), function(i, n){
+			if(n.value==""){
+				n.value = "100";
+			}
+		});
+		
 	});
 
 	function show() {
@@ -38,10 +49,11 @@
 		$.each(jsondatas, function(i, n) {
 			if(n.type!='flow'){
 				$("#" + n.isp.toLowerCase()).val(n.channelId);
+				$("#" + n.isp.toLowerCase()+"PD").val(n.discount);
 			}else{
+				$("#" + n.isp.toLowerCase()+"FD").val(n.discount);
 				$("#" + n.isp.toLowerCase()+"flow").val(n.channelId);
 			}
-			
 			//alert("name:" + n.channelId + " value:" + n.isp);
 		});
 	}
@@ -85,7 +97,7 @@
 <body>
 	<form id="addUserForm" action="${ctx}/system/user/addUser"
 		method="post">
-		<table>
+		<table width="100%">
 			<tr>
 				<td align="right">企业名:</td>
 				<td colspan="3"><input type="text" id="userName"
@@ -135,7 +147,7 @@
 				<td><c:if test="${empty updateUser && fn:contains(roleIds,'1,') }">
 						<select name="roleId" id="roleId">
 							<option value="3">普通用户</option>
-							<option value="2">代理商</option>
+							<!-- <option value="2">代理商</option> -->
 							<option value="1">管理员</option>
 						</select>
 					</c:if> <c:if
@@ -147,57 +159,67 @@
 			</tr>
 			<tr>
 				<td align="right">备注:</td>
-				<td colspan="3"><textarea name="remark" rows="3" cols="53"
+				<td colspan="3"><textarea name="remark" rows="2" cols="53"
 						class="validate[maxSize[500]]">${updateUser.remark}</textarea></td>
 			</tr>
-			<tr>
+			<%-- <tr>
 				<td align="right">话费折扣:</td>
 				<td><input type="text" id="discountPhone" name="discountPhone"
 					value="${updateUser.discountPhone }" class="validate[required,maxSize[3],custom[integer]]" /></td>
 				<td align="right">流量折扣:</td>
 				<td><input type="text" id="discountFlow" name="discountFlow"
 					value="${updateUser.discountFlow}" class="validate[required,maxSize[3],custom[integer]]" /></td>
-			</tr>
+			</tr> --%>
 			<c:if test="${fn:contains(roleIds,'1,') }">
 			<tr>
 				<td align="right">话费通道：</td>
-				<td colspan="3">移动：<select name="cm" id="cm"
+				<td >移动：<select name="phoneChannel" id="cm"
 					class="validate[required]">
-						<option value="">请选择</option>
+						<option value="0">无通道</option>
 						<c:forEach items="${CM }" var="channel">
 							<option value="${channel.channelId }">${channel.channelName }</option>
 						</c:forEach>
-				</select> 联通： <select name="cu" id="cu" class="validate[required]">
-						<option value="">请选择</option>
-						<c:forEach items="${CU }" var="channel">
-							<option value="${channel.channelId }">${channel.channelName }</option>
-						</c:forEach>
-				</select> 电信： <select name="ct" id="ct" class="validate[required]">
-						<option value="">请选择</option>
-						<c:forEach items="${CT }" var="channel">
-							<option value="${channel.channelId }">${channel.channelName }</option>
-						</c:forEach>
-				</select></td>
-			</tr>
-			<tr>
+				</select>折扣<input type="text" name="phoneDiscount" id="cmPD" size="3"/> </td>
 				<td align="right">流量通道：</td>
-				<td colspan="3">移动：<select name="cmflow" id="cmflow"
+				<td>移动：<select name="flowChannel" id="cmflow"
 					class="validate[required]">
-						<option value="">请选择</option>
+						<option value="0">无通道</option>
 						<c:forEach items="${CMflow }" var="channel">
 							<option value="${channel.channelId }">${channel.channelName }</option>
 						</c:forEach>
-				</select> 联通： <select name="cuflow" id="cuflow" class="validate[required]">
-						<option value="">请选择</option>
+				</select>折扣<input type="text" name="flowDiscount" id="cmFD" size="3"/>  </td>
+			</tr>
+			<tr>
+				<td align="right">话费通道：</td>
+				<td >联通： <select name="phoneChannel" id="cu" class="validate[required]">
+						<option value="0">无通道</option>
+						<c:forEach items="${CU }" var="channel">
+							<option value="${channel.channelId }">${channel.channelName }</option>
+						</c:forEach>
+				</select>折扣<input type="text" name="phoneDiscount" id="cuPD" size="3"/> </td>
+				<td align="right">流量通道：</td>
+				<td>联通： <select name="flowChannel" id="cuflow" class="validate[required]">
+						<option value="0">无通道</option>
 						<c:forEach items="${CUflow }" var="channel">
 							<option value="${channel.channelId }">${channel.channelName }</option>
 						</c:forEach>
-				</select> 电信： <select name="ctflow" id="ctflow" class="validate[required]">
-						<option value="">请选择</option>
+				</select>折扣<input type="text" name="flowDiscount" id="cuFD" size="3"/></td>
+			</tr>
+			<tr>
+				<td align="right">话费通道：</td>
+				<td >电信： <select name="phoneChannel" id="ct" class="validate[required]">
+						<option value="0">无通道</option>
+						<c:forEach items="${CT }" var="channel">
+							<option value="${channel.channelId }">${channel.channelName }</option>
+						</c:forEach>
+				</select>折扣<input type="text" name="phoneDiscount" id="ctPD" size="3"/> </td>
+				<td align="right">流量通道：</td>
+				<td>电信： <select name="flowChannel" id="ctflow" class="validate[required]">
+						<option value="0">无通道</option>
 						<c:forEach items="${CTflow }" var="channel">
 							<option value="${channel.channelId }">${channel.channelName }</option>
 						</c:forEach>
-				</select></td>
+				</select>折扣<input type="text" name="flowDiscount" id="ctFD" size="3"/></td>
 			</tr>
 			</c:if>
 		</table>

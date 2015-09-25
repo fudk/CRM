@@ -10,6 +10,9 @@ public class UserChannel {
     private String type;
     
     private String interfaceName;
+    
+    private Integer discount;
+
 
     public Integer getChannelId() {
         return channelId;
@@ -49,6 +52,14 @@ public class UserChannel {
 
 	public void setInterfaceName(String interfaceName) {
 		this.interfaceName = interfaceName;
+	}
+
+	public Integer getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Integer discount) {
+		this.discount = discount;
 	}
     
     

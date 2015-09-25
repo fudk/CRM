@@ -76,7 +76,7 @@
 </script>
 <div class="top_content">
 	<div class="logo">
-		<img src="${ctx}/images/logo.jpg" width="202" height="66" alt="志晴CRM" />
+		<img src="${ctx}/images/logo.jpg" width="202" height="66" alt="中舜充值系统" />
 	</div>
 	<div class="top_contain">
 		<img src="${ctx}/images/top_ad.jpg" width="246" height="63" />

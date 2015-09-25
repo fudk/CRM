@@ -21,6 +21,13 @@ public class UserChannelServiceImpl implements UserChannelService {
 		return userChannelDao.getUserChannel(userChannel);
 	}
 	
+	public void saveUserChannels(Integer userId,List<UserChannel> userChannels){
+		for(UserChannel userChannel:userChannels){
+			userChannel.setUserId(userId);
+			userChannelDao.insert(userChannel);
+		}
+	}
+	
 	public void saveUserChannels(Integer userId,ChannelCondition channelCondition){
 		UserChannel userChannelCM = new UserChannel();
 		userChannelCM.setIsp(RMSConstant.ISP_CM);

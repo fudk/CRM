@@ -9,6 +9,8 @@ public interface UserChannelService {
 
 	public List<UserChannel> getUserChannel(UserChannel userChannel);
 	
-	public void saveUserChannels(Integer userId,ChannelCondition channelCondition);
+//	public void saveUserChannels(Integer userId,ChannelCondition channelCondition);
+	
+	public void saveUserChannels(Integer userId,List<UserChannel> userChannels);
 	
 }

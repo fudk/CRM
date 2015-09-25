@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<title>志晴CRM</title>
+<title>中舜充值系统</title>
 
 <%@ include file="../../common/head.jsp"%>
 
@@ -88,8 +88,8 @@
 	function addOrUpdateUser(method) {
 		userDialog = $.dialog({
 			title : '新增用户',
-			width : '600px',
-			height : '370px',
+			width : '680px',
+			height : '400px',
 			content : 'url:' + ctx + '/system/user/' + method,
 			button : [ {
 				name : '确定',

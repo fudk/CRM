@@ -6,6 +6,7 @@ import com.greatwall.platform.base.dao.DaoException;
 import com.greatwall.platform.domain.PageParameter;
 import com.greatwall.platform.system.dto.User;
 import com.greatwall.recharge.dto.ChannelCondition;
+import com.greatwall.recharge.dto.UserChannel;
 
 
 public interface UserService {
@@ -25,9 +26,10 @@ public interface UserService {
 	*/
 	public List<User> searchUsers(User user,PageParameter page) throws DaoException;
 	
-	public void saveUserAndChannel(User user,ChannelCondition channelCondition,Integer roleId);
+	public void saveUserAndChannel(User user,List<UserChannel> userChannels,Integer roleId);
+//	public void saveUserAndChannel(User user,ChannelCondition channelCondition,Integer roleId);
 	
-	public void updateUserAndChannel(User user,ChannelCondition channelCondition)throws DaoException;
+	public void updateUserAndChannel(User user,List<UserChannel> userChannels)throws DaoException;
 	
 	/** 
 	* @Title: hasUser 

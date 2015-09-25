@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONArray;
@@ -134,24 +135,27 @@ public class UserController {
 	*/
 	@RequestMapping("/addUser")
 	public@ResponseBody String addUser(User user,ChannelCondition channelCondition,Integer roleId,
-			HttpSession session,ModelMap model){
+			HttpServletRequest request,ModelMap model){
 		try {
 			if(!userService.hasUser(user)){
-				User u = (User)session.getAttribute("user");
+				User u = (User)request.getSession().getAttribute("user");
 				user.setParentId(u.getUserId());
 				user.setDiscountFlow(100);
 				user.setDiscountPhone(100);
 				
 				//如果是代理商新增普通用户，用户的通道与创建代理商通道默认一致。
-				String roleIds = session.getAttribute("roleIds").toString();
+				/*String roleIds = request.getSession().getAttribute("roleIds").toString();
 				if(!ValidateUtil.isAdmin(roleIds)){//不是管理员，是代理商,1是管理员角色ID，2是代理商角色ID
 					UserChannel userChannel = new UserChannel();
 					userChannel.setUserId(u.getUserId());
 					List<UserChannel> uclist = userChannelService.getUserChannel(userChannel);
 					channelCondition = UserChannelListToChannelCondition(uclist);
-				}
+				}*/
 				
-				userService.saveUserAndChannel(user,channelCondition,roleId);
+//				userService.saveUserAndChannel(user,channelCondition,roleId);
+				
+				userService.saveUserAndChannel(user, getParamsUserChannels(request), roleId);
+				
 			}else{
 				return "平台用户ID或登录名(手机)重复";
 			}
@@ -160,6 +164,43 @@ public class UserController {
 			return e.getMessage();
 		}
 		return "success";
+	}
+	
+	private List<UserChannel> getParamsUserChannels(HttpServletRequest request){
+		List<UserChannel> userChannels = new ArrayList<UserChannel>();
+		String[] phoneChannel = request.getParameterValues("phoneChannel");
+		String[] phoneDiscount = request.getParameterValues("phoneDiscount");
+		String[] flowChannel = request.getParameterValues("flowChannel");
+		String[] flowDiscount = request.getParameterValues("flowDiscount");
+		for(int i=0;i<phoneChannel.length;i++){
+			UserChannel userChannel = new UserChannel();
+			userChannel.setChannelId(Integer.parseInt(phoneChannel[i]));
+			userChannel.setDiscount(Integer.parseInt(phoneDiscount[i]));
+			userChannel.setType(RMSConstant.PRODUCT_TYPE_PHONE);
+			switch(i){
+			case 0:userChannel.setIsp(RMSConstant.ISP_CM);break; 
+			case 1:userChannel.setIsp(RMSConstant.ISP_CU);break; 
+			case 2:userChannel.setIsp(RMSConstant.ISP_CT);break; 
+			default:userChannel.setIsp("");break; 
+			}
+			userChannels.add(userChannel);
+//			System.out.println(phoneChannel[i]+" "+phoneDiscount[i]);
+		}
+		for(int i=0;i<flowChannel.length;i++){
+			UserChannel userChannel = new UserChannel();
+			userChannel.setChannelId(Integer.parseInt(flowChannel[i]));
+			userChannel.setDiscount(Integer.parseInt(flowDiscount[i]));
+			userChannel.setType(RMSConstant.PRODUCT_TYPE_FLOW);
+			switch(i){
+			case 0:userChannel.setIsp(RMSConstant.ISP_CM);break; 
+			case 1:userChannel.setIsp(RMSConstant.ISP_CU);break; 
+			case 2:userChannel.setIsp(RMSConstant.ISP_CT);break; 
+			default:userChannel.setIsp("");break; 
+			}
+			userChannels.add(userChannel);
+//			System.out.println(flowChannel[i]+" "+flowDiscount[i]);
+		}
+		return userChannels;
 	}
 	
 	private ChannelCondition UserChannelListToChannelCondition(List<UserChannel> uclist){
@@ -210,9 +251,9 @@ public class UserController {
 	}
 	
 	@RequestMapping("/updateUser")
-	public@ResponseBody String updateUser(User user,ChannelCondition channelCondition,HttpSession session,ModelMap model){
+	public@ResponseBody String updateUser(User user,HttpServletRequest request,ModelMap model){
 		try {
-			userService.updateUserAndChannel(user,channelCondition);
+			userService.updateUserAndChannel(user,getParamsUserChannels(request));
 		} catch (Exception e) {
 			logger.error("保存用户失败",e);
 			return e.getMessage();

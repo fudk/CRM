@@ -7,20 +7,21 @@
 		<result column="ISP" jdbcType="VARCHAR" property="isp" />
 		<result column="TYPE" jdbcType="VARCHAR" property="type" />
 		<result column="INTERFACE_NAME" jdbcType="VARCHAR" property="interfaceName" />
+		<result column="DISCOUNT" property="discount" jdbcType="INTEGER" />
 	</resultMap>
 
 	<insert id="insert" parameterType="com.greatwall.recharge.dto.UserChannel">
-		insert into td_rms_user_channel (CHANNEL_ID, USER_ID, ISP,TYPE
+		insert into td_rms_user_channel (CHANNEL_ID, USER_ID, ISP,TYPE, DISCOUNT
 		)
 		values (#{channelId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
-		#{isp,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR}
+		#{isp,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},#{discount,jdbcType=INTEGER}
 		)
 	</insert>
 
-
 	<select id="getUserChannel" parameterType="com.greatwall.recharge.dto.UserChannel"
 		resultMap="BaseResultMap">
-		select a.CHANNEL_ID, a.USER_ID, a.ISP,a.TYPE,b.INTERFACE_NAME from td_rms_user_channel a,td_rms_channel b
+		select a.CHANNEL_ID, a.USER_ID, a.ISP,a.TYPE,a.discount,b.INTERFACE_NAME 
+		from td_rms_user_channel a,td_rms_channel b
 		<where>
 				a.CHANNEL_ID = b.CHANNEL_ID 
 			<if test="channelId != null">

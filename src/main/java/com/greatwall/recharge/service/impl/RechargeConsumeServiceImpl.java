@@ -28,7 +28,9 @@ import com.greatwall.recharge.dto.Consume;
 import com.greatwall.recharge.dto.ConsumeConditions;
 import com.greatwall.recharge.dto.Recharge;
 import com.greatwall.recharge.dto.RechargeConditions;
+import com.greatwall.recharge.dto.UserChannel;
 import com.greatwall.recharge.service.RechargeConsumeService;
+import com.greatwall.recharge.service.UserChannelService;
 import com.greatwall.util.MathUtil;
 import com.greatwall.util.RMSConstant;
 
@@ -141,6 +143,7 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 
 	@Autowired
 	private ConsumeDao consumeDao;
+	
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
@@ -149,14 +152,15 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 		User user = new User();
 		user.setUserId(consume.getUserId());
 		user = userDao.getUser(user);
+		
 
-		if(RMSConstant.PRODUCT_TYPE_PHONE.equals(consume.getConsumeType())){
+		/*if(RMSConstant.PRODUCT_TYPE_PHONE.equals(consume.getConsumeType())){
 			consume.setDiscount(user.getDiscountPhone());
 		}else if(RMSConstant.PRODUCT_TYPE_FLOW.equals(consume.getConsumeType())){
 			consume.setDiscount(user.getDiscountFlow());
 		}else{
 			consume.setDiscount(RMSConstant.DEFAULT_DISCOUNT);
-		}
+		}*/
 
 		double discountR = MathUtil.div(new Double(consume.getDiscount()), new Double(100), 2);
 		consume.setPayment(MathUtil.mul(consume.getConsumeAmount(), discountR, 2));

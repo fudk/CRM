@@ -275,6 +275,9 @@ public class RechargeApiController {
 			return remap;
 		}
 		
+		Consume consume = new Consume();
+		consume.setDiscount(RMSConstant.DEFAULT_DISCOUNT);//默认折扣
+		
 		UserChannel userChannel = new UserChannel();
 		userChannel.setUserId(u.getUserId());
 		userChannel.setIsp(isp);
@@ -285,6 +288,7 @@ public class RechargeApiController {
 			for(UserChannel uc:uclist){
 				if(isp.equals(uc.getIsp())){
 					interfaceName = uc.getInterfaceName();
+					consume.setDiscount(uc.getDiscount());
 				}
 			}
 		}
@@ -294,7 +298,7 @@ public class RechargeApiController {
 			return remap;
 		}
 		
-		Consume consume = new Consume();
+		
 		
 		consume.setProductId(product.getProductId());
 		consume.setProductName(product.getProductName());
