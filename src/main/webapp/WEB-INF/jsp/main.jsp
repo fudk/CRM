@@ -22,6 +22,7 @@
 			searchData.productType = $("#productType").val();
 			searchPage("${ctx}/product/getProductsMain",searchData,"","ul");
 		});
+		
 	});
 
 	var consumeDialog;
@@ -48,14 +49,38 @@
 		});
 	}
 
+	
+	$(function() {
+		var $this = $("#news");
+		var scrollTimer;
+		$this.hover(function() {
+			clearInterval(scrollTimer);
+		}, function() {
+			scrollTimer = setInterval(function() {
+				scrollNews($this);
+			}, 2000);
+		}).trigger("mouseleave");
 
-
+		function scrollNews(obj) {
+			var $self = obj.find("ul");
+			var lineHeight = $self.find("li:first").height();
+			$self.animate({
+				"marginTop" : -lineHeight + "px"
+			}, 600, function() {
+				$self.css({
+					marginTop : 0
+				}).find("li:first").appendTo($self);
+			})
+		}
+	});
 </script>
 
 <style type="text/css">
 .liimg {border:1px solid #CCC; padding:2px;width: 200px}
 .lileft {float: left;text-align: center;padding:10px 0 6px 15px;}
 .ulmain {padding:10px 0 6px 15px;}
+.news-wrapper{position: fixed;bottom: 0px;right: 15px;z-index: 888;width: 180px;height: 150px;float:right;}
+
 </style>
 <body>
 	<div class="top">
@@ -72,7 +97,16 @@
 				<div style="clear:both" id="Pagination"></div>
 			</div>
 		</div>
-		
+		<div class="news-wrapper" id="news"><div style="float:right;">关闭</div>
+		<ul>
+<li><a href="#" title="aaaaaaaaaaaaaaa">aaaaaaaaaaaaaaa</a></li>
+<li><a href="#" title="bbbbbbbbbbbbbbb">bbbbbbbbbbbbbbb</a></li>
+<li><a href="#" title="ccccccccccccccc">ccccccccccccccc</a></li>
+<li><a href="#" title="ddddddddddddddd">ddddddddddddddd</a></li>
+<li><a href="#" title="eeeeeeeeeeeeeee">eeeeeeeeeeeeeee</a></li>
+<li><a href="#" title="fffffffffffffff">fffffffffffffff</a></li>
+</ul></div>
+
 		<!-- 代码 结束 -->
 	</div>
 </body>
