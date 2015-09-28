@@ -117,7 +117,7 @@ public class ServiceApiAop {
 	private void printOptLog(String className,Object[] inputParam,String methodName,Object outputParam,
 			String ip,long startTimeMillis,long endTimeMillis) {  
 		Gson gson = new Gson(); 
-		String optTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTimeMillis);  
+//		String optTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTimeMillis);  
 		
 		if(inputParam!=null&&inputParam.length>0){
 			for(int i=0;i<inputParam.length;i++){
@@ -132,7 +132,7 @@ public class ServiceApiAop {
 		sb.append(" result：");
 		sb.append(gson.toJson(outputParam));
 		
-		sb.append(" ip：");
+		/*sb.append(" ip：");
 		sb.append(ip);
 		sb.append(" className：");
 		sb.append(className);
@@ -142,12 +142,13 @@ public class ServiceApiAop {
 		sb.append(optTime);
 		sb.append(" pro_time:");
 		sb.append(endTimeMillis - startTimeMillis);
-		sb.append(" ms");
+		sb.append(" ms");*/
 		
 		logger.info(sb.toString());
 		
 		Log log = new Log();
-		log.setLogType(methodName);
+		log.setLogType("provide");
+		log.setLogName(methodName);
 		log.setLogTime(new Date(startTimeMillis));
 		log.setRemark(sb.toString());
 		log.setFromIp(ip);

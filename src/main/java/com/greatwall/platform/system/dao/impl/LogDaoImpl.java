@@ -1,11 +1,12 @@
 package com.greatwall.platform.system.dao.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.greatwall.platform.base.dao.DaoException;
 import com.greatwall.platform.base.dao.MyBatisDao;
+import com.greatwall.platform.domain.PageParameter;
 import com.greatwall.platform.system.dao.LogDao;
 import com.greatwall.platform.system.dto.Log;
 
@@ -20,6 +21,11 @@ public class LogDaoImpl extends MyBatisDao implements LogDao {
 
 	public void saveLog(Log log){
 		this.save("LogMapper.insert", log);
+	}
+	
+	@Override
+	public List<Log> getLogs(Log log,PageParameter page) throws DaoException{
+		return this.getListPage("LogMapper.selectPage",log,page);
 	}
 	
 	/*public Date getLastSynDate(Log log){

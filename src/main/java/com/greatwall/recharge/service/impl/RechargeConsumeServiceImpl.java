@@ -241,7 +241,8 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 
 				try {  
 					Log log = new Log();
-					log.setLogType(methodName);
+					log.setLogType("call");
+					log.setLogName(methodName);
 					log.setLogTime(new Date(startTimeMillis));
 					log.setRemark(remark);
 					log.setTimeConsuming(endTimeMillis - startTimeMillis);

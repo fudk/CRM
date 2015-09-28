@@ -15,7 +15,7 @@
 
 	<sql id="Base_Column_List">
 		log_id, log_type, log_time, start_date, end_date,
-		remark,log_name,fromIp,timeConsuming
+		remark,log_name,from_ip,time_consuming
 	</sql>
 
 	<sql id="base_where">
@@ -44,11 +44,12 @@
 		</where>
 	</sql>
 
-	<select id="selectByExample" resultMap="BaseResultMap"
+	<select id="selectPage" resultMap="BaseResultMap"
 		parameterType="com.greatwall.platform.system.dto.Log">
 		select
 		<include refid="Base_Column_List" />
 		from td_sys_log
+		order by log_time desc
 	</select>
 
 	<!-- <select id="getLastSynTradeRates" resultMap="BaseResultMap" parameterType="String"> 
