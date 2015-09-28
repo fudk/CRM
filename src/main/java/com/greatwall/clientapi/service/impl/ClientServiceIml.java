@@ -40,6 +40,7 @@ public class ClientServiceIml implements ClientService {
 			logger.error("调研查询接口错误", e);
 			status = RMSConstant.CONSUME_STATE_ERROR;
 		}
+		System.out.println("接口查询状态："+status);
 		//		String status = RMSConstant.CONSUME_STATE_SENDED_FAIL;
 		if(StringUtils.isNotBlank(status)){
 			if(RMSConstant.CONSUME_STATE_SENDED_FAIL.equals(status)){

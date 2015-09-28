@@ -19,4 +19,7 @@ public interface LogService {
 	public void saveLog(Log log);
 
 	List<Log> getLogs(Log log, PageParameter page) throws DaoException;
+
+	void execLog(String logType, String logName, Long startTimeMillis,
+			String remark);
 }

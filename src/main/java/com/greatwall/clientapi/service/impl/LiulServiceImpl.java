@@ -20,10 +20,12 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.greatwall.clientapi.service.LiulService;
+import com.greatwall.platform.system.service.LogService;
 import com.greatwall.recharge.dto.Consume;
 import com.greatwall.util.CryptUtil;
 import com.greatwall.util.RMSConstant;
@@ -31,6 +33,9 @@ import com.greatwall.util.RMSConstant;
 @Service("liulService")
 public class LiulServiceImpl implements LiulService {
 
+	@Autowired
+	private LogService logService;
+	
 	/** 
 	 * @Fields httpUrl : 接口调用地址 
 	 */ 
@@ -115,6 +120,7 @@ public class LiulServiceImpl implements LiulService {
 	}
 	
 	public String searchState(Consume consume) throws Exception{
+		long startTimeMillis = System.currentTimeMillis(); // 开始时间  
 		//创建HttpClientBuilder  
 		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();  
 		//HttpClient  
@@ -171,8 +177,9 @@ public class LiulServiceImpl implements LiulService {
 				//打印响应内容  
 				
 				String restr = EntityUtils.toString(httpEntity, "GBK");
-				
 				System.out.println("liul searchState response:" + restr);  
+				logService.execLog("call", "liulSearchState", startTimeMillis, formparams.toString()+" response:" + restr);
+				
 				consume.setRemark(restr);
 				if(restr.contains("FLX00000")){
 					String[] resArr = StringUtils.split(restr, "&");
@@ -216,6 +223,7 @@ public class LiulServiceImpl implements LiulService {
 	}
 	
 	public Boolean sendMsg(Consume consume) throws Exception{
+		long startTimeMillis = System.currentTimeMillis(); // 开始时间  
 		//创建HttpClientBuilder  
 		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();  
 		//HttpClient  
@@ -286,7 +294,7 @@ public class LiulServiceImpl implements LiulService {
 				//打印响应内容  
 				
 				String restr = EntityUtils.toString(httpEntity, "GBK");
-				
+				logService.execLog("call", "liulSend", startTimeMillis, formparams.toString()+" response:" + restr);
 //				System.out.println("response:" + restr);  
 				consume.setRemark(restr);
 				if(restr.contains("FLX00000")){

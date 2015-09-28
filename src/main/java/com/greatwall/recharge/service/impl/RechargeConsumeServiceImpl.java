@@ -55,7 +55,7 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 	@Autowired
 	private LogDao logDao;
 
-	ExecutorService fixedThreadPool = Executors.newFixedThreadPool(30);
+//	ExecutorService fixedThreadPool = Executors.newFixedThreadPool(30);
 
 //	@Transactional(rollbackFor=Exception.class)
 //	public Boolean offsetConsume(Consume consume) throws Exception{
@@ -187,7 +187,7 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 		consume.setConsumeId(UUID.randomUUID().toString().replaceAll("-", ""));
 		
 		
-		long startTimeMillis = System.currentTimeMillis(); // 开始时间  
+//		long startTimeMillis = System.currentTimeMillis(); // 开始时间  
 		//TODO 调用电话或流量接口充值
 		if("phone".equals(consume.getConsumeType())){
 			
@@ -195,7 +195,7 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 				if(shunpayService.sendMsg(consume)){
 					consume.setState(RMSConstant.CONSUME_STATE_SENDED);
 				}else{
-					run(fixedThreadPool,"shunpay",startTimeMillis,System.currentTimeMillis(),consume.getRemark());
+//					run(fixedThreadPool,"shunpay",startTimeMillis,System.currentTimeMillis(),consume.getRemark());
 					throw new DaoException(RMSConstant.ERROR_CODE_104+" 接口调用失败");
 				}
 			}else{
@@ -206,14 +206,14 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 				if(liulService.sendMsg(consume)){
 					consume.setState(RMSConstant.CONSUME_STATE_SENDED);
 				}else{
-					run(fixedThreadPool,"liul",startTimeMillis,System.currentTimeMillis(),consume.getRemark());
+//					run(fixedThreadPool,"liul",startTimeMillis,System.currentTimeMillis(),consume.getRemark());
 					throw new DaoException(RMSConstant.ERROR_CODE_104+" 接口调用失败");
 				}
 			}else if(RMSConstant.INTERFACE_NAME_JINPIAO.equals(consume.getInterfaceName())){
 				if(jinPiaoService.sendMsg(consume)){
 					consume.setState(RMSConstant.CONSUME_STATE_SUC);
 				}else{
-					run(fixedThreadPool,"jinPiao",startTimeMillis,System.currentTimeMillis(),consume.getRemark());
+//					run(fixedThreadPool,"jinPiao",startTimeMillis,System.currentTimeMillis(),consume.getRemark());
 					throw new DaoException(RMSConstant.ERROR_CODE_104+" 接口调用失败");
 				}
 			}else{
@@ -233,7 +233,7 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 	}
 
 
-	private void run(ExecutorService threadPool,final String methodName,final Long startTimeMillis,final Long endTimeMillis
+/*	private void run(ExecutorService threadPool,final String methodName,final Long startTimeMillis,final Long endTimeMillis
 			,final String remark) {
 		threadPool.execute(new Runnable() {  
 			@Override
@@ -258,7 +258,7 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 			}  
 		});  
 		//threadPool.shutdown();// 任务执行完毕，关闭线程池  
-	}
+	}*/
 	
 	
 	public Boolean confirmConsume(String consumeId,String opstatus){

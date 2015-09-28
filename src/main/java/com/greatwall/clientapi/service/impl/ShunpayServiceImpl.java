@@ -17,18 +17,24 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.greatwall.clientapi.service.ShunpayService;
+import com.greatwall.platform.system.service.LogService;
 import com.greatwall.recharge.dto.Consume;
 import com.greatwall.util.RMSConstant;
 
 @Service("shunpayService")
 public class ShunpayServiceImpl implements ShunpayService {
 
-	Logger logger = Logger.getLogger(ShunpayServiceImpl.class);
+//	Logger logger = Logger.getLogger(ShunpayServiceImpl.class);
+	
+	@Autowired
+	private LogService logService;
+	
 	/** 
 	 * @Fields httpUrl : 接口调用地址 
 	 */ 
@@ -92,6 +98,7 @@ public class ShunpayServiceImpl implements ShunpayService {
 	}
 
 	public String searchState(Consume consume)throws Exception{
+		long startTimeMillis = System.currentTimeMillis(); // 开始时间  
 		//创建HttpClientBuilder  
 		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();  
 		//HttpClient  
@@ -118,7 +125,6 @@ public class ShunpayServiceImpl implements ShunpayService {
 			sb.append("&");
 		}
 		sb.append(key);
-		System.out.println(sb.toString());
 		formparams.add(new BasicNameValuePair("sign", DigestUtils.md5Hex(sb.toString())));  
 
 		UrlEncodedFormEntity entity;  
@@ -136,22 +142,29 @@ public class ShunpayServiceImpl implements ShunpayService {
 				//打印响应内容  
 				String restr = EntityUtils.toString(httpEntity, "UTF-8");
 				System.out.println("shunpay searchState response:" + restr);  
+				
+				logService.execLog("call", "shunpaySearchState", startTimeMillis, formparams.toString()+" response:" + restr);
 				Gson gson = new Gson();
-				Map<String,Object> requestMap = gson.fromJson(restr, Map.class);
-				if(requestMap!=null&&"10000000".equals(requestMap.get("retcode"))){
-					if("9".equals(requestMap.get("state"))){
-						return RMSConstant.CONSUME_STATE_SENDED_WAIT;
-					}else if("8".equals(requestMap.get("state"))){
-						return RMSConstant.CONSUME_STATE_SENDED_PROCESSING;
-					}else if("0".equals(requestMap.get("state"))){
-						return RMSConstant.CONSUME_STATE_SUC;
-					}else if("6".equals(requestMap.get("state"))){
-						return "";//部分成功暂不处理
+				try {
+					Map<String,Object> requestMap = gson.fromJson(restr, Map.class);
+					if(requestMap!=null&&"10000000".equals(requestMap.get("retcode"))){
+						if("9".equals(requestMap.get("state"))){
+							return RMSConstant.CONSUME_STATE_SENDED_WAIT;
+						}else if("8".equals(requestMap.get("state"))){
+							return RMSConstant.CONSUME_STATE_SENDED_PROCESSING;
+						}else if("0".equals(requestMap.get("state"))){
+							return RMSConstant.CONSUME_STATE_SUC;
+						}else if("6".equals(requestMap.get("state"))){
+							return "";//部分成功暂不处理
+						}else{
+					    	return RMSConstant.CONSUME_STATE_SENDED_ERROR;
+					    }
+						//return RMSConstant.CONSUME_STATE_SUC;
 					}else{
-				    	return RMSConstant.CONSUME_STATE_SENDED_ERROR;
-				    }
-					//return RMSConstant.CONSUME_STATE_SUC;
-				}else{
+						consume.setRemark(restr);
+					    return RMSConstant.CONSUME_STATE_SENDED_ERROR;
+					}
+				} catch (Exception e) {
 					consume.setRemark(restr);
 				    return RMSConstant.CONSUME_STATE_SENDED_ERROR;
 				}
@@ -171,6 +184,7 @@ public class ShunpayServiceImpl implements ShunpayService {
 	}
 
 	public Boolean sendMsg(Consume consume) throws Exception{
+		long startTimeMillis = System.currentTimeMillis(); // 开始时间  
 		//创建HttpClientBuilder  
 		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();  
 		//HttpClient  
@@ -213,7 +227,7 @@ public class ShunpayServiceImpl implements ShunpayService {
 				sb.append("&");
 			}
 			sb.append(key);
-			//			System.out.println(sb.toString());
+			
 			formparams.add(new BasicNameValuePair("sign", DigestUtils.md5Hex(sb.toString())));  
 
 			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");  
@@ -229,7 +243,9 @@ public class ShunpayServiceImpl implements ShunpayService {
 				//打印响应内容  
 
 				String restr = EntityUtils.toString(httpEntity, "UTF-8");
-				logger.info("shunpay sendMsg response:" + restr);
+				System.out.println("shunpaySend response:" + restr);  
+				logService.execLog("call", "shunpaySend", startTimeMillis, formparams.toString()+" response:" + restr);
+				
 				Gson gson = new Gson();
 				try {
 					Map<String,Object> requestMap = gson.fromJson(restr, Map.class);
