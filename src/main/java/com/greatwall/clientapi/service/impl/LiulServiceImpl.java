@@ -177,7 +177,7 @@ public class LiulServiceImpl implements LiulService {
 				//打印响应内容  
 				
 				String restr = EntityUtils.toString(httpEntity, "GBK");
-				System.out.println("liul searchState response:" + restr);  
+//				System.out.println("liul searchState response:" + restr);  
 				logService.execLog("call", "liulSearchState", startTimeMillis, formparams.toString()+" response:" + restr);
 				
 				consume.setRemark(restr);

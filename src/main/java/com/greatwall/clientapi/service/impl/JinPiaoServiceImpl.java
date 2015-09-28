@@ -119,8 +119,7 @@ public class JinPiaoServiceImpl implements JinPiaoService {
 				//打印响应内容  
 				
 				String restr = EntityUtils.toString(httpEntity, "UTF-8");
-				
-				System.out.println("response:" + restr);  
+//				System.out.println("response:" + restr);  
 				logService.execLog("call", "jinpiaoSend", startTimeMillis, formparams.toString()+" response:" + restr);
 				
 				consume.setRemark(restr);

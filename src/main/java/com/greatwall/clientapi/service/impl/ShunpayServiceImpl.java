@@ -152,7 +152,7 @@ public class ShunpayServiceImpl implements ShunpayService {
 							return RMSConstant.CONSUME_STATE_SENDED_WAIT;
 						}else if("8".equals(requestMap.get("state"))){
 							return RMSConstant.CONSUME_STATE_SENDED_PROCESSING;
-						}else if("0".equals(requestMap.get("state"))){
+						}else if("0".equals(requestMap.get("state"))||"".equals(requestMap.get("state"))){
 							return RMSConstant.CONSUME_STATE_SUC;
 						}else if("6".equals(requestMap.get("state"))){
 							return "";//部分成功暂不处理
@@ -243,7 +243,7 @@ public class ShunpayServiceImpl implements ShunpayService {
 				//打印响应内容  
 
 				String restr = EntityUtils.toString(httpEntity, "UTF-8");
-				System.out.println("shunpaySend response:" + restr);  
+//				System.out.println("shunpaySend response:" + restr);  
 				logService.execLog("call", "shunpaySend", startTimeMillis, formparams.toString()+" response:" + restr);
 				
 				Gson gson = new Gson();
