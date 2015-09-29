@@ -192,6 +192,9 @@
       <if test="state != null" >
         STATE = #{state,jdbcType=VARCHAR},
       </if>
+      <if test="balance != null" >
+        BALANCE = #{balance,jdbcType=DOUBLE},
+      </if>
       <if test="remark != null" >
         REMARK = #{remark}
       </if>

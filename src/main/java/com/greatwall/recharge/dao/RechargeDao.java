@@ -12,6 +12,8 @@ public interface RechargeDao {
 	
     public int insert(Recharge record);
     
+    public Recharge getRecharge(Recharge recharge);
+    
     public List<RechargeConditions> getRechargesPage(RechargeConditions rechargeConditions,PageParameter page) throws DaoException;
 
 }

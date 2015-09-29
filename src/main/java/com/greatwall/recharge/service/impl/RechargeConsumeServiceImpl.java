@@ -139,6 +139,10 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 	public List<RechargeConditions> getRechargesPage(RechargeConditions rechargeConditions,PageParameter page) throws DaoException{
 		return rechargeDao.getRechargesPage(rechargeConditions, page);
 	}
+	
+	public Recharge getRecharge(Recharge recharge){
+		return rechargeDao.getRecharge(recharge);
+	}
 
 
 	@Autowired

@@ -30,4 +30,6 @@ public interface RechargeConsumeService {
 	public Boolean updateState(Consume consume);
 	
 	public Consume getConsumeBy(Consume consume);
+	
+	public Recharge getRecharge(Recharge recharge);
 }

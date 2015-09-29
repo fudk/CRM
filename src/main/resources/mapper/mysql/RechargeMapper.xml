@@ -4,38 +4,47 @@
 	<resultMap id="BaseResultMap" type="com.greatwall.recharge.dto.Recharge">
 		<result column="RECHARGE_ID" property="rechargeId" jdbcType="INTEGER" />
 		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
-		<result column="RECHARGE_AMOUNT" property="rechargeAmount"
-			jdbcType="DOUBLE" />
+		<result column="RECHARGE_AMOUNT" property="rechargeAmount" jdbcType="DOUBLE" />
 		<result column="OPERATOR" property="operator" jdbcType="INTEGER" />
 		<result column="USER_ID" property="userId" jdbcType="INTEGER" />
 		<result column="REMARK" jdbcType="VARCHAR" property="remark" />
 		<result column="TYPE" jdbcType="VARCHAR" property="type" />
+		<result column="CONSUME_ID" property="consumeId" jdbcType="VARCHAR" />
 	</resultMap>
 	
 	<resultMap id="ConditionsResultMap" type="com.greatwall.recharge.dto.RechargeConditions">
 		<result column="RECHARGE_ID" property="rechargeId" jdbcType="INTEGER" />
 		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
-		<result column="RECHARGE_AMOUNT" property="rechargeAmount"
-			jdbcType="DOUBLE" />
+		<result column="RECHARGE_AMOUNT" property="rechargeAmount" jdbcType="DOUBLE" />
 		<result column="OPERATOR" property="operator" jdbcType="INTEGER" />
 		<result column="USER_ID" property="userId" jdbcType="INTEGER" />
 		<result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
 		<result column="OPERATOR_NAME" jdbcType="VARCHAR" property="operatorName" />
 		<result column="LOGIN_NAME" jdbcType="VARCHAR" property="loginName" />
 		<result column="TYPE" jdbcType="VARCHAR" property="type" />
+		<result column="CONSUME_ID" property="consumeId" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		RECHARGE_ID, CREATE_TIME, RECHARGE_AMOUNT, OPERATOR, USER_ID,REMARK,TYPE
+		RECHARGE_ID, CREATE_TIME, RECHARGE_AMOUNT, OPERATOR, USER_ID,REMARK,TYPE,CONSUME_ID
 	</sql>
 
 	<insert id="insert" parameterType="com.greatwall.recharge.dto.Recharge">
-		insert into td_rms_recharge_log ( CREATE_TIME, RECHARGE_AMOUNT,
-		OPERATOR, USER_ID,REMARK,TYPE)
-		values ( #{createTime,jdbcType=TIMESTAMP},
-		#{rechargeAmount,jdbcType=DOUBLE},
-		#{operator,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},#{remark},#{type})
+	insert into td_rms_recharge_log (RECHARGE_ID, CREATE_TIME, RECHARGE_AMOUNT, 
+      OPERATOR, USER_ID, REMARK, 
+      TYPE, CONSUME_ID)
+    values (#{rechargeId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{rechargeAmount,jdbcType=DOUBLE}, 
+      #{operator,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{consumeId,jdbcType=VARCHAR})
 	</insert>
+	
+	<select id="selectRecharge" resultMap="BaseResultMap"
+		parameterType="com.greatwall.recharge.dto.Recharge">
+		select 
+		<include refid="Base_Column_List"></include>
+		from td_rms_recharge_log
+		where CONSUME_ID = #{consumeId,jdbcType=VARCHAR}
+	</select>
 
 	<select id="selectByQueryPage" resultMap="ConditionsResultMap"
 		parameterType="com.greatwall.recharge.dto.RechargeConditions">
@@ -59,6 +68,9 @@
 			</if>
 			<if test="recType != null and recType != '' ">
 				and TYPE = #{recType,jdbcType=VARCHAR}
+			</if>
+			<if test="consumeId != null and consumeId != '' ">
+				and CONSUME_ID = #{consumeId,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>

@@ -46,8 +46,13 @@ public class ClientServiceIml implements ClientService {
 			if(RMSConstant.CONSUME_STATE_SENDED_FAIL.equals(status)){
 				//如果充值失败需要冲抵余额
 				Consume cons =rechargeConsumeService.getConsume(consume.getConsumeId());
-
-				if(cons.getState().contains(RMSConstant.CONSUME_STATE_SENDED)){//如果接口已经调用，而且状态为失败才能冲抵，并且只能冲抵1次
+				
+				Recharge recharge = new Recharge();
+				recharge.setConsumeId(consume.getConsumeId());
+				Recharge rc =rechargeConsumeService.getRecharge(recharge);
+				status = RMSConstant.CONSUME_STATE_FAIL;
+				if(rc==null&&cons!=null){
+//				if(cons.getState().contains(RMSConstant.CONSUME_STATE_SENDED)){//如果接口已经调用，而且状态为失败才能冲抵，并且只能冲抵1次
 					Recharge rec = new Recharge();
 					rec.setCreateTime(new Date());
 					rec.setRemark("充值失败，系统自动余额冲抵");
@@ -55,9 +60,14 @@ public class ClientServiceIml implements ClientService {
 					rec.setUserId(cons.getUserId());
 					rec.setType(cons.getConsumeType());
 					rec.setRechargeAmount(cons.getPayment());
-
+					rec.setConsumeId(cons.getConsumeId());
 					rechargeConsumeService.saveRecharge(rec, null);
-					status = RMSConstant.CONSUME_STATE_FAIL;
+					
+					cons.setState(status);
+					cons.setBalance(cons.getBalance()+cons.getPayment());
+					cons.setRemark("");
+					rechargeConsumeService.updateState(cons);
+					return status;
 				}
 			}
 			rechargeConsumeService.confirmConsume(consume.getConsumeId(), status);

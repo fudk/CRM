@@ -57,7 +57,8 @@
 			data : {consumeId:consumeId,createTime:createTime,interfaceName:interfaceName},
 			success : function(msg) {
 				if (msg == 'success') {
-					alert('查询成功！');
+					//alert('查询成功！');
+					search();
 				}else{
 					alert('查询失败！'+msg);
 				}

@@ -18,6 +18,10 @@ public class RechargeDaoImpl extends MyBatisDao implements RechargeDao {
 	public int insert(Recharge recharge) {
 		return this.save("RechargeMapper.insert",recharge);
 	}
+	
+	public Recharge getRecharge(Recharge recharge){
+		return this.get("RechargeMapper.selectRecharge", recharge);
+	}
 
 	public List<RechargeConditions> getRechargesPage(RechargeConditions rechargeConditions,PageParameter page) throws DaoException{
 		return this.getListPage("RechargeMapper.selectByQueryPage", rechargeConditions, page);
