@@ -19,7 +19,7 @@
 		<tr>
 			<td><c:out value="${status.count+page.pageSize*(page.currentPage-1)}"/></td>
 			<td><c:out value="${usert.loginName}"/></td>
-			<td><c:out value="${usert.userName}"/></td>
+			<td><div style="width:120px;overflow:hidden;"><c:out value="${usert.userName}"/></div></td>
 			<td><c:out value="${usert.userEmail}"/></td>
 			<td><c:out value="${usert.balance}"/></td>
 			<td><c:out value="${usert.flowBalance}"/></td>
