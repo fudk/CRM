@@ -48,8 +48,8 @@
 		</javaClientGenerator>
 
 		<!-- 配置表信息 -->
-		<table schema="crm" tableName="td_sys_log"
-			domainObjectName="SysLog" enableCountByExample="false"
+		<table schema="crm" tableName="td_rms_recharge_log"
+			domainObjectName="Recharge" enableCountByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
 			enableUpdateByExample="false">
 			<!-- schema即为数据库名 tableName为对应的数据库表 domainObjectName是要生成的实体类 enable*ByExample 
