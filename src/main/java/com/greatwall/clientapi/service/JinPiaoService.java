@@ -5,6 +5,8 @@ import com.greatwall.recharge.dto.Consume;
 public interface JinPiaoService {
 
 	public Boolean sendMsg(Consume consume) throws Exception;
+
+	String searchState() throws Exception;
 	
 /*	public String searchState(Consume consume) throws Exception;
 	

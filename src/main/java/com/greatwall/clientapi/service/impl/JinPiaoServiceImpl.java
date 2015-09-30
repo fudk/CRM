@@ -65,6 +65,77 @@ public class JinPiaoServiceImpl implements JinPiaoService {
 		this.signKey = signKey;
 	}
 
+	@Override
+	public String searchState() throws Exception{
+		long startTimeMillis = System.currentTimeMillis(); // 开始时间  
+		//创建HttpClientBuilder  
+		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();  
+		//HttpClient  
+		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();  
+
+		HttpPost httpPost = new HttpPost("http://122.224.5.41:8080/api.aspx/api.aspx");  
+		RequestConfig requestConfig = RequestConfig.custom()  
+				.setConnectionRequestTimeout(3000).setConnectTimeout(3000)  
+				.setSocketTimeout(3000).build(); 
+		httpPost.setConfig(requestConfig);  
+		
+		try {  
+			String action = "getReports";
+			String count = "10";
+			String v = "1.1";
+			
+			StringBuffer signData = new StringBuffer();
+			signData.append("account=");
+			signData.append(account);
+			signData.append("&count=");
+			signData.append(count);
+			signData.append("&key=");
+			signData.append(signKey);
+			
+			String sign = DigestUtils.md5Hex(signData.toString());
+			
+			// 创建参数队列  
+			List<NameValuePair> formparams = new ArrayList<NameValuePair>();  
+			formparams.add(new BasicNameValuePair("v", v));  
+			formparams.add(new BasicNameValuePair("action", action));  
+			formparams.add(new BasicNameValuePair("account", account));  
+			formparams.add(new BasicNameValuePair("count", count));  
+			formparams.add(new BasicNameValuePair("sign", sign));  
+
+			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");  
+			httpPost.setEntity(entity);  
+
+			HttpResponse httpResponse;  
+			//post请求  
+			httpResponse = closeableHttpClient.execute(httpPost);  
+
+			//getEntity()  
+			HttpEntity httpEntity = httpResponse.getEntity();  
+			if (httpEntity != null) {  
+				//打印响应内容  
+				
+				String restr = EntityUtils.toString(httpEntity, "UTF-8");
+//				System.out.println("response:" + restr);  
+				logService.execLog("call", "jinpiaoSearchState", startTimeMillis, formparams.toString()+" response:" + restr);
+				
+				Gson gson = new Gson();
+				Map map = gson.fromJson(restr, Map.class);
+				if("0".equals(map.get("Code"))){
+					return restr;
+				}
+			}  
+			//					closeableHttpClient.close();  
+		} catch (Exception e) {  
+			throw new Exception(e);
+		}  finally {  
+			try {
+				//释放资源  
+				closeableHttpClient.close();
+			} catch (IOException e) {
+			}  
+		}  
+		return "";
+	}
 	
 	
 	public Boolean sendMsg(Consume consume) throws Exception{
@@ -122,10 +193,10 @@ public class JinPiaoServiceImpl implements JinPiaoService {
 //				System.out.println("response:" + restr);  
 				logService.execLog("call", "jinpiaoSend", startTimeMillis, formparams.toString()+" response:" + restr);
 				
-				consume.setRemark(restr);
 				Gson gson = new Gson();
 				Map map = gson.fromJson(restr, Map.class);
 				if("0".equals(map.get("Code"))){
+					consume.setRemark(String.format("%.0f ", map.get("TaskID")).trim());
 					return true;
 				}
 			}  

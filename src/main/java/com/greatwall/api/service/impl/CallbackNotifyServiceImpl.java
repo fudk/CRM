@@ -27,7 +27,7 @@ public class CallbackNotifyServiceImpl implements CallbackNotifyService {
 
 	public Boolean callbackNotify(ConsumeConditions consume,String opstatus) throws Exception{
 		if(consume == null || consume.getNotifyUrl() == null){
-			
+			return false;
 		}
 		//创建HttpClientBuilder  
 		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();  

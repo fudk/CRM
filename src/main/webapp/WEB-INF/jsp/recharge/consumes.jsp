@@ -41,14 +41,14 @@
 			<c:if test="${consume.consumeType == 'flow'}">流量</c:if>
 			</td>
 			<td><div style="width:150px;overflow:hidden;"><c:out value="${consume.userName}"/></div></td>
-			<td><c:if test="${consume.state == 'sended'}">充值中</c:if>
+			<td><c:if test="${consume.state == 'sended' || consume.state == 'sended_processing'}">充值中</c:if>
 			<c:if test="${consume.state == 'fail'}">充值失败</c:if>
 			<c:if test="${consume.state == 'success'}">充值成功</c:if>
+			<c:if test="${consume.state == 's_error'}">错误</c:if>
 			</td>
 			<td><div style="width:80px;overflow:hidden;"><fmt:formatDate value="${consume.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></div></td>
-			<td><c:if test="${consume.interfaceName !='jinpiao'}">
+			<td>
 			<input type="button" value="状态" onclick="searchState('${consume.consumeId}','<fmt:formatDate value="${consume.createTime}" pattern="yyyy-MM-dd"/>','${consume.interfaceName}')">
-			</c:if>
 			</td>
 		</tr>
 	</c:forEach>

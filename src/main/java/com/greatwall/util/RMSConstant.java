@@ -31,7 +31,7 @@ public class RMSConstant {
 	 */
 	public static final String INTERFACE_NAME_SHUNPAY = "shunpay";
 	/**
-	 * @Fields INTERFACE_NAME_LIUL : 流量接口1
+	 * @Fields INTERFACE_NAME_LIUL : 君隆流量
 	 */
 	public static final String INTERFACE_NAME_LIUL= "liul";
 	/**

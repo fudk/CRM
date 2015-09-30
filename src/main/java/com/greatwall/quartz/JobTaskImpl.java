@@ -61,7 +61,7 @@ public class JobTaskImpl implements JobTask {
 		cc.setState("%sended%");
 
 		PageParameter page = new PageParameter();
-		page.setPageSize(2);
+		page.setPageSize(20);
 		//page.setCurrentPage(1);
 
 		String status = "";

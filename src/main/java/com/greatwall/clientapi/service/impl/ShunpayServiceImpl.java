@@ -251,12 +251,9 @@ public class ShunpayServiceImpl implements ShunpayService {
 					Map<String,Object> requestMap = gson.fromJson(restr, Map.class);
 					if(requestMap!=null&&"10000000".equals(requestMap.get("retcode"))){
 						return true;
-					}else{
-						consume.setRemark(restr);
 					}
 				} catch (Exception e) {
 					//logger.error("", e);
-					consume.setRemark(restr);
 				}
 			}  
 
