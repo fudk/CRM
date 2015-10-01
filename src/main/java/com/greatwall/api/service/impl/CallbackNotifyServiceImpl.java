@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -26,7 +27,7 @@ import com.greatwall.recharge.dto.ConsumeConditions;
 public class CallbackNotifyServiceImpl implements CallbackNotifyService {
 
 	public Boolean callbackNotify(ConsumeConditions consume,String opstatus) throws Exception{
-		if(consume == null || consume.getNotifyUrl() == null){
+		if(consume == null || StringUtils.isBlank(consume.getNotifyUrl())){
 			return false;
 		}
 		//创建HttpClientBuilder  

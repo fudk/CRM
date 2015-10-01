@@ -55,8 +55,9 @@ public class JobTaskImpl implements JobTask {
 
 	private void searchState() throws Exception{
 		Boolean flag = true;
-		int maxWhile = 50;//最多循环50次
+		int maxWhile = 10;//最多循环10次
 		int initWhile = 1;
+		ConsumeConditions jinpiao = null;
 		ConsumeConditions cc =new ConsumeConditions();
 		cc.setState("%sended%");
 
@@ -75,6 +76,12 @@ public class JobTaskImpl implements JobTask {
 			}
 
 			for(ConsumeConditions ccd:consumeList){
+				if(RMSConstant.INTERFACE_NAME_JINPIAO.equals(ccd.getInterfaceName())){
+					if(jinpiao==null){
+						jinpiao = ccd;
+					}
+					continue;
+				}
 				status = clientService.searchState(ccd);
 				if(status.contains("fail")){
 					opstatus = "00";
@@ -96,7 +103,18 @@ public class JobTaskImpl implements JobTask {
 				break;
 			}
 		}
+		
+		if(jinpiao!=null){
+			status = clientService.searchState(jinpiao);
+			if(status.contains("fail")){
+				opstatus = "00";
+			}else if("success".equals(status)){
+				opstatus = "01";
+			}
+			run(fixedThreadPool,jinpiao,opstatus);
+		}
 	}
+	
 	
 	private void run(ExecutorService threadPool,final ConsumeConditions consumeConditions,final String opstatus) {
 		threadPool.execute(new Runnable() {  
