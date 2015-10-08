@@ -135,6 +135,13 @@
 				<option value="phone">话费</option>
 				<option value="flow">流量</option>
 				</select>	
+				状态：<select name="state">
+				<option value="">全部</option>
+				<option value="processing">充值中</option>
+				<option value="fail">充值成功</option>
+				<option value="success">充值失败</option>
+				<option value="error">错误</option>
+				</select>	
 					 充值时间：<input type="text" size="12" readonly="readonly"
 					id="startTime" name="startTime" class="Wdate"
 					onFocus="startDate(this)"   value="" /> 

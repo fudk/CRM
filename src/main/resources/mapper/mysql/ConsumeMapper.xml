@@ -121,6 +121,14 @@
 			<if test="isp != null and isp != '' ">
 				and ISP = #{isp,jdbcType=VARCHAR}
 			</if>
+			<if test="state != null and state != '' ">
+				<if test="state == 'processing'">
+				and (STATE = 'sended' or STATE = 'sended_processing' or STATE = 'sended_wait')
+				</if>
+				<if test="state == 'error'">
+				and (STATE = 's_error' or STATE = 'error')
+				</if>
+			</if>
 			<if test="startTime != null">
 				<![CDATA[ and a.CREATE_TIME > #{startTime,jdbcType=TIMESTAMP} ]]>
 			</if>
