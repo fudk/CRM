@@ -180,6 +180,29 @@
     </where>
   </select>
   
+  <select id="selectConsumeConditions" resultMap="ConditionsResultMap" parameterType="com.greatwall.recharge.dto.Consume" >
+    select 
+    CONSUME_ID, a.USER_ID, DISCOUNT, a.CREATE_TIME, CONSUME_PRICE, CONSUME_NUM,
+		CONSUME_AMOUNT, CONSUME_PHONE, CONSUME_TYPE, ISP, NOTIFY_URL,
+		PRODUCT_ID, PRODUCT_NAME, STATE, a.BALANCE, PAYMENT,a.REMARK,a.INTERFACE_NAME,a.ORDER_ID,b.SESSION_KEY
+		from td_rms_consume_log a ,td_sm_user b
+    <where>
+    	a.USER_ID = b.USER_ID
+    	<if test="consumeId != null" >
+        and CONSUME_ID = #{consumeId,jdbcType=VARCHAR}
+      	</if>
+      	<if test="orderId != null" >
+        <![CDATA[ and ORDER_ID = #{orderId,jdbcType=VARCHAR}  ]]>
+      	</if>
+      	<if test="remark != null" >
+         and a.REMARK = #{remark,jdbcType=VARCHAR}
+      	</if>
+      	<if test="interfaceName != null" >
+         and INTERFACE_NAME = #{interfaceName,jdbcType=VARCHAR}
+      	</if>
+    </where>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from td_rms_consume_log
     where CONSUME_ID = #{consumeId,jdbcType=VARCHAR}

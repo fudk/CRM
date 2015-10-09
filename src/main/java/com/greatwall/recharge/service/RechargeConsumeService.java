@@ -32,4 +32,6 @@ public interface RechargeConsumeService {
 	public Consume getConsumeBy(Consume consume);
 	
 	public Recharge getRecharge(Recharge recharge);
+
+	ConsumeConditions getConsumeConditions(Consume consume);
 }

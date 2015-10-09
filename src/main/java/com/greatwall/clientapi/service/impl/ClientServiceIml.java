@@ -3,6 +3,8 @@ package com.greatwall.clientapi.service.impl;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -10,11 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.greatwall.api.service.CallbackNotifyService;
 import com.greatwall.clientapi.service.ClientService;
 import com.greatwall.clientapi.service.JinPiaoService;
 import com.greatwall.clientapi.service.LiulService;
 import com.greatwall.clientapi.service.ShunpayService;
 import com.greatwall.recharge.dto.Consume;
+import com.greatwall.recharge.dto.ConsumeConditions;
 import com.greatwall.recharge.dto.Recharge;
 import com.greatwall.recharge.service.RechargeConsumeService;
 import com.greatwall.util.RMSConstant;
@@ -23,6 +27,11 @@ import com.greatwall.util.RMSConstant;
 public class ClientServiceIml implements ClientService {
 
 	Logger logger = Logger.getLogger(ClientServiceIml.class);
+	
+	ExecutorService fixedThreadPool = Executors.newFixedThreadPool(10);
+	
+	@Autowired
+	private CallbackNotifyService callbackNotifyService;
 
 	@Autowired
 	private LiulService liulService;
@@ -70,16 +79,19 @@ public class ClientServiceIml implements ClientService {
 				consu.setInterfaceName(RMSConstant.INTERFACE_NAME_JINPIAO);
 				consu.setRemark(String.format("%.0f ", m.get("TaskID")).trim());
 				
-				Consume cons = rechargeConsumeService.getConsumeBy(consu);
+//				Consume cons = rechargeConsumeService.getConsumeBy(consu);
+				ConsumeConditions cons = rechargeConsumeService.getConsumeConditions(consu);
 				if(cons!=null){
 					String rest = String.format("%.0f ", m.get("Status")).trim();
 					System.out.println(rest);
 					if("5".equals(rest)){
 						status = RMSConstant.CONSUME_STATE_FAIL;
 						rechargeReturn(cons,status);
+						run(fixedThreadPool,cons,"00");
 					}else if("4".equals(rest)){
 						status = RMSConstant.CONSUME_STATE_SUC;
 						rechargeConsumeService.confirmConsume(cons.getConsumeId(), status);
+						run(fixedThreadPool,cons,"01");
 					}
 				}
 			}
@@ -128,5 +140,23 @@ public class ClientServiceIml implements ClientService {
 			return true;
 		}
 		return false;
+	}
+	
+	private void run(ExecutorService threadPool,final ConsumeConditions consumeConditions,final String opstatus) {
+		threadPool.execute(new Runnable() {  
+			@Override
+			public void run() {  
+				try {  
+					callbackNotifyService.callbackNotify(consumeConditions, opstatus);
+				} catch (Exception e) {  
+					logger.error("充值状态回调错误", e);
+				}finally{
+					
+				}
+
+
+			}  
+		});  
+		//threadPool.shutdown();// 任务执行完毕，关闭线程池  
 	}
 }

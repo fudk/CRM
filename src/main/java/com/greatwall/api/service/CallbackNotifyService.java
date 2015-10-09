@@ -4,5 +4,5 @@ import com.greatwall.recharge.dto.ConsumeConditions;
 
 public interface CallbackNotifyService {
 
-	public Boolean callbackNotify(ConsumeConditions consumeConditions,String opstatus) throws Exception;
+	public Boolean callbackNotify(ConsumeConditions consume,String opstatus) throws Exception;
 }

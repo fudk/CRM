@@ -291,6 +291,11 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 		return consumeDao.getConsumeBy(consume);
 	}
 	
+	@Override
+	public ConsumeConditions getConsumeConditions(Consume consume){
+		return consumeDao.getConsumeConditions(consume);
+	}
+	
 
 	@Override
 	public List<ConsumeConditions> getConsumesPage(ConsumeConditions consume,PageParameter page) throws DaoException {

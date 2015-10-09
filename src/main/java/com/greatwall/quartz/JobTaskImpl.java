@@ -24,7 +24,7 @@ public class JobTaskImpl implements JobTask {
 
 	Logger logger = Logger.getLogger(JobTaskImpl.class);
 
-	ExecutorService fixedThreadPool = Executors.newFixedThreadPool(30);
+	ExecutorService fixedThreadPool = Executors.newFixedThreadPool(20);
 	
 	@Autowired
 	private ClientService clientService;
@@ -111,7 +111,7 @@ public class JobTaskImpl implements JobTask {
 			}else if("success".equals(status)){
 				opstatus = "01";
 			}
-			run(fixedThreadPool,jinpiao,opstatus);
+//			run(fixedThreadPool,jinpiao,opstatus);
 		}
 	}
 	

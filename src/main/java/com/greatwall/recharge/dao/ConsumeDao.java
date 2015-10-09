@@ -23,4 +23,6 @@ public interface ConsumeDao {
 	public Consume getConsume(String consumeId);
 	
 	public Consume getConsumeBy(Consume consume);
+	
+	public ConsumeConditions getConsumeConditions(Consume consume);
 }
