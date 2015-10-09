@@ -28,7 +28,13 @@ public class UserDaoImpl extends MyBatisDao implements UserDao {
 	}
 	
 	public List<User> searchUsers(User user,PageParameter page) throws DaoException{
-		user.setLoginName("%"+user.getLoginName()+"%");
+		if(user.getLoginName()!=null){
+			user.setLoginName("%"+user.getLoginName()+"%");
+		}
+		if(user.getUserName()!=null){
+			user.setUserName("%"+user.getUserName()+"%");
+		}
+		
 		return this.getListPage("userMapper.searchUsersPage",user,page);
 	}
 	

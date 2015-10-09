@@ -29,8 +29,8 @@
 			<td><c:out value="${consume.consumePrice}"/></td>
 			<td><c:out value="${consume.consumeNum}"/></td>
 			<td><c:out value="${consume.consumeAmount}"/></td>
-			<td><c:out value="${consume.payment}"/></td>
-			<td><c:out value="${consume.balance}"/></td>
+			<td><c:if test="${consume.state == 'fail'}">0</c:if><c:if test="${consume.state != 'fail'}">${consume.payment}</c:if></td>
+			<td><c:if test="${consume.state == 'fail'}">余额不变</c:if><c:if test="${consume.state != 'fail'}">${consume.balance}</c:if></td>
 			<td>
 			<c:if test="${consume.isp == 'CM'}">中国移动</c:if>
 			<c:if test="${consume.isp == 'CU'}">中国联通</c:if>

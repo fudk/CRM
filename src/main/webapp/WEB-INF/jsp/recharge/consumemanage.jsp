@@ -109,6 +109,11 @@
 			dateFmt : 'yyyy-MM-dd '
 		})
 	}
+	
+	function clearform(){
+		$("#consumeForm").find("input[type!='button']").val("");
+		$("#consumeForm").find("select").val("");
+	}
 </script>
 
 </head>
@@ -120,9 +125,9 @@
 			<div class="page_title">充值记录</div>
 			<form action="" id="consumeForm">
 			<div id="Search">
-				手机号：<input type="text" name="consumePhone" id="consumePhone" value=""
+				手机号：<input type="text" name="consumePhone" id="consumePhone" value="" size="11"
 					style="border:1px solid #ccc;"> 
-				消费账户：<input type="text" name="operatorName" id="operatorName" value=""
+				消费账户：<input type="text" name="operatorName" id="operatorName" value="" size="15"
 					style="border:1px solid #ccc;"><input type="hidden" name="userId" id="operator"/>
 				运营商：<select name="isp">
 				<option value="">全部</option>
@@ -138,8 +143,8 @@
 				状态：<select name="state">
 				<option value="">全部</option>
 				<option value="processing">充值中</option>
-				<option value="fail">充值成功</option>
-				<option value="success">充值失败</option>
+				<option value="success">充值成功</option>
+				<option value="fail">充值失败</option>
 				<option value="error">错误</option>
 				</select>	
 					 充值时间：<input type="text" size="12" readonly="readonly"
@@ -150,6 +155,7 @@
 					onFocus="endDate()" value="" /> 
 
  			<input type="button" onclick="search()" value="查询" /> 
+ 			<input type="button" onclick="clearform()" value="清除" /> 
 			</div>
 			</form>
 			<div id="Searchresult"></div>

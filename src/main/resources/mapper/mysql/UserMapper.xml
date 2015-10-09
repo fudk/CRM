@@ -215,7 +215,10 @@
 		from td_sm_user
 		<where>
 			<if test="loginName != null and loginName != '' ">
-				OR LOGIN_NAME like #{loginName,jdbcType=VARCHAR}
+				LOGIN_NAME like #{loginName,jdbcType=VARCHAR}
+			</if>
+			<if test="userName != null and userName != '' ">
+				USER_NAME = #{userName,jdbcType=VARCHAR}
 			</if>
 			<if test="parentId != null">
 				AND PARENT_ID = #{parentId,jdbcType=VARCHAR}

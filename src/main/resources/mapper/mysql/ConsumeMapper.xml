@@ -103,10 +103,14 @@
 	<select id="selectByQueryPage" resultMap="ConditionsResultMap"
 		parameterType="com.greatwall.recharge.dto.ConsumeConditions">
 		select
-		CONSUME_ID, a.USER_ID, DISCOUNT, a.CREATE_TIME, CONSUME_PRICE, CONSUME_NUM,
-		CONSUME_AMOUNT, CONSUME_PHONE, CONSUME_TYPE, ISP, NOTIFY_URL,
-		PRODUCT_ID, PRODUCT_NAME, STATE, a.BALANCE, PAYMENT,a.REMARK,a.INTERFACE_NAME,a.ORDER_ID,b.USER_NAME
-		from td_rms_consume_log a ,td_sm_user b
+		CONSUME_ID, a.USER_ID, DISCOUNT, a.CREATE_TIME, CONSUME_PRICE,
+		CONSUME_NUM,
+		CONSUME_AMOUNT, CONSUME_PHONE, CONSUME_TYPE, ISP,
+		NOTIFY_URL,
+		PRODUCT_ID, PRODUCT_NAME, STATE, a.BALANCE,
+		PAYMENT,a.REMARK,a.INTERFACE_NAME,a.ORDER_ID,b.USER_NAME
+		from
+		td_rms_consume_log a ,td_sm_user b
 		<where>
 			a.USER_ID = b.USER_ID
 			<if test="userId != null and userId != '' ">
@@ -122,12 +126,17 @@
 				and ISP = #{isp,jdbcType=VARCHAR}
 			</if>
 			<if test="state != null and state != '' ">
-				<if test="state == 'processing'">
-				and (STATE = 'sended' or STATE = 'sended_processing' or STATE = 'sended_wait')
-				</if>
-				<if test="state == 'error'">
-				and (STATE = 's_error' or STATE = 'error')
-				</if>
+			<choose>
+				<when test="state == 'processing'">
+					and (STATE = 'sended' or STATE = 'sended_processing' or STATE =	'sended_wait')
+				</when>
+				<when test="state == 'error'">
+					and (STATE = 's_error' or STATE = 'error')
+				</when>
+				<otherwise>
+					and STATE = #{state,jdbcType=VARCHAR}
+				</otherwise>
+			</choose>
 			</if>
 			<if test="startTime != null">
 				<![CDATA[ and a.CREATE_TIME > #{startTime,jdbcType=TIMESTAMP} ]]>
