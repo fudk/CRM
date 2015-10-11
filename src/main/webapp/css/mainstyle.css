@@ -1,0 +1,24 @@
+body,html{width: 100%;height: 100%;background: #f1f1f1;font-family: "Microsoft YaHei";color:#333;}
+
+.content{float:left;margin:0 10px ;width:900px;}
+.title h4{font-weight: normal;font-size:18px;}
+.title h4 i{width: 8px;height:8px;border-radius: 4px;background: #ddd;float: right;margin-top:12px;}
+.title h4 b{float:right;width:850px;height:1px;border-top:1px solid #ddd;margin-top:15px;}
+.charge{width: 100%;height:300px;background: #ebebeb;border:1px solid #ebebeb}
+.charge>div{width: 800px;height:100px;margin:20px auto;}
+.select p{display: inline-block;margin-right:100px;font-size: 14px;}
+.tel-num p{font-size: 14px;}
+.tel-num  input{margin-left:50px;height:25px;}
+.Par{overflow: hidden;}
+.Par p{float:left;font-size: 14px;letter-spacing: 28px;}
+.Par ul{padding-left:0;list-style: none;overflow: hidden;float:left;width:600px;margin-left:23px;}
+.Par ul li{float:left;width:100px;height:30px;line-height:30px;border:1px solid #666;font-size: 14px;text-align: center;margin-right:10px;margin-bottom: 20px;}
+
+.active{background: #5da748;color:#fff;border:1px solid #5da748!important;}
+.true-num{margin-top:-20px;}
+.true-num p{font-size: 14px;}
+.true-num p span{margin-left:50px;color: red;}
+
+.button-foot{text-align: center;margin-top:20px;}
+.button-foot button{width:180px;height:35px;background: #e76258;border:none;border-radius: 8px;font-size:16px;color:#fff;font-family: "Microsoft YaHei"}
+.button-foot a{font-size: 14px;}

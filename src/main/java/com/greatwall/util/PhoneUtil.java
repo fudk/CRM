@@ -67,5 +67,15 @@ public class PhoneUtil {
 		throw new ClassCastException("错误的电话号码或号段未维护");
 	}
 	
-	
+	public String getIspName(String isp){
+		if("CM".equals(isp.toUpperCase())){
+			return "移动";
+		}else if("CU".equals(isp.toUpperCase())){
+			return "联通";
+		}else if("CUT".equals(isp.toUpperCase())){
+			return "电信";
+		}else{
+			return "运营商错误";
+		}
+	}
 }

@@ -44,7 +44,7 @@ public class MainController {
 			httpSession.setAttribute("resList", leftlist);
 //		}
 		
-		return new ModelAndView("main.jsp");
+		return new ModelAndView("main2.jsp");
 	}
 
 }
