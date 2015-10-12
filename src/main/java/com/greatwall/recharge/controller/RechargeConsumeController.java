@@ -233,6 +233,8 @@ public class RechargeConsumeController {
 				if(!"success".equals(reStr)){
 					map.put("msg",reStr);
 					return map;
+				}else{
+					map.put("msg","success");
 				}
 			}else{
 				List<String> errorMsgs = new ArrayList<String>();
