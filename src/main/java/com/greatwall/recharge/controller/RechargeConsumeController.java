@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -158,8 +160,10 @@ public class RechargeConsumeController {
 		if(path==null){
 			return mv;
 		}
-		List<String> tels = new ArrayList<>();
-		try {
+		model.addAttribute("tels", getSendTelList(path));
+		/*
+		  List<String> tels = new ArrayList<>();
+		  try {
 			BufferedReader br = new BufferedReader(new FileReader(basePath+path));  
 			String data = br.readLine();//一次读入一行，直到读入null为文件结束  
 			while( data!=null){  
@@ -171,14 +175,42 @@ public class RechargeConsumeController {
 			logger.error("path "+basePath+path+" 文件不存在");
 		} catch (IOException e) {
 			logger.error("path "+path+" 读取错误");
-		}
+		}*/
 		return mv;
+	}
+	
+	private List<String> getSendTelList(String path){
+		List<String> tels = new ArrayList<>();
+		BufferedReader br = null;
+		FileReader reader = null;
+		try {
+			reader = new FileReader(basePath+path);
+			br = new BufferedReader(reader);  
+			String data = br.readLine();//一次读入一行，直到读入null为文件结束  
+			while( data!=null){  
+				tels.add(data);
+				data = br.readLine(); //接着读下一行  
+			}
+		} catch (FileNotFoundException e) {
+			logger.error("path "+basePath+path+" 文件不存在");
+		} catch (IOException e) {
+			logger.error("path "+path+" 读取错误");
+		}finally{
+			try {
+				br.close();
+				reader.close();
+			} catch (IOException e) {
+			}
+		}
+		return tels;
 	}
 
 	@RequestMapping("/addConsumes")
-	public@ResponseBody String addConsumes(String type,String tel,String sendfile,String productValue,HttpSession session){
-		if(type==null||tel==null){
-			return "不能为空";
+	public@ResponseBody Map<String,Object> addConsumes(String type,String tel,String sendfile,String productValue,HttpSession session){
+		Map<String,Object> map = new HashMap<String,Object>(); 
+		if(type==null){
+			map.put("msg","充值类型不能为空");
+			return map;
 		}
 		Product product = new Product();
 		product.setProductType(type);
@@ -190,40 +222,67 @@ public class RechargeConsumeController {
 			
 			List<Product> products = productService.getProductsPage(product,page);
 			
-			if(!"文件批量导入".equals(tel)){
-				Product sendPro = null;
-				String isp = phoneUtil.isPhoneNum(tel);
-				for(Product pro:products){
-					if(pro.getIsp().toUpperCase().equals(isp)){
-						sendPro = pro;
-						System.out.println(pro.getProductName());
+			
+			UserChannel userChannel = new UserChannel();
+			userChannel.setUserId(u.getUserId());
+			userChannel.setType(product.getProductType());
+			List<UserChannel> uclist = userChannelService.getUserChannel(userChannel);
+			
+			if(tel!=null){
+				String reStr = sendConsume(u.getUserId(),tel,uclist,products);
+				if(!"success".equals(reStr)){
+					map.put("msg",reStr);
+					return map;
+				}
+			}else{
+				List<String> errorMsgs = new ArrayList<String>();
+				List<String> tels = getSendTelList(sendfile);
+				if(tels!=null&&tels.size()>0){
+					for(String phone:tels){
+						try {
+							String reStr = sendConsume(u.getUserId(),phone,uclist,products);
+							if(!"success".equals(reStr)){
+								errorMsgs.add(phone+" "+reStr);
+							}
+						} catch (Exception e) {
+							errorMsgs.add(phone+" "+e.getMessage());
+						}
 					}
 				}
 				
-				UserChannel userChannel = new UserChannel();
-				userChannel.setUserId(u.getUserId());
-				userChannel.setType(product.getProductType());
-				List<UserChannel> uclist = userChannelService.getUserChannel(userChannel);
-				
-				if(sendPro!=null){
-					sendConsume(sendPro,u.getUserId(),tel,uclist);
+				if(errorMsgs!=null&&errorMsgs.size()>0){
+					map.put("errorMsgs", errorMsgs);
+					map.put("msg", tels.size()-errorMsgs.size()+"保存成功，"+errorMsgs.size()+"保存失败。成功操作可在消费记录中查询");
 				}else{
-					return phoneUtil.getIspName(isp)+" 无此号码对应产品";
+					map.put("msg", "success");
 				}
-				
 			}
-			
-			System.out.println(phoneUtil.isPhoneNum(tel));
+			User user = userService.getUser(u.getUserId());
+			session.setAttribute("user", user);
+			map.put("amount", user.getBalance()-u.getBalance());
 			
 		} catch (Exception e) {
 			logger.error("", e);
-			return e.getMessage();
+			map.put("msg",e.getMessage());
+			return map;
 		}
-		
-		return "success";
+		return map;
 	}
 	
-	private void sendConsume(Product product,Integer userId,String tel,List<UserChannel> uclist) throws Exception{
+	
+	private String sendConsume(Integer userId,String tel,List<UserChannel> uclist,List<Product> products) throws Exception{
+		Product product = null;
+		String isp = phoneUtil.isPhoneNum(tel);
+		for(Product pro:products){
+			if(pro.getIsp().toUpperCase().equals(isp)){
+				product = pro;
+				System.out.println(pro.getProductName());
+			}
+		}
+		if(product==null){
+			return phoneUtil.getIspName(isp)+" 无此号码对应产品";
+		}
+		
 		Consume consume = new Consume();
 		
 		consume.setProductId(product.getProductId());
@@ -252,11 +311,14 @@ public class RechargeConsumeController {
 			}
 		}
 		if("".equals(interfaceName)){
-			throw new ClassCastException("用户未分配通道");
+			return "用户未分配通道";
+//			throw new ClassCastException("用户未分配通道");
 		}
 		consume.setInterfaceName(interfaceName);
 
-//		rechargeConsumeService.addConsume(consume);
+		rechargeConsumeService.addConsume(consume);
+		
+		return "success";
 	}
 	
 

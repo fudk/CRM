@@ -38,7 +38,7 @@
 </head>
 
 <body>
-	<div class="Par" style="height:120px;">
+	<div class="Par" style="width:100%;">
 		<ul id="phoneul">
 			<c:forEach items="${tels}" var="tel" varStatus="status">
 				<li class="active">${tel }</li>

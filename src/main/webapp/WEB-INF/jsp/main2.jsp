@@ -62,8 +62,10 @@
 						</div>
 						<div class="true-num" style="height:50px;">
 							<p>
-								实付金额<span>0.00</span> 元
+								实付金额<span id="amount">0.00</span> 元
 							</p>
+						</div>
+						<div  style="height:50px;display: none;" id="errorMsg">
 						</div>
 					</div>
 
@@ -98,6 +100,7 @@
 	}
 	
 	function saveConsumes(){
+		$("#errorMsg").hide();
 		if($("input[name='type']:checked").val()==''){
 			alert("充值类型不能为空！");
 			return;
@@ -114,11 +117,22 @@
 			type : "POST",
 			url : "${ctx}/rechargeConsume/addConsumes",
 			data : $("form").serialize(),
-			success : function(msg) {
-				if (msg == 'success') {
+			success : function(data) {
+				console.log(data);
+				if (data.msg == 'success') {
+					$("#amount").text(data.amount);
 					alert('充值成功！');
 				}else{
-					alert('充值失败！'+msg);
+					$("#errorMsg").html(data.msg+"<br/>");
+					if(data.errorMsgs != undefined){
+						var jsondatas = eval(data.errorMsgs);
+						$.each(jsondatas, function(i, n) {
+							$("#errorMsg").append(n+"<br/>")					
+							//alert("name:" + n.channelId + " value:" + n.isp);
+						});
+					}
+					$("#errorMsg").show();
+					alert('充值失败！'+data.msg);
 				}
 			}
 		});

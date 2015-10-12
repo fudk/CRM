@@ -44,6 +44,19 @@ public class MainController {
 			httpSession.setAttribute("resList", leftlist);
 //		}
 		
+		return new ModelAndView("main.jsp");
+	}
+	
+	@RequestMapping("/m2")
+	public ModelAndView main2(Product product,PageParameter page,ModelMap model,HttpSession httpSession) {
+		User user = httpSession.getAttribute("user")!=null?(User)httpSession.getAttribute("user"):null;
+//		if(httpSession.getAttribute("resTopList")==null){
+		JSONArray toplist = JSONArray.fromObject( mainService.getResource(user,"top") ); 
+		JSONArray leftlist = JSONArray.fromObject( mainService.getResource(user,"left") ); 
+		httpSession.setAttribute("resTopList", toplist);
+		httpSession.setAttribute("resList", leftlist);
+//		}
+		
 		return new ModelAndView("main2.jsp");
 	}
 
