@@ -157,7 +157,7 @@ public class RechargeConsumeController {
 	public ModelAndView showSendFile(String path,ModelMap model){
 		ModelAndView mv = new ModelAndView("/recharge/showsendfile.jsp");
 		System.out.println(path);
-		if(path==null){
+		if(path==null||!"".equals(path)){
 			return mv;
 		}
 		model.addAttribute("tels", getSendTelList(path));
@@ -197,8 +197,12 @@ public class RechargeConsumeController {
 			logger.error("path "+path+" 读取错误");
 		}finally{
 			try {
-				br.close();
-				reader.close();
+				if(br!=null){
+					br.close();
+				}
+				if(reader!=null){
+					reader.close();
+				}
 			} catch (IOException e) {
 			}
 		}
