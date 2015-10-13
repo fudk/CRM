@@ -18,12 +18,12 @@ import org.apache.http.util.EntityUtils;
 
 public class LocalHttpclientTest {
 	
-	private static String hosts = "http://115.29.43.62:8080";
-//	private static String hosts = "http://127.0.0.1";
+//	private static String hosts = "http://115.29.43.62:8080";
+	private static String hosts = "http://127.0.0.1";
 
 	public static void main(String[] args) {
-		regPhone();
-//		 regFlow();
+//		regPhone();
+		 regFlow();
 //		requesQuery();
 	}
 
@@ -61,7 +61,7 @@ public class LocalHttpclientTest {
 		formparams.add(new BasicNameValuePair("sign", DigestUtils.md5Hex(sb.toString())));  
 		System.out.println("====");
 
-
+		
 		UrlEncodedFormEntity entity;  
 		try {  
 			entity = new UrlEncodedFormEntity(formparams, "UTF-8");  
@@ -130,9 +130,25 @@ public class LocalHttpclientTest {
 		System.out.println("====");
 
 
+//		[{"platId":"288100","timestamp":"1444703462094","orderId":"20151013103059000001",
+//		"opType":"flow","flxTyp":"M","custPhone":"13905000513","opPrice":"30M","opNum":1,"notifyUrl":"","sign":"fb923e9ba408d7cb5791f145f8845e7c"}] 
+
+		List<NameValuePair> formparamstest = new ArrayList<NameValuePair>(); 
+		formparamstest.add(new BasicNameValuePair("platId", "288100"));  
+		formparamstest.add(new BasicNameValuePair("timestamp", "1444703462094"));  
+		formparamstest.add(new BasicNameValuePair("orderId", "20151013103059000001"));  
+		formparamstest.add(new BasicNameValuePair("opType", "flow"));  
+		formparamstest.add(new BasicNameValuePair("flxTyp", "M")); 
+		formparamstest.add(new BasicNameValuePair("custPhone", "13905000513"));  
+		formparamstest.add(new BasicNameValuePair("opPrice", "30M"));  
+		formparamstest.add(new BasicNameValuePair("opNum", "1"));  
+		formparamstest.add(new BasicNameValuePair("notifyUrl","")); 
+		formparamstest.add(new BasicNameValuePair("sign", "fb923e9ba408d7cb5791f145f8845e7c"));  
+		
 		UrlEncodedFormEntity entity;  
 		try {  
-			entity = new UrlEncodedFormEntity(formparams, "UTF-8");  
+//			entity = new UrlEncodedFormEntity(formparams, "UTF-8");  
+			entity = new UrlEncodedFormEntity(formparamstest, "UTF-8");  
 			httpPost.setEntity(entity);  
 
 			HttpResponse httpResponse;  
