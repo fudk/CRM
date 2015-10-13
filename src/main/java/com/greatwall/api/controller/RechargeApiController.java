@@ -327,20 +327,24 @@ public class RechargeApiController {
 				consume.setConsumePhone(phone);
 				
 				rechargeConsumeService.addConsume(consume);
-			}catch (ClassCastException e) {
-				logger.error(phone+" "+e.getMessage());
-				errorMsgs.add(phone+" "+e.getMessage());
 			}catch (Exception e) {
-				logger.error(phone+" 消费错误 ",e);
+				logger.error(phone,e);
 				errorMsgs.add(phone+" "+e.getMessage());
 			}
 		}
 
 		if(errorMsgs!=null&&errorMsgs.size()>0){
 			Gson gson = new Gson();
-			remap.put("resCode", "05");
-			remap.put("resMsg", gson.toJson(errorMsgs) );
-			remap.put("msg", phones.length-errorMsgs.size()+"保存成功，"+errorMsgs.size()+"保存失败。");
+			
+			String emsg = gson.toJson(errorMsgs);
+			remap.put("resCode", "09");
+			if(emsg.contains("code102")){
+				remap.put("resCode", "102");
+			}else if(emsg.contains("code104")){
+				remap.put("resCode", "104");
+			}
+			remap.put("resMsg", emsg );
+			remap.put("msg", "共"+(phones.length-errorMsgs.size())+"条保存成功，共"+errorMsgs.size()+"条保存失败。");
 		}else{
 			remap.put("resCode", "01");
 			remap.put("resMsg", "充值成功");

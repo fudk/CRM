@@ -171,7 +171,7 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 
 		double balance = MathUtil.sub(this.getTypeBalance(user, consume.getConsumeType()),consume.getPayment(), 2);
 		if(MathUtil.compareTo(balance, new Double(0)) == -1){
-			throw new DaoException(RMSConstant.ERROR_CODE_102+" 消费后余额为："+balance);
+			throw new DaoException("code"+RMSConstant.ERROR_CODE_102+" 余额不足");
 		}
 
 		int updateBalanceCount = 0;
@@ -200,7 +200,7 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 					consume.setState(RMSConstant.CONSUME_STATE_SENDED);
 				}else{
 //					run(fixedThreadPool,"shunpay",startTimeMillis,System.currentTimeMillis(),consume.getRemark());
-					throw new DaoException(RMSConstant.ERROR_CODE_104+" 接口调用失败");
+					throw new DaoException("code"+RMSConstant.ERROR_CODE_104+" 接口调用失败");
 				}
 			}else{
 				throw new Exception("未找到对应接口");
@@ -211,14 +211,14 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 					consume.setState(RMSConstant.CONSUME_STATE_SENDED);
 				}else{
 //					run(fixedThreadPool,"liul",startTimeMillis,System.currentTimeMillis(),consume.getRemark());
-					throw new DaoException(RMSConstant.ERROR_CODE_104+" 接口调用失败");
+					throw new DaoException("code"+RMSConstant.ERROR_CODE_104+" 接口调用失败");
 				}
 			}else if(RMSConstant.INTERFACE_NAME_JINPIAO.equals(consume.getInterfaceName())){
 				if(jinPiaoService.sendMsg(consume)){
 					consume.setState(RMSConstant.CONSUME_STATE_SENDED);
 				}else{
 //					run(fixedThreadPool,"jinPiao",startTimeMillis,System.currentTimeMillis(),consume.getRemark());
-					throw new DaoException(RMSConstant.ERROR_CODE_104+" 接口调用失败");
+					throw new DaoException("code"+RMSConstant.ERROR_CODE_104+" 接口调用失败");
 				}
 			}else{
 				throw new Exception("未找到对应接口");
