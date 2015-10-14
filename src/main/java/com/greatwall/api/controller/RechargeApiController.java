@@ -347,7 +347,7 @@ public class RechargeApiController {
 			remap.put("msg", "共"+(phones.length-errorMsgs.size())+"条保存成功，共"+errorMsgs.size()+"条保存失败。");
 		}else{
 			remap.put("resCode", "01");
-			remap.put("resMsg", "充值成功");
+			remap.put("resMsg", "提交成功");
 		}
 		
 		return remap;

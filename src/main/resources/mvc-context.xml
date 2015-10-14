@@ -27,7 +27,6 @@
 			<property name="excludeUrl">
 				<list>
 					<value>/login</value>
-					<value>/regist</value>
 					<value>/rechargeapi</value>
 				</list>
 			</property>

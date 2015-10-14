@@ -156,26 +156,10 @@ public class RechargeConsumeController {
 	@RequestMapping("/showSendFile")
 	public ModelAndView showSendFile(String path,ModelMap model){
 		ModelAndView mv = new ModelAndView("/recharge/showsendfile.jsp");
-		System.out.println(path);
 		if(path==null||!"".equals(path)){
 			return mv;
 		}
 		model.addAttribute("tels", getSendTelList(path));
-		/*
-		  List<String> tels = new ArrayList<>();
-		  try {
-			BufferedReader br = new BufferedReader(new FileReader(basePath+path));  
-			String data = br.readLine();//一次读入一行，直到读入null为文件结束  
-			while( data!=null){  
-				tels.add(data);
-				data = br.readLine(); //接着读下一行  
-			}
-			model.addAttribute("tels", tels);
-		} catch (FileNotFoundException e) {
-			logger.error("path "+basePath+path+" 文件不存在");
-		} catch (IOException e) {
-			logger.error("path "+path+" 读取错误");
-		}*/
 		return mv;
 	}
 	
