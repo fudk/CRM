@@ -20,6 +20,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ import com.greatwall.util.RMSConstant;
 @Service("liulService")
 public class LiulServiceImpl implements LiulService {
 
+	Logger logger = Logger.getLogger(LiulServiceImpl.class);
 	@Autowired
 	private LogService logService;
 	
@@ -305,6 +307,7 @@ public class LiulServiceImpl implements LiulService {
 
 			//					closeableHttpClient.close();  
 		} catch (Exception e) {  
+			logger.error("君隆充值接口调用错误：", e);
 			throw new Exception(e);
 		}  finally {  
 			try {
