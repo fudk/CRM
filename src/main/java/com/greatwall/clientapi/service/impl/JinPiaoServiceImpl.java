@@ -16,6 +16,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ import com.greatwall.util.RMSConstant;
 @Service("jinPiaoService")
 public class JinPiaoServiceImpl implements JinPiaoService {
 
+	Logger logger = Logger.getLogger(JinPiaoServiceImpl.class);
 	@Autowired
 	private LogService logService;
 	
@@ -202,6 +204,7 @@ public class JinPiaoServiceImpl implements JinPiaoService {
 			}  
 			//					closeableHttpClient.close();  
 		} catch (Exception e) {  
+			logger.error("金飘流量充值接口错误：", e);
 			throw new Exception(e);
 		}  finally {  
 			try {

@@ -30,7 +30,7 @@ import com.greatwall.util.RMSConstant;
 @Service("shunpayService")
 public class ShunpayServiceImpl implements ShunpayService {
 
-//	Logger logger = Logger.getLogger(ShunpayServiceImpl.class);
+	Logger logger = Logger.getLogger(ShunpayServiceImpl.class);
 	
 	@Autowired
 	private LogService logService;
@@ -259,6 +259,7 @@ public class ShunpayServiceImpl implements ShunpayService {
 
 			//					closeableHttpClient.close();  
 		} catch (Exception e) {  
+			logger.error("舜联充值接口错误：", e);
 			throw new Exception(e);
 		}  finally {  
 			try {
