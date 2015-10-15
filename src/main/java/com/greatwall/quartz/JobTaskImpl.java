@@ -123,7 +123,7 @@ public class JobTaskImpl implements JobTask {
 				try {  
 					callbackNotifyService.callbackNotify(consumeConditions, opstatus);
 				} catch (Exception e) {  
-					logger.error("充值状态回调错误", e);
+					logger.error("充值状态回调错误 : "+consumeConditions.getNotifyUrl(), e);
 				}finally{
 					
 				}
