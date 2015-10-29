@@ -49,6 +49,10 @@
 			<td><div style="width:80px;overflow:hidden;"><fmt:formatDate value="${consume.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></div></td>
 			<td>
 			<input type="button" value="状态" onclick="searchState('${consume.consumeId}','<fmt:formatDate value="${consume.createTime}" pattern="yyyy-MM-dd"/>','${consume.interfaceName}')">
+			<c:if test="${fn:contains(roleIds,'1,')}">
+				<input type="button" value="成功" onclick="changeState('${consume.consumeId}',1)">
+				<input type="button" value="失败" onclick="changeState('${consume.consumeId}',2)">
+			</c:if>
 			</td>
 		</tr>
 	</c:forEach>

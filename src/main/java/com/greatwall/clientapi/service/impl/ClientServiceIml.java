@@ -100,7 +100,7 @@ public class ClientServiceIml implements ClientService {
 		return status;
 	}
 
-	private String updateStatus(Consume consume,String status) throws Exception{
+	public String updateStatus(Consume consume,String status) throws Exception{
 		if(RMSConstant.CONSUME_STATE_SENDED_FAIL.equals(status)){
 			//如果充值失败需要冲抵余额
 			Consume cons =rechargeConsumeService.getConsume(consume.getConsumeId());
@@ -117,7 +117,7 @@ public class ClientServiceIml implements ClientService {
 		return status;
 	}
 	
-	private Boolean rechargeReturn(Consume cons,String status) throws Exception{
+	public Boolean rechargeReturn(Consume cons,String status) throws Exception{
 		Recharge recharge = new Recharge();
 		recharge.setConsumeId(cons.getConsumeId());
 		Recharge rc =rechargeConsumeService.getRecharge(recharge);

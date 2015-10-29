@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.servlet.http.HttpSession;
 
@@ -22,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.greatwall.api.service.CallbackNotifyService;
+import com.greatwall.clientapi.service.ClientService;
 import com.greatwall.platform.base.dao.DaoException;
 import com.greatwall.platform.domain.PageParameter;
 import com.greatwall.platform.system.dto.User;
@@ -45,6 +49,8 @@ import com.greatwall.util.ValidateUtil;
 public class RechargeConsumeController {
 
 	Logger logger = Logger.getLogger(RechargeConsumeController.class);
+	
+	ExecutorService fixedThreadPool = Executors.newFixedThreadPool(2);
 
 	private String basePath;
 
@@ -52,9 +58,15 @@ public class RechargeConsumeController {
 	public void setBasePath(String basePath) {
 		this.basePath = basePath;
 	}
+	
+	@Autowired
+	private CallbackNotifyService callbackNotifyService;
 
 	@Autowired
 	private RechargeConsumeService rechargeConsumeService;
+	
+	@Autowired
+	private ClientService clientService;
 
 	@Autowired
 	private ProductService productService;
@@ -399,4 +411,59 @@ public class RechargeConsumeController {
 		return new ModelAndView("/recharge/consumereturn.jsp");
 
 	}
+	
+	@RequestMapping("/changeState")
+	public@ResponseBody String changeState(String consumeId,String state,HttpSession session){
+		String roleIds = session.getAttribute("roleIds").toString();
+		if(!ValidateUtil.isAdmin(roleIds)){
+			return "不是管理员，不能操作";
+		}
+		if(!RMSConstant.CONSUME_STATE_SENDED_FAIL.equals(state)&&!RMSConstant.CONSUME_STATE_SUC.equals(state)){
+			return "状态错误！";
+		}
+		
+		Consume consu = new Consume();
+		consu.setConsumeId(consumeId);
+		ConsumeConditions cons = rechargeConsumeService.getConsumeConditions(consu);
+		
+		try {
+			if(cons==null){
+				return "充值记录为空";
+			}
+			if(!cons.getState().equals("sended")&&!cons.getState().equals("sended_processing")
+					&&!cons.getState().equals("sended_wait")&&!cons.getState().equals("s_error")
+					&&!cons.getState().equals("error")){
+				return "只有充值中的和充值错误的才能调整状态";
+			}
+			if(RMSConstant.CONSUME_STATE_SENDED_FAIL.equals(state)){
+				state = RMSConstant.CONSUME_STATE_FAIL;
+				clientService.rechargeReturn(cons,state);
+				run(fixedThreadPool,cons,"00");
+			}else{
+				rechargeConsumeService.confirmConsume(cons.getConsumeId(), state);
+				run(fixedThreadPool,cons,"01");
+			}
+			return "success";
+		} catch (Exception e) {
+			logger.error("", e);
+			return "程序错误";
+		}
+	}
+	
+	private void run(ExecutorService threadPool,final ConsumeConditions consumeConditions,final String opstatus) {
+		threadPool.execute(new Runnable() {  
+			@Override
+			public void run() {  
+				try {  
+					callbackNotifyService.callbackNotify(consumeConditions, opstatus);
+				} catch (Exception e) {  
+					logger.error("充值状态回调错误 : "+consumeConditions.getNotifyUrl(), e);
+				}finally{
+					
+				}
+			}  
+		});  
+		//threadPool.shutdown();// 任务执行完毕，关闭线程池  
+	}
+	
 }

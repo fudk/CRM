@@ -65,6 +65,35 @@
 			}
 		});
 	}
+	function changeState(consumeId,state){
+		/* var interfaceName = '';
+		if(consumeType == 'flow'){
+			interfaceName = 'liul';
+		}
+		if(consumeType == 'phone'){
+			interfaceName = 'shunpan';
+		} */
+		if(state==1){
+			state = "success";
+		}else if(state==2){
+			state = "sended_fail";
+		}else{
+			alert('操作错误！');
+			return;
+		}
+		$.ajax({
+			type : "POST",
+			url : "${ctx}/rechargeConsume/changeState",
+			data : {consumeId:consumeId,state:state},
+			success : function(msg) {
+				if (msg == 'success') {
+					alert('操作成功！');
+				}else{
+					alert('操作失败！'+msg);
+				}
+			}
+		});
+	}
 
 	function operatorUser(){
 		$("#operatorName").autocomplete("/system/user/searchUsers", {
