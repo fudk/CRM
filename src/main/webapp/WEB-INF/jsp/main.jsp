@@ -97,15 +97,17 @@
 				<div style="clear:both" id="Pagination"></div>
 			</div>
 		</div>
-		<div class="news-wrapper" id="news" style="display: none;"><div style="float:right;">关闭</div>
-		<ul>
-<li><a href="#" title="aaaaaaaaaaaaaaa">aaaaaaaaaaaaaaa</a></li>
-<li><a href="#" title="bbbbbbbbbbbbbbb">bbbbbbbbbbbbbbb</a></li>
-<li><a href="#" title="ccccccccccccccc">ccccccccccccccc</a></li>
-<li><a href="#" title="ddddddddddddddd">ddddddddddddddd</a></li>
-<li><a href="#" title="eeeeeeeeeeeeeee">eeeeeeeeeeeeeee</a></li>
-<li><a href="#" title="fffffffffffffff">fffffffffffffff</a></li>
-</ul></div>
+		<div class="news-wrapper" id="news">
+			<div style="float:right;">关闭</div>
+			<ul>
+				<li><a href="#" title="aaaaaaaaaaaaaaa">aaaaaaaaaaaaaaa</a></li>
+				<li><a href="#" title="bbbbbbbbbbbbbbb">bbbbbbbbbbbbbbb</a></li>
+				<li><a href="#" title="ccccccccccccccc">ccccccccccccccc</a></li>
+				<li><a href="#" title="ddddddddddddddd">ddddddddddddddd</a></li>
+				<li><a href="#" title="eeeeeeeeeeeeeee">eeeeeeeeeeeeeee</a></li>
+				<li><a href="#" title="fffffffffffffff">fffffffffffffff</a></li>
+			</ul>
+		</div>
 
 		<!-- 代码 结束 -->
 	</div>
