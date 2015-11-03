@@ -4,7 +4,7 @@
  <!-- 引入配置文件 -->  
 
 	<!-- 指定数据连接驱动jar地址 -->
-	<classPathEntry location="D:/Workspaces/repo/mysql/mysql-connector-java/5.1.21/mysql-connector-java-5.1.21.jar" />
+	<classPathEntry location="G:/development/repo/mysql/mysql-connector-java/5.1.21/mysql-connector-java-5.1.21.jar" />
 
 	<!-- 一个数据库一个context -->
 	<context id="infoGuardian">
@@ -48,8 +48,8 @@
 		</javaClientGenerator>
 
 		<!-- 配置表信息 -->
-		<table schema="crm" tableName="td_rms_recharge_log"
-			domainObjectName="Recharge" enableCountByExample="false"
+		<table schema="crm" tableName="td_rms_notice"
+			domainObjectName="Notice" enableCountByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
 			enableUpdateByExample="false">
 			<!-- schema即为数据库名 tableName为对应的数据库表 domainObjectName是要生成的实体类 enable*ByExample 

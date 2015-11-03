@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="NoticeMapper" >
+  <resultMap id="BaseResultMap" type="com.greatwall.recharge.dto.Notice" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="NEED_SHOW" property="needShow" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.greatwall.recharge.dto.Notice" extends="BaseResultMap" >
+    <result column="CONTENT" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, TITLE, CREATE_TIME, NEED_SHOW
+  </sql>
+  <sql id="Blob_Column_List" >
+    CONTENT
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from td_rms_notice
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectPage" resultMap="BaseResultMap"
+		parameterType="com.greatwall.recharge.dto.Notice">
+		select
+		<include refid="Base_Column_List" />
+		from td_rms_notice
+		order by create_time desc
+	</select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from td_rms_notice
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="com.greatwall.recharge.dto.Notice" >
+    insert into td_rms_notice (ID, TITLE, CREATE_TIME, 
+      NEED_SHOW, CONTENT)
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{needShow,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.greatwall.recharge.dto.Notice" >
+    update td_rms_notice
+    <set >
+      <if test="title != null" >
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="needShow != null" >
+        NEED_SHOW = #{needShow,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        CONTENT = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+ 
+</mapper>

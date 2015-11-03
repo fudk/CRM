@@ -29,10 +29,14 @@
 	}
 
 	var noticeDialog;
-	function addOrUpdate(method) {
+	function addOrUpdate(method,id) {
+		var url = 'url:' + ctx + '/notice/' + method;
+		if(id){
+			url = url +"?id="+id;
+		}
 		noticeDialog = $.dialog({
-			title : '新增产品',
-			content : 'url:' + ctx + '/notice/' + method,
+			title : '通知',
+			content : url,
 			button : [ {
 				name : '确定',
 				callback : function() {
@@ -62,22 +66,7 @@
 			<div class="page_title">产品管理</div>
 			<form id="productForm" action="">
 			<div id="Search">
-				充值类型：<select name="productType">
-				<option value="">全部</option>
-				<option value="phone">话费</option>
-				<option value="flow">流量</option>
-				</select>
-				运营商：<select name="isp">
-				<option value="">全部</option>
-				<option value="CM">中国移动</option>
-				<option value="CU">中国联通</option>
-				<option value="CT">中国电信</option>
-				</select>
-				产品状态：<select name="state">
-				<option value="enable">有效</option>
-				<option value="">全部</option>
-				<option value="disable">停用</option>
-				</select>
+				通知标题：
 				 <input type="button" onclick="search()" value="查询" /> <input type="button"
 					onclick="addOrUpdate('noticeInit')" value="新增" />
 			</div>

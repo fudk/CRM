@@ -12,9 +12,9 @@
 <link rel="apple-touch-icon" href="//mindmup.s3.amazonaws.com/lib/img/apple-touch-icon.png" />
     <link rel="shortcut icon" href="http://mindmup.s3.amazonaws.com/lib/img/favicon.ico" >
     <link href="${ctx}/css/prettify.css" rel="stylesheet">
-    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
-    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
-	<link href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+    <link href="${ctx}/bootstrap/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="${ctx}/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="${ctx}/bootstrap/css/font-awesome.css" rel="stylesheet">
 	<script src="${ctx}/js/jquery.hotkeys.js"></script>
     
 
@@ -31,8 +31,22 @@
 	var api = frameElement.api, W = api.opener;
 
 	function saveNotice() {
-		alert($("#editor").html());
-		//$("#productForm").submit();
+		
+		$.ajax({
+			type : "POST",
+			url : "${ctx}/notice/addNotice",
+			data : {title:$("#noticeTitle").val(),content:$("#editor").html()},
+			success : function(msg) {
+				if (msg == 'success') {
+					alert('提交成功！');
+					W.noticeDialog.time(0.1);
+				} else {
+					alert(msg);
+				}
+
+			}
+		});
+		
 	}
 	function updateProduct() {
 		/* $("#productForm").attr("action",ctx+"/product/updateProduct");
@@ -44,6 +58,8 @@
 
 	$(document).ready(function() {
 		$('#editor').wysiwyg();
+		//$('#editor').html($("#ttt").cleanHtml())
+		alert($("#ttt").cleanHtml())
 	});
 	
 
@@ -53,8 +69,8 @@
 <body>
  <div class="container">
   <div class="hero-unit" style="margin-top: -50px">
-	<h3>通知 <br/> <small>tiny wysiwyg rich text editor for Bootstrap</small></h3>
-	<hr/>
+	<h3>通知 <br/> <small></small></h3>
+	标题：<input type="text" id="noticeTitle" value="${notice.title }"/>
 	<div id="alerts"></div>
     <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
       <div class="btn-group">
@@ -110,11 +126,10 @@
     </div>
 
     <div id="editor">
-      Go ahead&hellip;
+      
     </div>
   </div>
 </div>		
-	
 	<script>
   $(function(){
     function initToolbarBootstrapBindings() {
