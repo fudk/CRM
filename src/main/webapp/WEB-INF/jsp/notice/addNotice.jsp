@@ -8,6 +8,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <script type="text/javascript" src="${ctx}/js/jquery-1.11.3.min.js"></script>
+
+<link rel="apple-touch-icon" href="//mindmup.s3.amazonaws.com/lib/img/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="http://mindmup.s3.amazonaws.com/lib/img/favicon.ico" >
+    <link href="${ctx}/css/prettify.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+	<script src="${ctx}/js/jquery.hotkeys.js"></script>
+    
+
 <link rel="stylesheet" href="${ctx}/css/wysiwyg.css" type="text/css" />
 <link rel="stylesheet" href="${ctx}/bootstrap/css/bootstrap.css" type="text/css" />
 <script type="text/javascript" src="${ctx}/bootstrap/js/bootstrap.min.js"></script>
@@ -20,7 +30,8 @@
 
 	var api = frameElement.api, W = api.opener;
 
-	function saveProduct() {
+	function saveNotice() {
+		alert($("#editor").html());
 		//$("#productForm").submit();
 	}
 	function updateProduct() {
@@ -40,7 +51,12 @@
 </head>
 
 <body>
- <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+ <div class="container">
+  <div class="hero-unit" style="margin-top: -50px">
+	<h3>通知 <br/> <small>tiny wysiwyg rich text editor for Bootstrap</small></h3>
+	<hr/>
+	<div id="alerts"></div>
+    <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
       <div class="btn-group">
         <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="icon-font"></i><b class="caret"></b></a>
           <ul class="dropdown-menu">
@@ -97,9 +113,48 @@
       Go ahead&hellip;
     </div>
   </div>
-		
+</div>		
 	
-	
+	<script>
+  $(function(){
+    function initToolbarBootstrapBindings() {
+      var fonts = ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier', 
+            'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times',
+            'Times New Roman', 'Verdana'],
+            fontTarget = $('[title=Font]').siblings('.dropdown-menu');
+      $.each(fonts, function (idx, fontName) {
+          fontTarget.append($('<li><a data-edit="fontName ' + fontName +'" style="font-family:\''+ fontName +'\'">'+fontName + '</a></li>'));
+      });
+      $('a[title]').tooltip({container:'body'});
+    	$('.dropdown-menu input').click(function() {return false;})
+		    .change(function () {$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');})
+        .keydown('esc', function () {this.value='';$(this).change();});
+
+      $('[data-role=magic-overlay]').each(function () { 
+        var overlay = $(this), target = $(overlay.data('target')); 
+        overlay.css('opacity', 0).css('position', 'absolute').offset(target.offset()).width(target.outerWidth()).height(target.outerHeight());
+      });
+      if ("onwebkitspeechchange"  in document.createElement("input")) {
+        var editorOffset = $('#editor').offset();
+        $('#voiceBtn').css('position','absolute').offset({top: editorOffset.top, left: editorOffset.left+$('#editor').innerWidth()-35});
+      } else {
+        $('#voiceBtn').hide();
+      }
+	};
+	function showErrorAlert (reason, detail) {
+		var msg='';
+		if (reason==='unsupported-file-type') { msg = "Unsupported format " +detail; }
+		else {
+			console.log("error uploading file", reason, detail);
+		}
+		$('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>'+ 
+		 '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
+	};
+    initToolbarBootstrapBindings();  
+	$('#editor').wysiwyg({ fileUploadError: showErrorAlert} );
+    window.prettyPrint && prettyPrint();
+  });
+</script>
 </body>
 
 </html>
