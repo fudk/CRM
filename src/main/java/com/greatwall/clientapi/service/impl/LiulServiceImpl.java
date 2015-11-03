@@ -195,7 +195,8 @@ public class LiulServiceImpl implements LiulService {
 				      resMap.put(nm, val);
 				    }
 				    String chgSts = (String)resMap.get("chg_sts") == null ? "" : (String)resMap.get("chg_sts");
-				    if("U".equals(chgSts.toUpperCase())){
+				    return RMSConstant.CONSUME_STATE_SUC;
+				    /*if("U".equals(chgSts.toUpperCase())){
 				    	return RMSConstant.CONSUME_STATE_SENDED_WAIT;
 				    }else  if("P".equals(chgSts.toUpperCase())){
 				    	return RMSConstant.CONSUME_STATE_SENDED_PROCESSING;
@@ -205,7 +206,7 @@ public class LiulServiceImpl implements LiulService {
 				    	return RMSConstant.CONSUME_STATE_SENDED_FAIL;
 				    }else{
 				    	return RMSConstant.CONSUME_STATE_SENDED_ERROR;
-				    }
+				    }*/
 				}else{
 					return RMSConstant.CONSUME_STATE_SENDED_ERROR;
 				}
