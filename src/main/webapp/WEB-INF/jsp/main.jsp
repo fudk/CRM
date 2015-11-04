@@ -63,16 +63,28 @@
 
 		function scrollNews(obj) {
 			var $self = obj.find("ul");
+			//$self.find("li:first").hide();
 			var lineHeight = $self.find("li:first").height();
 			$self.animate({
 				"marginTop" : -lineHeight + "px"
-			}, 600, function() {
+			}, 1500, function() {
 				$self.css({
 					marginTop : 0
 				}).find("li:first").appendTo($self);
 			})
 		}
 	});
+	
+	var noticeDialog;
+	function showNotice(id) {
+		var url = 'url:' + ctx + '/notice/showNotice?id=' + id;
+		noticeDialog = $.dialog({
+			title : '通知',
+			content : url,
+			cancelVal : '关闭',
+			cancel : true
+		}).max();
+	}
 </script>
 
 <style type="text/css">
@@ -97,16 +109,16 @@
 				<div style="clear:both" id="Pagination"></div>
 			</div>
 		</div>
-		<div class="news-wrapper" id="news">
-			<div style="float:right;">关闭</div>
+		
+		<div class="news-wrapper" id="news" style="background-color: #F7FFDB;">
+		<div style="float:right;">关闭</div>
+		<div style="margin-top: 30px;">
 			<ul>
-				<li><a href="#" title="aaaaaaaaaaaaaaa">aaaaaaaaaaaaaaa</a></li>
-				<li><a href="#" title="bbbbbbbbbbbbbbb">bbbbbbbbbbbbbbb</a></li>
-				<li><a href="#" title="ccccccccccccccc">ccccccccccccccc</a></li>
-				<li><a href="#" title="ddddddddddddddd">ddddddddddddddd</a></li>
-				<li><a href="#" title="eeeeeeeeeeeeeee">eeeeeeeeeeeeeee</a></li>
-				<li><a href="#" title="fffffffffffffff">fffffffffffffff</a></li>
+				<c:forEach items="${notices}" var="notice" varStatus="status">
+				<li><a href="javascript:showNotice(${notice.id })" title="${notice.title }">${notice.title }</a></li>
+				</c:forEach>
 			</ul>
+			</div>
 		</div>
 
 		<!-- 代码 结束 -->

@@ -53,7 +53,6 @@ public class NoticeController {
 				return "标题或内容不能为空！";
 			}
 			notice.setCreateTime(new Date());
-			notice.setNeedShow("need");
 			noticeService.saveNotice(notice);
 			return "success";
 		}
@@ -65,9 +64,22 @@ public class NoticeController {
 		model.addAttribute("notice",noticeService.getNotice(id));
 		return new ModelAndView("/notice/addNotice.jsp");
 	}
+	@RequestMapping("/showNotice")
+	public ModelAndView showNotice(Integer id,ModelMap model){
+		model.addAttribute("notice",noticeService.getNotice(id));
+		return new ModelAndView("/notice/notice.jsp");
+	}
 	
 	@RequestMapping("/updateNotice")
 	public@ResponseBody String updateNotice(Notice notice){
-		return "";
+		if(notice!=null){
+			if(notice.getId()==null||StringUtils.isBlank(notice.getTitle())
+					||StringUtils.isBlank(notice.getContent())){
+				return "标题或内容不能为空！";
+			}
+			noticeService.updateNotice(notice);
+			return "success";
+		}
+		return "失败";
 	}
 }

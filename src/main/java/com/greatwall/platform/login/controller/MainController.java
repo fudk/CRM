@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.greatwall.platform.base.dao.DaoException;
 import com.greatwall.platform.domain.PageParameter;
 import com.greatwall.platform.login.service.MainService;
 import com.greatwall.platform.system.dto.User;
+import com.greatwall.recharge.dto.Notice;
 import com.greatwall.recharge.dto.Product;
+import com.greatwall.recharge.service.NoticeService;
 
 
 
@@ -34,6 +37,9 @@ public class MainController {
 	@Autowired
 	private MainService mainService;
 	
+	@Autowired
+	private NoticeService noticeService;
+	
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView main(Product product,PageParameter page,ModelMap model,HttpSession httpSession) {
 		User user = httpSession.getAttribute("user")!=null?(User)httpSession.getAttribute("user"):null;
@@ -43,6 +49,13 @@ public class MainController {
 			httpSession.setAttribute("resTopList", toplist);
 			httpSession.setAttribute("resList", leftlist);
 //		}
+			Notice notice = new Notice();
+			
+			try {
+				model.addAttribute("notices",noticeService.getNotices(notice, page));
+			} catch (DaoException e) {
+				logger.error("", e);
+			}
 		
 		return new ModelAndView("main.jsp");
 	}
