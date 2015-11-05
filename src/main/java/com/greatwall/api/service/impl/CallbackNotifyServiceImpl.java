@@ -17,16 +17,25 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.greatwall.api.service.CallbackNotifyService;
+import com.greatwall.platform.system.service.LogService;
 import com.greatwall.recharge.dto.ConsumeConditions;
 
 @Service("callbackNotifyService")
 public class CallbackNotifyServiceImpl implements CallbackNotifyService {
 
+	Logger logger = Logger.getLogger(CallbackNotifyServiceImpl.class);
+	
+	@Autowired
+	private LogService logService;
+	
 	public Boolean callbackNotify(ConsumeConditions consume,String opstatus) throws Exception{
+		long startTimeMillis = System.currentTimeMillis(); // 开始时间  
 		if(consume == null || StringUtils.isBlank(consume.getNotifyUrl())){
 			return false;
 		}
@@ -37,8 +46,8 @@ public class CallbackNotifyServiceImpl implements CallbackNotifyService {
 
 		HttpPost httpPost = new HttpPost(consume.getNotifyUrl());  
 		RequestConfig requestConfig = RequestConfig.custom()  
-			    .setConnectionRequestTimeout(3000).setConnectTimeout(3000)  
-			    .setSocketTimeout(3000).build(); 
+			    .setConnectionRequestTimeout(5000).setConnectTimeout(5000)  
+			    .setSocketTimeout(5000).build(); 
 		httpPost.setConfig(requestConfig);  
 		try {  
 			String consumeId = consume.getConsumeId();
@@ -69,7 +78,7 @@ public class CallbackNotifyServiceImpl implements CallbackNotifyService {
 			HttpEntity httpEntity = httpResponse.getEntity();  
 			if (httpEntity != null) {  
 				String restr = EntityUtils.toString(httpEntity, "UTF-8");
-				System.out.println("callback response:" + restr);  
+				logService.execLog("callback", consume.getNotifyUrl(), startTimeMillis, formparams.toString()+" response:" + restr);
 				Gson gson = new Gson();
 				Map<String,Object> requestMap = gson.fromJson(restr, Map.class);
 				if(requestMap!=null&&"01".equals(requestMap.get("retcode"))){
@@ -78,6 +87,7 @@ public class CallbackNotifyServiceImpl implements CallbackNotifyService {
 			}  
 
 		} catch (Exception e) {  
+			logger.error("", e);
 			throw new Exception(e);
 		}  finally {  
 			try {
