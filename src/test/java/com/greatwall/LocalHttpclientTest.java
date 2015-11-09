@@ -18,8 +18,8 @@ import org.apache.http.util.EntityUtils;
 
 public class LocalHttpclientTest {
 	
-//	private static String hosts = "http://115.29.43.62:8080";
-	private static String hosts = "http://127.0.0.1";
+	private static String hosts = "http://115.29.43.62:8080";
+//	private static String hosts = "http://127.0.0.1";
 
 	public static void main(String[] args) {
 //		regPhone();
@@ -33,7 +33,6 @@ public class LocalHttpclientTest {
 		//HttpClient  
 		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();  
 
-		//				HttpPost httpPost = new HttpPost("http://115.29.43.62:8080/rechargeapi/recharge");  
 		HttpPost httpPost = new HttpPost(hosts+"/rechargeapi/recharge");  
 		// 创建参数队列  
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>(); 
@@ -48,7 +47,7 @@ public class LocalHttpclientTest {
 		formparams.add(new BasicNameValuePair("opPrice", "10"));  
 		formparams.add(new BasicNameValuePair("opNum", "1"));  
 //		formparams.add(new BasicNameValuePair("notifyUrl", hosts+"/rechargeapi/callback"));  
-		formparams.add(new BasicNameValuePair("notifyUrl",""));  
+		formparams.add(new BasicNameValuePair("notifyUrl",hosts+"/rechargeapi/callback"));  
 
 		StringBuffer sb = new StringBuffer();
 		for(NameValuePair nameValuePair:formparams){
@@ -57,7 +56,7 @@ public class LocalHttpclientTest {
 			sb.append(nameValuePair.getValue());
 			sb.append("&");
 		}
-		sb.append("C6B84C250D400001FC4C1E701DD99F10");
+		sb.append("");
 		formparams.add(new BasicNameValuePair("sign", DigestUtils.md5Hex(sb.toString())));  
 		System.out.println("====");
 
@@ -96,15 +95,15 @@ public class LocalHttpclientTest {
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>(); 
 
 		//流量测试
-		formparams.add(new BasicNameValuePair("platId", "1234"));  
+		formparams.add(new BasicNameValuePair("platId", "YHNNIK"));  
 		formparams.add(new BasicNameValuePair("timestamp", new Date().getTime()+""));  
 		formparams.add(new BasicNameValuePair("orderId", UUID.randomUUID().toString()));  
 		formparams.add(new BasicNameValuePair("opType", "flow"));  
 		formparams.add(new BasicNameValuePair("flxTyp", "M")); 
-		formparams.add(new BasicNameValuePair("custPhone", "13682202050"));  
-		formparams.add(new BasicNameValuePair("opPrice", "30M"));  
+		formparams.add(new BasicNameValuePair("custPhone", "18173116167"));  
+		formparams.add(new BasicNameValuePair("opPrice", "10M"));  
 		formparams.add(new BasicNameValuePair("opNum", "1"));  
-		formparams.add(new BasicNameValuePair("notifyUrl", "http://127.0.0.1/rechargeapi/callback"));  
+		formparams.add(new BasicNameValuePair("notifyUrl", hosts+"/rechargeapi/callback"));  
 
 
 		/*formparams.add(new BasicNameValuePair("platId", "YHNNIK"));  
@@ -124,7 +123,7 @@ public class LocalHttpclientTest {
 			sb.append(nameValuePair.getValue());
 			sb.append("&");
 		}
-		sb.append("C6914624EB90000116D71D90141B3FC0");
+		sb.append("");
 		//				sb.append("C6AF41651F70000132CD17C41C70A5D0");
 		formparams.add(new BasicNameValuePair("sign", DigestUtils.md5Hex(sb.toString())));  
 		System.out.println("====");
@@ -133,7 +132,7 @@ public class LocalHttpclientTest {
 //		[{"platId":"288100","timestamp":"1444703462094","orderId":"20151013103059000001",
 //		"opType":"flow","flxTyp":"M","custPhone":"13905000513","opPrice":"30M","opNum":1,"notifyUrl":"","sign":"fb923e9ba408d7cb5791f145f8845e7c"}] 
 
-		List<NameValuePair> formparamstest = new ArrayList<NameValuePair>(); 
+		/*List<NameValuePair> formparamstest = new ArrayList<NameValuePair>(); 
 		formparamstest.add(new BasicNameValuePair("platId", "288100"));  
 		formparamstest.add(new BasicNameValuePair("timestamp", "1444703462094"));  
 		formparamstest.add(new BasicNameValuePair("orderId", "20151013103059000001"));  
@@ -143,12 +142,12 @@ public class LocalHttpclientTest {
 		formparamstest.add(new BasicNameValuePair("opPrice", "30M"));  
 		formparamstest.add(new BasicNameValuePair("opNum", "1"));  
 		formparamstest.add(new BasicNameValuePair("notifyUrl","")); 
-		formparamstest.add(new BasicNameValuePair("sign", "fb923e9ba408d7cb5791f145f8845e7c"));  
+		formparamstest.add(new BasicNameValuePair("sign", "fb923e9ba408d7cb5791f145f8845e7c")); */ 
 		
 		UrlEncodedFormEntity entity;  
 		try {  
-//			entity = new UrlEncodedFormEntity(formparams, "UTF-8");  
-			entity = new UrlEncodedFormEntity(formparamstest, "UTF-8");  
+			entity = new UrlEncodedFormEntity(formparams, "UTF-8");  
+//			entity = new UrlEncodedFormEntity(formparamstest, "UTF-8");  
 			httpPost.setEntity(entity);  
 
 			HttpResponse httpResponse;  
@@ -191,7 +190,7 @@ public class LocalHttpclientTest {
 			sb.append(nameValuePair.getValue());
 			sb.append("&");
 		}
-		sb.append("C6914624EB90000116D71D90141B3FC0");
+		sb.append("");
 		formparams.add(new BasicNameValuePair("sign", DigestUtils.md5Hex(sb.toString())));  
 		System.out.println("====");
 

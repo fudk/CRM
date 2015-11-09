@@ -387,12 +387,12 @@ public class RechargeApiController {
 			if(StringUtils.isNotBlank(status)){
 				//TODO 保存充值状态
 				remap.put("retcode", "01");
-				remap.put("retmsg", "交易成功");
+				remap.put("retmsg", "测试成功");
 			}
 			
 		}else{
 			remap.put("retcode", "00");
-			remap.put("retmsg", "交易失败");
+			remap.put("retmsg", "测试失败");
 		}
 		return remap;
 	}

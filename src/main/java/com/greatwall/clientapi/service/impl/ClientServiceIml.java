@@ -28,7 +28,7 @@ public class ClientServiceIml implements ClientService {
 
 	Logger logger = Logger.getLogger(ClientServiceIml.class);
 	
-	ExecutorService fixedThreadPool = Executors.newFixedThreadPool(10);
+	ExecutorService fixedThreadPool = Executors.newFixedThreadPool(20);
 	
 	@Autowired
 	private CallbackNotifyService callbackNotifyService;
@@ -43,9 +43,11 @@ public class ClientServiceIml implements ClientService {
 	@Autowired
 	private RechargeConsumeService rechargeConsumeService;
 
-	public String searchState(Consume consume) throws Exception{
-		String status = "";
-		String statuslist = "";
+	public String searchState(ConsumeConditions consume) throws Exception{
+		String status = "";//查询状态
+		String statuslist = "";//金飘接口查询状态列表
+		String finalstatus = "";//转换成的内部状态
+		String searchstatus = "";//为空时查询错误，其他查询成功
 		try {
 			if(RMSConstant.INTERFACE_NAME_LIUL.equals(consume.getInterfaceName())){
 				status = liulService.searchState(consume);
@@ -56,48 +58,70 @@ public class ClientServiceIml implements ClientService {
 			}
 		} catch (Exception e) {
 			logger.error("调研查询接口错误", e);
-			status = RMSConstant.CONSUME_STATE_ERROR;
+			status = "";
 		}
-		System.out.println("接口查询状态："+status);
+		if(StringUtils.isEmpty(status)){
+			System.out.println("接口查询状态："+statuslist);
+		}else{
+			System.out.println("接口查询状态："+status);
+		}
 		//		String status = RMSConstant.CONSUME_STATE_SENDED_FAIL;
 		if(StringUtils.isNotBlank(status)){
-			status = updateStatus(consume,status);
-		}else if(StringUtils.isNotBlank(statuslist)){
-			
-			Gson gson = new Gson();
-			Map map = gson.fromJson(statuslist, Map.class);
-			
-			if("0".equals(map.get("Code"))){
-				status = RMSConstant.CONSUME_STATE_SUC;
+			finalstatus = updateStatus(consume,status);
+			System.out.println("finalstatus："+finalstatus);
+			if(finalstatus.contains(RMSConstant.CONSUME_STATE_FAIL)){
+				run(fixedThreadPool,consume,"00");
+			}else if(finalstatus.contains(RMSConstant.CONSUME_STATE_SUC)){
+				run(fixedThreadPool,consume,"01");
+			}else{
+				logger.info(consume.getInterfaceName() +" 查询中间状态 ："+status);
 			}
-
-			List list = (List) map.get("Reports");
-			for(int i=0;i<list.size();i++){
-				Map m = (Map)list.get(i);
-				System.out.println(String.format("%.0f ", m.get("TaskID")).trim());
-				Consume consu = new Consume();
-				consu.setInterfaceName(RMSConstant.INTERFACE_NAME_JINPIAO);
-				consu.setRemark(String.format("%.0f ", m.get("TaskID")).trim());
-				
-//				Consume cons = rechargeConsumeService.getConsumeBy(consu);
-				ConsumeConditions cons = rechargeConsumeService.getConsumeConditions(consu);
-				if(cons!=null){
-					String rest = String.format("%.0f ", m.get("Status")).trim();
-					System.out.println(rest);
-					if("5".equals(rest)){
-						status = RMSConstant.CONSUME_STATE_FAIL;
-						rechargeReturn(cons,status);
-						run(fixedThreadPool,cons,"00");
-					}else if("4".equals(rest)){
-						status = RMSConstant.CONSUME_STATE_SUC;
-						rechargeConsumeService.confirmConsume(cons.getConsumeId(), status);
-						run(fixedThreadPool,cons,"01");
-					}
+			searchstatus = finalstatus;
+		}else if(StringUtils.isNotBlank(statuslist)){
+			searchstatus = updateStatusJinpiao(statuslist,finalstatus);
+		}else{
+			System.out.println("返回值不匹配 ");
+		}
+		return searchstatus;
+	}
+	
+	private String updateStatusJinpiao(String statuslist,String finalstatus) throws Exception{
+		Gson gson = new Gson();
+		Map map = gson.fromJson(statuslist, Map.class);
+		
+		List list = (List) map.get("Reports");
+		for(int i=0;i<list.size();i++){
+			Map m = (Map)list.get(i);
+//			System.out.println(String.format("%.0f ", m.get("TaskID")).trim());
+			Consume consu = new Consume();
+			consu.setInterfaceName(RMSConstant.INTERFACE_NAME_JINPIAO);
+			consu.setRemark(String.format("%.0f ", m.get("TaskID")).trim());
+			
+//			Consume cons = rechargeConsumeService.getConsumeBy(consu);
+			ConsumeConditions cons = rechargeConsumeService.getConsumeConditions(consu);
+			if(cons!=null){
+				String rest = String.format("%.0f ", m.get("Status")).trim();
+//				System.out.println(rest);
+				if("5".equals(rest)){
+					finalstatus = RMSConstant.CONSUME_STATE_FAIL;
+					rechargeReturn(cons,finalstatus);
+					run(fixedThreadPool,cons,"00");
+				}else if("4".equals(rest)){
+					finalstatus = RMSConstant.CONSUME_STATE_SUC;
+					rechargeConsumeService.confirmConsume(cons.getConsumeId(), finalstatus);
+					run(fixedThreadPool,cons,"01");
+				}else{
+					logger.info(RMSConstant.INTERFACE_NAME_JINPIAO +" 查询中间状态 ："+rest);
 				}
 			}
 		}
-
-		return status;
+		
+		if("0".equals(map.get("Code"))){
+			return "search";
+		}else{
+			return "error";
+		}
+		
 	}
 
 	public String updateStatus(Consume consume,String status) throws Exception{
@@ -149,7 +173,7 @@ public class ClientServiceIml implements ClientService {
 				try {  
 					callbackNotifyService.callbackNotify(consumeConditions, opstatus);
 				} catch (Exception e) {  
-					logger.error("充值状态回调错误", e);
+					logger.error("接口名： "+consumeConditions.getInterfaceName()+"充值状态回调错误", e);
 				}finally{
 					
 				}

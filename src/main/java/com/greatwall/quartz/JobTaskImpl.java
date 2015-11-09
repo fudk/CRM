@@ -24,7 +24,7 @@ public class JobTaskImpl implements JobTask {
 
 	Logger logger = Logger.getLogger(JobTaskImpl.class);
 
-	ExecutorService fixedThreadPool = Executors.newFixedThreadPool(20);
+//	ExecutorService fixedThreadPool = Executors.newFixedThreadPool(20);
 	
 	@Autowired
 	private ClientService clientService;
@@ -83,14 +83,14 @@ public class JobTaskImpl implements JobTask {
 					continue;
 				}
 				status = clientService.searchState(ccd);
-				if(status.contains("fail")){
+				/*if(status.contains("fail")){
 					opstatus = "00";
 				}else if("success".equals(status)){
 					opstatus = "01";
 				}else{
 					continue;
-				}
-				run(fixedThreadPool,ccd,opstatus);
+				}*/
+//				run(fixedThreadPool,ccd,opstatus);
 			}
 
 			if(page.getCurrentPage()>page.getTotalPage()){
@@ -106,17 +106,17 @@ public class JobTaskImpl implements JobTask {
 		
 		if(jinpiao!=null){
 			status = clientService.searchState(jinpiao);
-			if(status.contains("fail")){
+			/*if(status.contains("fail")){
 				opstatus = "00";
 			}else if("success".equals(status)){
 				opstatus = "01";
-			}
+			}*/
 //			run(fixedThreadPool,jinpiao,opstatus);
 		}
 	}
 	
 	
-	private void run(ExecutorService threadPool,final ConsumeConditions consumeConditions,final String opstatus) {
+	/*private void run(ExecutorService threadPool,final ConsumeConditions consumeConditions,final String opstatus) {
 		threadPool.execute(new Runnable() {  
 			@Override
 			public void run() {  
@@ -132,5 +132,5 @@ public class JobTaskImpl implements JobTask {
 			}  
 		});  
 		//threadPool.shutdown();// 任务执行完毕，关闭线程池  
-	}
+	}*/
 }

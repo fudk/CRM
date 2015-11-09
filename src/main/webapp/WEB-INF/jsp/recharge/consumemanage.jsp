@@ -58,9 +58,16 @@
 			success : function(msg) {
 				if (msg == 'success') {
 					//alert('查询成功！');
+					alert("充值成功！");
 					search();
+				}else if(msg == 'fail'){
+					alert('充值失败！');
+				}else if(msg == 'error'){
+					alert('查询错误！');
+				}else if(msg == 'search'){
+					alert('查询成功！');
 				}else{
-					alert('查询失败！'+msg);
+					alert('充值中！');
 				}
 			}
 		});
