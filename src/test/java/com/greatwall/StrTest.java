@@ -13,6 +13,9 @@ public class StrTest {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		System.out.println("F".matches("[A-Z]"));
+		
+		/*
 		String str = "{'Code':'0','Message':'OK','Reports':[{'TaskID':5,'Mobile':'15914400880','Status':5,'ReportTime':'2015-09-24 18:15:18','ReportCode':'S:006:不支持广东移动'},{'TaskID':14,'Mobile':'13533914580','Status':5,'ReportTime':'2015-09-24 18:15:18','ReportCode':'S:006:不支持广东移动'}]}";
 		Gson gson = new Gson();
 		Map map = gson.fromJson(str, Map.class);
@@ -24,7 +27,7 @@ public class StrTest {
 			System.out.println(String.format("%.0f ", m.get("TaskID")));
 			System.out.println(String.format("%.0f ", m.get("Status")));
 //			System.out.println(list.get(i).getClass());
-		}
+		}*/
 		
 		/*JsonParser parser = new JsonParser();
 		JsonElement el = parser.parse(map.get("Reports").toString());

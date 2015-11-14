@@ -11,7 +11,7 @@
 	<div class="top">
 		<%@ include file="common/top.jsp"%>
 		<div class="main">
-			<%@ include file="common/left.jsp"%>
+			<%-- <%@ include file="common/left.jsp"%> --%>
 			<div class="content">
 				<div class="title">
 					<h4>

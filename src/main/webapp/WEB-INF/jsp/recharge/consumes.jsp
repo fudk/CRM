@@ -18,6 +18,9 @@
     <th>消费账户</th>
     <th>状态</th>
     <th>消费时间</th>
+    <c:if test="${fn:contains(roleIds,'1,')}">
+		<th>通道</th>
+	</c:if>
     <th>操作</th>
   </tr>
 	<c:forEach items="${consumes}" var="consume" varStatus="status">
@@ -47,6 +50,10 @@
 			<c:if test="${consume.state == 's_error' ||consume.state == 'error' }">错误</c:if>
 			</td>
 			<td><div style="width:80px;overflow:hidden;"><fmt:formatDate value="${consume.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></div></td>
+			<c:if test="${fn:contains(roleIds,'1,')}">
+			<td><c:if test="${consume.interfaceName == 'jinpiao'}">金飘</c:if>
+			<c:if test="${consume.interfaceName == 'liul'}">君隆</c:if></td>
+			</c:if>
 			<td>
 			<input type="button" value="状态" onclick="searchState('${consume.consumeId}','<fmt:formatDate value="${consume.createTime}" pattern="yyyy-MM-dd"/>','${consume.interfaceName}')">
 			<c:if test="${fn:contains(roleIds,'1,')}">

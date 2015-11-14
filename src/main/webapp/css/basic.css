@@ -3,7 +3,6 @@
 body {
 	margin:0;
 	padding:0;
-	background:#f0f0f0 url(../images/page_bg.jpg) repeat-y center top;
 	font: 14px/28px 'Microsoft Yahei', Tahoma, Arial, Helvetica, STHeiti;
 }
 .clear{clear:both;}
@@ -16,7 +15,7 @@ a:link,a:visited{
 }
 .blue_num{ color:#06C;font-weight:bold;padding:4px;}
 
-.main,.footer,.top_content,.menu_bar{margin:0px auto;width:1140px;}
+.main,.footer,.top_content,.menu_bar{margin:0px auto;width:90%;}
 .top{ background:url(../images/top_bg.jpg) repeat-x left top;}
 .top .logo {
 	float: left;
@@ -103,7 +102,7 @@ a:link,a:visited{
 .left_menu a:hover{ color:#03F; background-color:#D6E4FC; }
 .cur2{ background-color:#D6E4FC; font-weight:bold;}
 /*main*/
-.index_content{float:left;margin:0 10px ; font-size:14px; color:#333; width:900px;}
+.index_content{float:left;margin:0 10px ; font-size:14px; color:#333; width:90%;}
 .index_content .index_ad{border:1px solid #ccc; background-color:#900;}
 .title_min{border-bottom:2px solid #bdbdbe; line-height:28px; margin:20px 0 5px 0;font-size:16px;}
 .title_min .title2{font-size:18px;color:#222;line-height:28px;margin:0;padding:4px;}

@@ -14,7 +14,7 @@
 <script type="text/javascript">
 
 	$(document).ready(function() {
-		var searchData = {pageSize:8};
+		var searchData = {pageSize:12};
 		searchPage("${ctx}/product/getProductsMain",searchData,"","ul");
 		
 		$("select").change( function() {
@@ -98,7 +98,7 @@
 	<div class="top">
 		<%@ include file="common/top.jsp"%>
 		<div class="main">
-			<%@ include file="common/left.jsp"%>
+			<%-- <%@ include file="common/left.jsp"%> --%>
 			<div class="index_content">
 			<div>运营商：<select name="isp" id="isp"><option value="">全部</option>
 			<option value="CM">移动</option><option value="CU">联通</option><option value="CT">电信</option></select> 
