@@ -15,7 +15,8 @@ a:link,a:visited{
 }
 .blue_num{ color:#06C;font-weight:bold;padding:4px;}
 
-.main,.footer,.top_content,.menu_bar{margin:0px auto;width:90%;}
+.main{margin:0px auto;width:90%;center}
+.footer,.top_content,.menu_bar{margin:0px auto;width:1020px;}
 .top{ background:url(../images/top_bg.jpg) repeat-x left top;}
 .top .logo {
 	float: left;
@@ -72,7 +73,7 @@ a:link,a:visited{
 	#sddm div a:hover
 	{	background: #d6e4fc;
 		color: #333;}
-.top .menu_bar .nav-box #sddm li .drop{background:url(../images/drop.png) no-repeat 90% center ;}
+.top .menu_bar .nav-box #sddm li .drop{background:url(../images/drop.png) no-repeat 1140px center ;}
 /*search*/
 .search_bar{text-align:right; height:42px; font-size:16px;color:#FFF;line-height:42px;}
 .search_input{font-size:14px;height:22px;border:1px solid #06C;width:240px;padding:2px 4px;line-height:22px;}
