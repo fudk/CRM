@@ -100,6 +100,9 @@ public class ClientServiceIml implements ClientService {
 //			Consume cons = rechargeConsumeService.getConsumeBy(consu);
 			ConsumeConditions cons = rechargeConsumeService.getConsumeConditions(consu);
 			if(cons!=null){
+				if("success".equals(cons.getState())){
+					continue;
+				}
 				String rest = String.format("%.0f ", m.get("Status")).trim();
 //				System.out.println(rest);
 				if("5".equals(rest)){
