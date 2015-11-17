@@ -36,7 +36,7 @@ public class CallbackNotifyServiceImpl implements CallbackNotifyService {
 	
 	public Boolean callbackNotify(ConsumeConditions consume,String opstatus) throws Exception{
 		long startTimeMillis = System.currentTimeMillis(); // 开始时间  
-		System.out.println(consume.getNotifyUrl()+" 回调函数开始");
+		logger.error(consume.getNotifyUrl()+" 回调函数开始");
 		if(consume == null || StringUtils.isBlank(consume.getNotifyUrl())){
 			return false;
 		}
@@ -79,7 +79,7 @@ public class CallbackNotifyServiceImpl implements CallbackNotifyService {
 			HttpEntity httpEntity = httpResponse.getEntity();  
 			if (httpEntity != null) {  
 				String restr = EntityUtils.toString(httpEntity, "UTF-8");
-				System.out.println(consume.getNotifyUrl()+" 回调函数返回："+restr);
+				logger.error(consume.getNotifyUrl()+" 回调函数返回："+restr);
 				logService.execLog("callback", consume.getNotifyUrl(), startTimeMillis, formparams.toString()+" response:" + restr);
 				Gson gson = new Gson();
 				Map<String,Object> requestMap = gson.fromJson(restr, Map.class);
