@@ -53,6 +53,9 @@ public class CallbackNotifyServiceImpl implements CallbackNotifyService {
 		try {  
 			String consumeId = consume.getConsumeId();
 			String orderId = consume.getOrderId();
+			if(orderId!=null&&orderId.contains("_")){
+				orderId = orderId.split("_")[1];
+			}
 			
 			// 创建参数队列  
 			List<NameValuePair> formparams = new ArrayList<NameValuePair>();  

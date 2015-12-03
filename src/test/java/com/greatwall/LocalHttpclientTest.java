@@ -18,13 +18,13 @@ import org.apache.http.util.EntityUtils;
 
 public class LocalHttpclientTest {
 	
-	private static String hosts = "http://115.29.43.62:8080";
-//	private static String hosts = "http://127.0.0.1";
+//	private static String hosts = "http://115.29.43.62:8080";
+	private static String hosts = "http://127.0.0.1";
 
 	public static void main(String[] args) {
 //		regPhone();
-		 regFlow();
-//		requesQuery();
+//		 regFlow();
+		requesQuery();
 	}
 
 	public static void regPhone(){
@@ -190,7 +190,7 @@ public class LocalHttpclientTest {
 			sb.append(nameValuePair.getValue());
 			sb.append("&");
 		}
-		sb.append("");
+		sb.append("C6914624EB90000116D71D90141B3FC0");
 		formparams.add(new BasicNameValuePair("sign", DigestUtils.md5Hex(sb.toString())));  
 		System.out.println("====");
 
