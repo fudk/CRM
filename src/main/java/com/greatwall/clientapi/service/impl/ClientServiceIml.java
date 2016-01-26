@@ -16,6 +16,7 @@ import com.greatwall.api.service.CallbackNotifyService;
 import com.greatwall.clientapi.service.ClientService;
 import com.greatwall.clientapi.service.JinPiaoService;
 import com.greatwall.clientapi.service.LiulService;
+import com.greatwall.clientapi.service.ShService;
 import com.greatwall.clientapi.service.ShunpayService;
 import com.greatwall.recharge.dto.Consume;
 import com.greatwall.recharge.dto.ConsumeConditions;
@@ -39,6 +40,8 @@ public class ClientServiceIml implements ClientService {
 	private ShunpayService shunpanService;
 	@Autowired
 	private JinPiaoService jinPiaoService;
+	@Autowired
+	private ShService shService;
 
 	@Autowired
 	private RechargeConsumeService rechargeConsumeService;
@@ -46,6 +49,7 @@ public class ClientServiceIml implements ClientService {
 	public String searchState(ConsumeConditions consume) throws Exception{
 		String status = "";//查询状态
 		String statuslist = "";//金飘接口查询状态列表
+		String shStatuslist = "";//sh接口查询状态列表
 		String finalstatus = "";//转换成的内部状态
 		String searchstatus = "";//为空时查询错误，其他查询成功
 		try {
@@ -55,6 +59,8 @@ public class ClientServiceIml implements ClientService {
 				status = shunpanService.searchState(consume);
 			}else if(RMSConstant.INTERFACE_NAME_JINPIAO.equals(consume.getInterfaceName())){
 				statuslist = jinPiaoService.searchState();
+			}else if(RMSConstant.INTERFACE_NAME_SH.equals(consume.getInterfaceName())){
+				shStatuslist = shService.searchState();
 			}
 		} catch (Exception e) {
 			logger.error("调研查询接口错误", e);
@@ -79,12 +85,22 @@ public class ClientServiceIml implements ClientService {
 			searchstatus = finalstatus;
 		}else if(StringUtils.isNotBlank(statuslist)){
 			searchstatus = updateStatusJinpiao(statuslist,finalstatus);
+		}else if(StringUtils.isNotBlank(shStatuslist)){
+			searchstatus = updateStatusSh(shStatuslist,finalstatus);
 		}else{
 			System.out.println("返回值不匹配 ");
 		}
+		
 		return searchstatus;
 	}
 	
+	/**
+	 * 金飘接口状态更新
+	 * @param statuslist
+	 * @param finalstatus
+	 * @return
+	 * @throws Exception
+	 */
 	private String updateStatusJinpiao(String statuslist,String finalstatus) throws Exception{
 		Gson gson = new Gson();
 		Map map = gson.fromJson(statuslist, Map.class);
@@ -124,7 +140,53 @@ public class ClientServiceIml implements ClientService {
 		}else{
 			return "error";
 		}
+	}
+	/**
+	 * sh接口状态更新
+	 * @param statuslist
+	 * @param finalstatus
+	 * @return
+	 * @throws Exception
+	 */
+	private String updateStatusSh(String statuslist,String finalstatus) throws Exception{
+		Gson gson = new Gson();
+		Map map = gson.fromJson(statuslist, Map.class);
 		
+		List list = (List) map.get("Reports");
+		for(int i=0;i<list.size();i++){
+			Map m = (Map)list.get(i);
+//			System.out.println(String.format("%.0f ", m.get("TaskID")).trim());
+			Consume consu = new Consume();
+			consu.setInterfaceName(RMSConstant.INTERFACE_NAME_SH);
+			consu.setRemark(String.format("%.0f ", m.get("TaskID")).trim());
+			
+//			Consume cons = rechargeConsumeService.getConsumeBy(consu);
+			ConsumeConditions cons = rechargeConsumeService.getConsumeConditions(consu);
+			if(cons!=null){
+				if("success".equals(cons.getState())){
+					continue;
+				}
+				String rest = String.format("%.0f ", m.get("Status")).trim();
+//				System.out.println(rest);
+				if("5".equals(rest)){
+					finalstatus = RMSConstant.CONSUME_STATE_FAIL;
+					rechargeReturn(cons,finalstatus);
+					run(fixedThreadPool,cons,"00");
+				}else if("4".equals(rest)){
+					finalstatus = RMSConstant.CONSUME_STATE_SUC;
+					rechargeConsumeService.confirmConsume(cons.getConsumeId(), finalstatus);
+					run(fixedThreadPool,cons,"01");
+				}else{
+					logger.info(RMSConstant.INTERFACE_NAME_SH +" 查询中间状态 ："+rest);
+				}
+			}
+		}
+		
+		if("0".equals(map.get("Code"))){
+			return "search";
+		}else{
+			return "error";
+		}
 	}
 
 	public String updateStatus(Consume consume,String status) throws Exception{

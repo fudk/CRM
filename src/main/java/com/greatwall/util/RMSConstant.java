@@ -38,6 +38,10 @@ public class RMSConstant {
 	 * @Fields INTERFACE_NAME_LIUL : 金飘流量接口
 	 */
 	public static final String INTERFACE_NAME_JINPIAO= "jinpiao";
+	/**
+	 * @Fields INTERFACE_NAME_LIUL : 商户流量接口
+	 */
+	public static final String INTERFACE_NAME_SH= "sh";
 	
 	
 	/** 

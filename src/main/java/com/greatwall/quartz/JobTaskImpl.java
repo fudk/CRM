@@ -58,6 +58,7 @@ public class JobTaskImpl implements JobTask {
 		int maxWhile = 10;//最多循环10次
 		int initWhile = 1;
 		ConsumeConditions jinpiao = null;
+		ConsumeConditions sh = null;
 		ConsumeConditions cc =new ConsumeConditions();
 		cc.setState("%sended%");
 
@@ -81,16 +82,13 @@ public class JobTaskImpl implements JobTask {
 						jinpiao = ccd;
 					}
 					continue;
+				}else if(RMSConstant.INTERFACE_NAME_SH.equals(ccd.getInterfaceName())){
+					if(sh==null){
+						sh = ccd;
+					}
+					continue;
 				}
 				status = clientService.searchState(ccd);
-				/*if(status.contains("fail")){
-					opstatus = "00";
-				}else if("success".equals(status)){
-					opstatus = "01";
-				}else{
-					continue;
-				}*/
-//				run(fixedThreadPool,ccd,opstatus);
 			}
 
 			if(page.getCurrentPage()>page.getTotalPage()){
@@ -106,12 +104,9 @@ public class JobTaskImpl implements JobTask {
 		
 		if(jinpiao!=null){
 			status = clientService.searchState(jinpiao);
-			/*if(status.contains("fail")){
-				opstatus = "00";
-			}else if("success".equals(status)){
-				opstatus = "01";
-			}*/
-//			run(fixedThreadPool,jinpiao,opstatus);
+		}
+		if(sh!=null){
+			status = clientService.searchState(sh);
 		}
 	}
 	
