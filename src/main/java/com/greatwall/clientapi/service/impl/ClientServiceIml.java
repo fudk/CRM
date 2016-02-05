@@ -16,6 +16,7 @@ import com.greatwall.api.service.CallbackNotifyService;
 import com.greatwall.clientapi.service.ClientService;
 import com.greatwall.clientapi.service.JinPiaoService;
 import com.greatwall.clientapi.service.LiulService;
+import com.greatwall.clientapi.service.QiutongService;
 import com.greatwall.clientapi.service.ShService;
 import com.greatwall.clientapi.service.ShunpayService;
 import com.greatwall.recharge.dto.Consume;
@@ -41,6 +42,8 @@ public class ClientServiceIml implements ClientService {
 	@Autowired
 	private JinPiaoService jinPiaoService;
 	@Autowired
+	private QiutongService qiutongService;
+	@Autowired
 	private ShService shService;
 
 	@Autowired
@@ -57,6 +60,8 @@ public class ClientServiceIml implements ClientService {
 				status = liulService.searchState(consume);
 			}else if(RMSConstant.INTERFACE_NAME_SHUNPAY.equals(consume.getInterfaceName())){
 				status = shunpanService.searchState(consume);
+			}else if(RMSConstant.INTERFACE_NAME_QIUTONG.equals(consume.getInterfaceName())){
+				status = qiutongService.searchState(consume);
 			}else if(RMSConstant.INTERFACE_NAME_JINPIAO.equals(consume.getInterfaceName())){
 				statuslist = jinPiaoService.searchState();
 			}else if(RMSConstant.INTERFACE_NAME_SH.equals(consume.getInterfaceName())){

@@ -10,15 +10,16 @@
     <result column="PRODUCT_TYPE" property="productType" jdbcType="VARCHAR" />
     <result column="PRODUCT_PRICE" property="productPrice" jdbcType="DOUBLE" />
     <result column="PRODUCT_VALIDITY" property="productValidity" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
     <result column="STATE" property="state" jdbcType="VARCHAR" />
     <result column="REMARK" property="remark" jdbcType="VARCHAR" />
-    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="QT_PRODUCT_ID" property="qtProductId" jdbcType="VARCHAR" />
   </resultMap>
   
  
   <sql id="Base_Column_List" >
     PRODUCT_ID, PRODUCT_NAME, PRODUCT_IMG, PRODUCT_VALUE, ISP, PRODUCT_TYPE, PRODUCT_PRICE, 
-    PRODUCT_VALIDITY,CREATE_TIME,STATE,REMARK
+    PRODUCT_VALIDITY, CREATE_TIME, STATE, REMARK, QT_PRODUCT_ID
   </sql>
   
   <sql id="productWhere">
@@ -84,16 +85,19 @@
   <insert id="insert" parameterType="com.greatwall.recharge.dto.Product" >
     insert into td_rms_product (PRODUCT_ID, PRODUCT_NAME, PRODUCT_IMG, 
       PRODUCT_VALUE, ISP, PRODUCT_TYPE, 
-      PRODUCT_PRICE, PRODUCT_VALIDITY,CREATE_TIME,STATE,REMARK)
+      PRODUCT_PRICE, PRODUCT_VALIDITY, CREATE_TIME, 
+      STATE, REMARK, QT_PRODUCT_ID
+      )
     values (#{productId,jdbcType=INTEGER}, #{productName,jdbcType=VARCHAR}, #{productImg,jdbcType=VARCHAR}, 
       #{productValue,jdbcType=VARCHAR}, #{isp,jdbcType=VARCHAR}, #{productType,jdbcType=VARCHAR}, 
-      #{productPrice,jdbcType=DOUBLE}, #{productValidity,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}
-      ,#{state,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR})
+      #{productPrice,jdbcType=DOUBLE}, #{productValidity,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{state,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{qtProductId,jdbcType=VARCHAR}
+      )
   </insert>
   
   <update id="updateByPrimaryKeySelective" parameterType="com.greatwall.recharge.dto.Product" >
     update td_rms_product
-    <set >
+   <set >
       <if test="productName != null" >
         PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
       </if>
@@ -115,11 +119,17 @@
       <if test="productValidity != null" >
         PRODUCT_VALIDITY = #{productValidity,jdbcType=VARCHAR},
       </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="state != null" >
         STATE = #{state,jdbcType=VARCHAR},
       </if>
       <if test="remark != null" >
         REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="qtProductId != null" >
+        QT_PRODUCT_ID = #{qtProductId,jdbcType=VARCHAR},
       </if>
     </set>
     where PRODUCT_ID = #{productId,jdbcType=INTEGER}

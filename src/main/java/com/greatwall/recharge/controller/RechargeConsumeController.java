@@ -378,6 +378,8 @@ public class RechargeConsumeController {
 						}
 						if("".equals(interfaceName)){
 							throw new ClassCastException("用户未分配通道");
+						}else if(RMSConstant.INTERFACE_NAME_QIUTONG.equals(interfaceName)){
+							consume.setProductParam(product.getQtProductId());
 						}
 						consume.setInterfaceName(interfaceName);
 

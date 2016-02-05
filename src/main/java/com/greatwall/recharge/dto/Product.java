@@ -18,12 +18,14 @@ public class Product {
     private Double productPrice;
 
     private String productValidity;
-    
-    private String state;
-    
-    private String remark;
-    
+
     private Date createTime;
+
+    private String state;
+
+    private String remark;
+
+    private String qtProductId;
 
     public Integer getProductId() {
         return productId;
@@ -89,29 +91,35 @@ public class Product {
         this.productValidity = productValidity == null ? null : productValidity.trim();
     }
 
-	public Date getCreateTime() {
-		return createTime;
-	}
+    public Date getCreateTime() {
+        return createTime;
+    }
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
-	public String getState() {
-		return state;
-	}
+    public String getState() {
+        return state;
+    }
 
-	public void setState(String state) {
-		this.state = state;
-	}
+    public void setState(String state) {
+        this.state = state == null ? null : state.trim();
+    }
 
-	public String getRemark() {
-		return remark;
-	}
+    public String getRemark() {
+        return remark;
+    }
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-	
-    
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getQtProductId() {
+        return qtProductId;
+    }
+
+    public void setQtProductId(String qtProductId) {
+        this.qtProductId = qtProductId == null ? null : qtProductId.trim();
+    }
 }

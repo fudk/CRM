@@ -46,6 +46,8 @@ public class Consume {
     private String interfaceName;
     
     private String orderId;
+    
+    private String productParam;
 
     public String getConsumeId() {
         return consumeId;
@@ -214,6 +216,13 @@ public class Consume {
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
-	
+
+	public String getProductParam() {
+		return productParam;
+	}
+
+	public void setProductParam(String productParam) {
+		this.productParam = productParam;
+	}
     
 }

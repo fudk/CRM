@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.greatwall.clientapi.service.JinPiaoService;
 import com.greatwall.clientapi.service.JudianService;
 import com.greatwall.clientapi.service.LiulService;
+import com.greatwall.clientapi.service.QiutongService;
 import com.greatwall.clientapi.service.ShService;
 import com.greatwall.clientapi.service.ShunpayService;
 import com.greatwall.platform.base.dao.DaoException;
@@ -55,6 +56,8 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 	private JinPiaoService jinPiaoService;
 	@Autowired
 	private ShService shService;
+	@Autowired
+	private QiutongService qiutongService;
 	@Autowired
 	private LogDao logDao;
 
@@ -229,9 +232,16 @@ public class RechargeConsumeServiceImpl implements RechargeConsumeService {
 				}else{
 					throw new DaoException("code"+RMSConstant.ERROR_CODE_104+" 接口调用失败");
 				}
+			}else if(RMSConstant.INTERFACE_NAME_QIUTONG.equals(consume.getInterfaceName())){
+				if(qiutongService.sendMsg(consume)){
+					consume.setState(RMSConstant.CONSUME_STATE_SENDED);
+				}else{
+					throw new DaoException("code"+RMSConstant.ERROR_CODE_104+" 接口调用失败");
+				}
 			}else{
 				throw new Exception("未找到对应接口");
 			}
+			
 		}
 		
 		int insertConsume = consumeDao.insert(consume);

@@ -42,6 +42,10 @@ public class RMSConstant {
 	 * @Fields INTERFACE_NAME_LIUL : 商户流量接口
 	 */
 	public static final String INTERFACE_NAME_SH= "sh";
+	/**
+	 * INTERFACE_NAME_QIUTONG : 求同流量接口
+	 */
+	public static final String INTERFACE_NAME_QIUTONG= "qiutong";
 	
 	
 	/** 
