@@ -77,4 +77,5 @@ public interface UserDao {
 	
 	public int updateFlowBalance(Double amount,Integer version,Integer userId);
 	
+	public void delUser(Integer userId);
 }

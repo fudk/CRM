@@ -57,5 +57,8 @@ public class UserDaoImpl extends MyBatisDao implements UserDao {
 		return this.update("userMapper.updateFlowBalance", params);
 	}
 	
+	public void delUser(Integer userId){
+		this.delete("userMapper.deleteByPrimaryKey", userId);
+	}
 	
 }

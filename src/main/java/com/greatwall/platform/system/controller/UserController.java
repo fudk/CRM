@@ -304,10 +304,12 @@ public class UserController {
 
 	@RequestMapping("/disableUser")
 	public@ResponseBody String disableUser(Integer userId){
-		if(userService.disableUser(userId)){
+		userService.delUser(userId);
+		return "success";
+		/*if(userService.disableUser(userId)){
 			return "success";
 		}else{
 			return "删除错误";
-		}
+		}*/
 	}
 }

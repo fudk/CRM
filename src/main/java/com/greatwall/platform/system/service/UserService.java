@@ -48,4 +48,6 @@ public interface UserService {
 	public Boolean updatePassowrd(Integer userId,String oldPassword,String newPassword);
 	
 	public Boolean disableUser(Integer userId);
+	
+	public void delUser(Integer userId);
 }
