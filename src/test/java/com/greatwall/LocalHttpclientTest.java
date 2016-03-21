@@ -23,8 +23,8 @@ public class LocalHttpclientTest {
 
 	public static void main(String[] args) {
 //		regPhone();
-//		 regFlow();
-		requesQuery();
+		 regFlow();
+//		requesQuery();
 	}
 
 	public static void regPhone(){
@@ -95,7 +95,7 @@ public class LocalHttpclientTest {
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>(); 
 
 		//流量测试
-		formparams.add(new BasicNameValuePair("platId", "YHNNIK"));  
+		formparams.add(new BasicNameValuePair("platId", "ADMIN"));  
 		formparams.add(new BasicNameValuePair("timestamp", new Date().getTime()+""));  
 		formparams.add(new BasicNameValuePair("orderId", UUID.randomUUID().toString()));  
 		formparams.add(new BasicNameValuePair("opType", "flow"));  
@@ -123,7 +123,7 @@ public class LocalHttpclientTest {
 			sb.append(nameValuePair.getValue());
 			sb.append("&");
 		}
-		sb.append("");
+		sb.append("C691575047B00001799167E0EEE0A940");
 		//				sb.append("C6AF41651F70000132CD17C41C70A5D0");
 		formparams.add(new BasicNameValuePair("sign", DigestUtils.md5Hex(sb.toString())));  
 		System.out.println("====");

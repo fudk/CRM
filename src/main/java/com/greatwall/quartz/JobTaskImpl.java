@@ -38,7 +38,15 @@ public class JobTaskImpl implements JobTask {
 	@Scheduled(cron="0 0/2 *  * * ? ")   //每5秒执行一次  
 	@Override  
 	public void synState(){  
-		if(GlobalParamsUtil.getSearchLock()){
+		System.out.println("状态查询");
+		try {
+			searchState();
+			//Thread.sleep(40000);
+		} catch (Exception e) {
+			logger.error("充值状态查询定时任务错误 ", e);
+		}
+		
+		/*if(GlobalParamsUtil.getSearchLock()){
 			//System.out.println(new Date() +"获取定时任务锁成功");
 			try {
 				searchState();
@@ -50,7 +58,7 @@ public class JobTaskImpl implements JobTask {
 		}else{
 			System.out.println("获取定时任务锁失败");
 		}
-		GlobalParamsUtil.unSearchLock();
+		GlobalParamsUtil.unSearchLock();*/
 	}  
 
 	private void searchState() throws Exception{

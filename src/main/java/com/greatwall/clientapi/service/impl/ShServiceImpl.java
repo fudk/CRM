@@ -76,7 +76,8 @@ public class ShServiceImpl implements ShService {
 		//HttpClient  
 		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();  
 
-		HttpPost httpPost = new HttpPost("http://122.224.5.41:8080/api.aspx/api.aspx");  
+//		HttpPost httpPost = new HttpPost("http://122.224.5.41:8080/api.aspx/api.aspx");  
+		HttpPost httpPost = new HttpPost(httpUrl);  
 		RequestConfig requestConfig = RequestConfig.custom()  
 				.setConnectionRequestTimeout(3000).setConnectTimeout(3000)  
 				.setSocketTimeout(3000).build(); 
@@ -118,8 +119,9 @@ public class ShServiceImpl implements ShService {
 				//打印响应内容  
 				
 				String restr = EntityUtils.toString(httpEntity, "UTF-8");
-//				System.out.println("response:" + restr);  
-				logService.execLog("call", "jinpiaoSearchState", startTimeMillis, formparams.toString()+" response:" + restr);
+				System.out.println("sh post:" +formparams.toString());
+				System.out.println("sh response:" + restr);  
+				logService.execLog("call", "shSearchState", startTimeMillis, formparams.toString()+" response:" + restr);
 				
 				Gson gson = new Gson();
 				Map map = gson.fromJson(restr, Map.class);
@@ -193,8 +195,8 @@ public class ShServiceImpl implements ShService {
 				//打印响应内容  
 				
 				String restr = EntityUtils.toString(httpEntity, "UTF-8");
-//				System.out.println("response:" + restr);  
-				logService.execLog("call", "jinpiaoSend", startTimeMillis, formparams.toString()+" response:" + restr);
+				System.out.println("response:" + restr);  
+				logService.execLog("call", "shSend", startTimeMillis, formparams.toString()+" response:" + restr);
 				
 				Gson gson = new Gson();
 				Map map = gson.fromJson(restr, Map.class);
@@ -205,7 +207,7 @@ public class ShServiceImpl implements ShService {
 			}  
 			//					closeableHttpClient.close();  
 		} catch (Exception e) {  
-			logger.error("金飘流量充值接口错误：", e);
+			logger.error("sh流量充值接口错误：", e);
 			throw new Exception(e);
 		}  finally {  
 			try {
