@@ -83,6 +83,9 @@ public class ShServiceImpl implements ShService {
 				.setSocketTimeout(3000).build(); 
 		httpPost.setConfig(requestConfig);  
 		
+		String input = "";
+		String output = "";
+		String error = "";
 		try {  
 			String action = "getReports";
 			String count = "10";
@@ -105,7 +108,8 @@ public class ShServiceImpl implements ShService {
 			formparams.add(new BasicNameValuePair("account", account));  
 			formparams.add(new BasicNameValuePair("count", count));  
 			formparams.add(new BasicNameValuePair("sign", sign));  
-
+			input = formparams.toString();
+			
 			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");  
 			httpPost.setEntity(entity);  
 
@@ -119,9 +123,9 @@ public class ShServiceImpl implements ShService {
 				//打印响应内容  
 				
 				String restr = EntityUtils.toString(httpEntity, "UTF-8");
-				System.out.println("sh post:" +formparams.toString());
-				System.out.println("sh response:" + restr);  
-				logService.execLog("call", "shSearchState", startTimeMillis, formparams.toString()+" response:" + restr);
+//				System.out.println("sh post:" +formparams.toString());
+//				System.out.println("sh response:" + restr);  
+				output = restr;
 				
 				Gson gson = new Gson();
 				Map map = gson.fromJson(restr, Map.class);
@@ -131,8 +135,10 @@ public class ShServiceImpl implements ShService {
 			}  
 			//					closeableHttpClient.close();  
 		} catch (Exception e) {  
+			error = e.getMessage();
 			throw new Exception(e);
 		}  finally {  
+			logService.execLog("call", "shSearchState", startTimeMillis, "input:"+input+" output:" + output+" error:"+error);
 			try {
 				//释放资源  
 				closeableHttpClient.close();
@@ -150,12 +156,16 @@ public class ShServiceImpl implements ShService {
 		//HttpClient  
 		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();  
 
-		HttpPost httpPost = new HttpPost(httpUrl);  
-		RequestConfig requestConfig = RequestConfig.custom()  
-			    .setConnectionRequestTimeout(3000).setConnectTimeout(3000)  
-			    .setSocketTimeout(3000).build(); 
-		httpPost.setConfig(requestConfig);  
+		String input = "";
+		String output = "";
+		String error = "";
 		try {  
+			HttpPost httpPost = new HttpPost(httpUrl);  
+			RequestConfig requestConfig = RequestConfig.custom()  
+				    .setConnectionRequestTimeout(6000).setConnectTimeout(6000)  
+				    .setSocketTimeout(6000).build(); 
+			httpPost.setConfig(requestConfig);
+			
 			String action = "charge";
 			String v = "1.1";
 			String packageValue = consume.getProductValue().replaceAll("M", "");
@@ -208,8 +218,10 @@ public class ShServiceImpl implements ShService {
 			//					closeableHttpClient.close();  
 		} catch (Exception e) {  
 			logger.error("sh流量充值接口错误：", e);
+			error = e.getMessage();
 			throw new Exception(e);
 		}  finally {  
+			logService.execLog("call", "shSend", startTimeMillis, "input:"+input+" output:" + output+" error:"+error);
 			try {
 				//释放资源  
 				closeableHttpClient.close();
