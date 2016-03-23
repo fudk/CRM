@@ -53,7 +53,8 @@
 			<c:if test="${fn:contains(roleIds,'1,')}">
 			<td><c:if test="${consume.interfaceName == 'jinpiao'}">金飘</c:if>
 			<c:if test="${consume.interfaceName == 'liul'}">君隆</c:if>
-			<c:if test="${consume.interfaceName == 'qiutong'}">同求</c:if></td>
+			<c:if test="${consume.interfaceName == 'qiutong'}">同求</c:if>
+			<c:if test="${consume.interfaceName == 'sh'}">迈远</c:if></td>
 			</c:if>
 			<td>
 			<input type="button" value="状态" onclick="searchState('${consume.consumeId}','<fmt:formatDate value="${consume.createTime}" pattern="yyyy-MM-dd"/>','${consume.interfaceName}')">
