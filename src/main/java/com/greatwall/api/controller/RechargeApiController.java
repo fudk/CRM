@@ -1,11 +1,13 @@
 package com.greatwall.api.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
@@ -206,6 +208,31 @@ public class RechargeApiController {
 		return remap;
 	}
 	
+	
+    
+	@RequestMapping(value = "/wt/recharge",method = { RequestMethod.GET, RequestMethod.POST })
+	public void recharge(RechargeCondition rechargeCondition,
+			HttpServletRequest request,HttpServletResponse response){
+		
+		response.setContentType("application/json;charset=UTF-8");
+        response.setHeader("Cache-Control", "no-store");
+        response.setHeader("Pragrma", "no-cache");
+        response.setDateHeader("Expires", 0);
+        try {
+        	
+        	Map m = this.rechargeApi(rechargeCondition, request);
+        	if(!"01".equals(m.get("resCode"))){
+        		response.setHeader("paycut", "-1");
+        	}
+        	Gson gson = new Gson();
+			response.getWriter().write(gson.toJson(m));
+			response.getWriter().flush();  
+	        response.getWriter().close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+    
 	/** 
 	* @Title: recharge 
 	* @Description: 对外提供的充值接口 
@@ -393,6 +420,141 @@ public class RechargeApiController {
 		}else{
 			remap.put("retcode", "00");
 			remap.put("retmsg", "测试失败");
+		}
+		return remap;
+	}
+	
+	private Map<String,String> rechargeApi(RechargeCondition rechargeCondition,HttpServletRequest request){
+		Map<String,String> remap = new HashMap<String,String>();
+		if(rechargeCondition==null){
+			remap.put("resCode", "02");
+			remap.put("resMsg", "校验失败");
+			return remap;
+		}
+		User u = null;
+		if(rechargeCondition.getPlatId()!=null){
+			u = userService.getUser(rechargeCondition.getPlatId());
+		}else{
+			remap.put("resCode", "06");
+			remap.put("resMsg", "platId不能为空");
+			return remap;
+		}
+		
+		if(u == null || StringUtils.isBlank(u.getLoginName())){
+			remap.put("rescode", "04");
+			remap.put("resMsg", "用户不存在");
+			return remap;
+		}
+		
+		String ip = NetworkUtil.getIpAddress(request);
+		if(!"127.0.0.1".equals(u.getPermitIp())){
+			if(StringUtils.isBlank(ip)||!ip.equals(u.getPermitIp())){
+				remap.put("resCode", "03");
+				remap.put("resMsg", "IP地址未授权");
+				return remap;
+			}
+		}
+		
+		if(!StringUtil.authRechargeCondition(rechargeCondition, u.getSessionKey())){
+			remap.put("resCode", "02");
+			remap.put("resMsg", "校验失败");
+			return remap;
+		}
+		
+		String[] phones = StringUtil.getRepStrings(rechargeCondition.getCustPhone());
+		
+		Product product = new Product();
+		if("phone".equals(rechargeCondition.getOpType())){
+			product.setProductPrice(new Double(rechargeCondition.getOpPrice()));
+		}else{
+			product.setProductValue(rechargeCondition.getOpPrice());
+		}
+		String isp = phoneUtil.isPhoneNum(phones[0]);
+		product.setState("enable");
+		product.setProductValidity(rechargeCondition.getFlxTyp());
+		product.setIsp(isp);
+		product.setProductType(rechargeCondition.getOpType());
+		product = productService.getProduct(product);
+		
+		if(product==null){
+			remap.put("resCode", "07");
+			remap.put("resMsg", "充值产品不存在");
+			return remap;
+		}
+		
+		Consume consume = new Consume();
+		consume.setDiscount(RMSConstant.DEFAULT_DISCOUNT);//默认折扣
+		
+		UserChannel userChannel = new UserChannel();
+		userChannel.setUserId(u.getUserId());
+		userChannel.setIsp(isp);
+		userChannel.setType(rechargeCondition.getOpType());
+		List<UserChannel> uclist = userChannelService.getUserChannel(userChannel);
+		String interfaceName = "";
+		if(uclist!=null&&uclist.size()>0){
+			for(UserChannel uc:uclist){
+				if(isp.equals(uc.getIsp())){
+					interfaceName = uc.getInterfaceName();
+					consume.setDiscount(uc.getDiscount());
+				}
+			}
+		}
+		if("".equals(interfaceName)){
+			remap.put("resCode", "08");
+			remap.put("resMsg", "用户未配置通道");
+			return remap;
+		}
+		
+		
+		
+		consume.setProductId(product.getProductId());
+		consume.setProductName(product.getProductName());
+		consume.setProductValue(product.getProductValue());
+		consume.setConsumePrice(product.getProductPrice());
+		consume.setProductValidity(product.getProductValidity());
+		consume.setConsumeNum(rechargeCondition.getOpNum());//默认消费数量为1个
+		consume.setConsumeAmount(MathUtil.mul(product.getProductPrice(), new Double(1), 2));
+		consume.setConsumeType(product.getProductType());
+		consume.setIsp(product.getIsp());
+		consume.setState(RMSConstant.CONSUME_STATE_PROCESSING);//处理中
+		consume.setUserId(u.getUserId());
+		consume.setInterfaceName(interfaceName);
+		consume.setNotifyUrl(rechargeCondition.getNotifyUrl());
+		consume.setOrderId(rechargeCondition.getPlatId()+"_"+rechargeCondition.getOrderId());
+		
+		List<String> errorMsgs = new ArrayList<String>();
+		//获取相应产品信息
+		
+		for(String phone : phones){
+			try {
+				//如果电话号码与产品运营商不匹配
+				if(!consume.getIsp().toUpperCase().equals(phoneUtil.isPhoneNum(phone))){
+					throw new ClassCastException("手机号码与运营商不匹配");
+				}
+				consume.setConsumePhone(phone);
+				
+				rechargeConsumeService.addConsume(consume);
+			}catch (Exception e) {
+				logger.error(phone,e);
+				errorMsgs.add(phone+" "+e.getMessage());
+			}
+		}
+
+		if(errorMsgs!=null&&errorMsgs.size()>0){
+			Gson gson = new Gson();
+			
+			String emsg = gson.toJson(errorMsgs);
+			remap.put("resCode", "09");
+			if(emsg.contains("code102")){
+				remap.put("resCode", "102");
+			}else if(emsg.contains("code104")){
+				remap.put("resCode", "104");
+			}
+			remap.put("resMsg", emsg );
+			remap.put("msg", "共"+(phones.length-errorMsgs.size())+"条保存成功，共"+errorMsgs.size()+"条保存失败。");
+		}else{
+			remap.put("resCode", "01");
+			remap.put("resMsg", "提交成功");
 		}
 		return remap;
 	}

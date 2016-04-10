@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -18,8 +19,8 @@ import org.apache.http.util.EntityUtils;
 
 public class LocalHttpclientTest {
 	
-//	private static String hosts = "http://115.29.43.62:8080";
-	private static String hosts = "http://127.0.0.1";
+	private static String hosts = "http://115.29.43.62:8080";
+//	private static String hosts = "http://127.0.0.1:81";
 
 	public static void main(String[] args) {
 //		regPhone();
@@ -34,6 +35,7 @@ public class LocalHttpclientTest {
 		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();  
 
 		HttpPost httpPost = new HttpPost(hosts+"/rechargeapi/recharge");  
+		  
 		// 创建参数队列  
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>(); 
 
@@ -58,8 +60,6 @@ public class LocalHttpclientTest {
 		}
 		sb.append("");
 		formparams.add(new BasicNameValuePair("sign", DigestUtils.md5Hex(sb.toString())));  
-		System.out.println("====");
-
 		
 		UrlEncodedFormEntity entity;  
 		try {  
@@ -90,7 +90,8 @@ public class LocalHttpclientTest {
 		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();  
 
 		//				HttpPost httpPost = new HttpPost("http://115.29.43.62:8080/rechargeapi/recharge");  
-		HttpPost httpPost = new HttpPost( hosts+"/rechargeapi/recharge");  
+//		HttpPost httpPost = new HttpPost( hosts+"/rechargeapi/recharge");  
+		HttpPost httpPost = new HttpPost(hosts+"/rechargeapi/wt/recharge");
 		// 创建参数队列  
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>(); 
 
@@ -101,7 +102,7 @@ public class LocalHttpclientTest {
 		formparams.add(new BasicNameValuePair("opType", "flow"));  
 		formparams.add(new BasicNameValuePair("flxTyp", "M")); 
 		formparams.add(new BasicNameValuePair("custPhone", "18173116167"));  
-		formparams.add(new BasicNameValuePair("opPrice", "10M"));  
+		formparams.add(new BasicNameValuePair("opPrice", "2M"));  
 		formparams.add(new BasicNameValuePair("opNum", "1"));  
 		formparams.add(new BasicNameValuePair("notifyUrl", hosts+"/rechargeapi/callback"));  
 
@@ -154,6 +155,8 @@ public class LocalHttpclientTest {
 			//post请求  
 			httpResponse = closeableHttpClient.execute(httpPost);  
 
+			Header[] ss = httpResponse.getAllHeaders();
+			
 			//getEntity()  
 			HttpEntity httpEntity = httpResponse.getEntity();  
 			if (httpEntity != null) {  
