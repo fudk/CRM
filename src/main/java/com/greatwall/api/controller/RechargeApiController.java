@@ -341,6 +341,7 @@ public class RechargeApiController {
 		consume.setInterfaceName(interfaceName);
 		consume.setNotifyUrl(rechargeCondition.getNotifyUrl());
 		consume.setOrderId(rechargeCondition.getPlatId()+"_"+rechargeCondition.getOrderId());
+		consume.setProductParam(product.getQtProductId());
 		
 		List<String> errorMsgs = new ArrayList<String>();
 		//获取相应产品信息

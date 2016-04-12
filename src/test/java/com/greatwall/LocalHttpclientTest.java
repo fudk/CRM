@@ -90,8 +90,8 @@ public class LocalHttpclientTest {
 		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();  
 
 		//				HttpPost httpPost = new HttpPost("http://115.29.43.62:8080/rechargeapi/recharge");  
-//		HttpPost httpPost = new HttpPost( hosts+"/rechargeapi/recharge");  
-		HttpPost httpPost = new HttpPost(hosts+"/rechargeapi/wt/recharge");
+		HttpPost httpPost = new HttpPost( hosts+"/rechargeapi/recharge");  
+//		HttpPost httpPost = new HttpPost(hosts+"/rechargeapi/wt/recharge");
 		// 创建参数队列  
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>(); 
 
@@ -102,7 +102,7 @@ public class LocalHttpclientTest {
 		formparams.add(new BasicNameValuePair("opType", "flow"));  
 		formparams.add(new BasicNameValuePair("flxTyp", "M")); 
 		formparams.add(new BasicNameValuePair("custPhone", "18173116167"));  
-		formparams.add(new BasicNameValuePair("opPrice", "2M"));  
+		formparams.add(new BasicNameValuePair("opPrice", "5M"));  
 		formparams.add(new BasicNameValuePair("opNum", "1"));  
 		formparams.add(new BasicNameValuePair("notifyUrl", hosts+"/rechargeapi/callback"));  
 
