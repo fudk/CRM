@@ -88,7 +88,7 @@ public class ShServiceImpl implements ShService {
 		String error = "";
 		try {  
 			String action = "getReports";
-			String count = "10";
+			String count = "500";
 			String v = "1.1";
 			
 			StringBuffer signData = new StringBuffer();
