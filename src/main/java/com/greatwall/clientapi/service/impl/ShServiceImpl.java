@@ -30,6 +30,13 @@ import com.greatwall.recharge.dto.Consume;
 import com.greatwall.util.CryptUtil;
 import com.greatwall.util.RMSConstant;
 
+/**
+* @ClassName: ShServiceImpl
+* @Description: 迈远接口
+* @author fudk fudk_k@sina.com
+* @date 2016年4月18日 下午4:55:56
+*
+*/ 
 @Service("shService")
 public class ShServiceImpl implements ShService {
 
@@ -169,6 +176,11 @@ public class ShServiceImpl implements ShService {
 			String action = "charge";
 			String v = "1.1";
 			String packageValue = consume.getProductValue().replaceAll("M", "");
+			if("1024".equals(packageValue)){
+				packageValue = "1000";
+			}if("2048".equals(packageValue)){
+				packageValue = "2000";
+			}
 			String mobile = consume.getConsumePhone();
 			
 			StringBuffer signData = new StringBuffer();
