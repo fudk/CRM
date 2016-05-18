@@ -74,5 +74,22 @@
 			</if>
 		</where>
 	</select>
+	
+	<select id="selectRechargePage" resultMap="ConditionsResultMap" >
+		select
+		a.RECHARGE_ID, a.CREATE_TIME, a.RECHARGE_AMOUNT, a.OPERATOR, a.USER_ID,a.REMARK,a.TYPE,b.USER_NAME ,c.USER_NAME OPERATOR_NAME
+		from td_rms_recharge_log a LEFT JOIN td_sm_user b ON a.USER_ID =b.USER_ID LEFT JOIN td_sm_user c ON a.OPERATOR = c.USER_ID
+		<where>
+			<if test="startTime != null">
+				<![CDATA[ and a.CREATE_TIME > #{startTime,jdbcType=TIMESTAMP} ]]>
+			</if>
+			<if test="endTime != null">
+				<![CDATA[ and a.CREATE_TIME <= #{endTime,jdbcType=TIMESTAMP} ]]>
+			</if>
+			<if test="userId != null">
+				<![CDATA[and a.user_id = #{userId,jdbcType=INTEGER} and a.OPERATOR <> #{userId,jdbcType=INTEGER} ]]>
+			</if>
+		</where>
+	</select>
 
 </mapper>

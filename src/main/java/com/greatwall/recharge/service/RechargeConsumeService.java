@@ -34,4 +34,6 @@ public interface RechargeConsumeService {
 	public Recharge getRecharge(Recharge recharge);
 
 	ConsumeConditions getConsumeConditions(Consume consume);
+	
+	public List<RechargeConditions> getUserRechargePage(RechargeConditions rechargeConditions,PageParameter page) throws DaoException;
 }

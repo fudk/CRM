@@ -78,11 +78,11 @@
 	<div class="logo">
 		<img src="${ctx}/images/logo.jpg" width="202" height="66" alt="中舜充值系统" />
 	</div>
-	<div class="top_contain">
+	<div class="top_contain"style="width: 300px">
 		<img src="${ctx}/images/top_ad.jpg" width="246" height="63" />
 	</div>
-	<div class="login">${sessionScope.user.userName }，欢迎您
-		<a href="${ctx }/logout">注销</a> <a href="#">帮助</a><br />
+	<div class="login" >${sessionScope.user.userName }，欢迎您,<c:if test="${not empty userbean }">话费余额：${userbean.balance }元，流量余额${userbean.flowBalance }元</c:if>
+		<br /><a href="${ctx }/logout">注销</a> <a href="#">帮助</a><br />
 	</div>
 </div>
 

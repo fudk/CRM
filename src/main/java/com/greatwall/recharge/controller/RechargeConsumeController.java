@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -24,9 +27,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.greatwall.api.service.CallbackNotifyService;
 import com.greatwall.clientapi.service.ClientService;
-import com.greatwall.platform.base.dao.DaoException;
+import com.greatwall.common.poi.ExportExcel;
 import com.greatwall.platform.domain.PageParameter;
 import com.greatwall.platform.system.dto.User;
 import com.greatwall.platform.system.service.UserService;
@@ -123,9 +127,12 @@ public class RechargeConsumeController {
 			User u = (User)session.getAttribute("user");
 			String roleIds = session.getAttribute("roleIds").toString();
 			if(!ValidateUtil.isAdmin(roleIds)){//如果是代理商
-				rechargeConditions.setOperator(u.getUserId());
+				rechargeConditions.setUserId(u.getUserId());
+				model.addAttribute("recharges", rechargeConsumeService.getUserRechargePage(rechargeConditions, page));
+//				rechargeConditions.setOperator(u.getUserId());
+			}else{
+				model.addAttribute("recharges", rechargeConsumeService.getRechargesPage(rechargeConditions, page));
 			}
-			model.addAttribute("recharges", rechargeConsumeService.getRechargesPage(rechargeConditions, page));
 			model.addAttribute("page", page);
 		} catch (Exception e) {
 			logger.error("查询消费明细错误",e);
@@ -156,6 +163,67 @@ public class RechargeConsumeController {
 		}
 
 		return new ModelAndView("/recharge/consumes.jsp");
+	}
+	@RequestMapping(value = "/consume/export")
+	public void export(HttpServletRequest request, HttpServletResponse response,ConsumeConditions consume, PageParameter page) throws Exception {
+		page.setPageSize(10000);
+		OutputStream out = null;
+		try {
+			String fileName = "充值记录.xls";
+			response.setContentType("application/vnd.ms-excel;charset=utf-8");
+			response.setHeader("Content-Disposition", "attachment;filename="+ new String(fileName.getBytes("UTF-8"),"ISO8859-1"));
+			
+			Map<String,String> map = new HashMap<String,String>();
+			map.put("CM", "中国移动");
+			map.put("CU", "中国联通");
+			map.put("CT", "中国电信");
+			Map<String,String> map1 = new HashMap<String,String>();
+			map1.put("phone", "话费");
+			map1.put("flow", "流量");
+			Map<String,String> map2 = new HashMap<String,String>();
+			map2.put("sended", "充值中");
+			map2.put("sended_processing",  "充值中");
+			map2.put("sended_wait", "充值中");
+			map2.put("fail", "充值失败");
+			map2.put("success", "充值成功");
+			map2.put("s_error", "充值错误");
+			map2.put("error", "充值错误");
+			Gson gson = new Gson();
+			
+			ExportExcel<ConsumeConditions> ex = new ExportExcel<ConsumeConditions>();
+			
+			List<String[]> headers = new ArrayList<String[]>();
+			headers.add(new String[]{"序号","$sequence"});
+			headers.add(new String[]{"充值手机号","consumePhone"});
+			headers.add(new String[]{"产品名称","productName"});
+			headers.add(new String[]{"折扣","discount"});
+			headers.add(new String[]{"单价","consumePrice"});
+			headers.add(new String[]{"数量","consumeNum"});
+			headers.add(new String[]{"金额","consumeAmount"});
+			headers.add(new String[]{"实际支付","payment"});
+			headers.add(new String[]{"余额","balance"});
+			headers.add(new String[]{"运营商","isp",gson.toJson(map)});
+			headers.add(new String[]{"类型","consumeType",gson.toJson(map1)});
+			headers.add(new String[]{"状态","state",gson.toJson(map2)});
+			headers.add(new String[]{"充值时间","createTime"});
+			
+			User u = (User)request.getSession().getAttribute("user");
+			String roleIds = request.getSession().getAttribute("roleIds").toString();
+			if(!ValidateUtil.isAdmin(roleIds)){//如果是代理商
+				consume.setUserId(u.getUserId());
+			}
+			List<ConsumeConditions> dataset = rechargeConsumeService.getConsumesPage(consume, page);
+			
+			out = response.getOutputStream();
+			ex.exportExcelC("充值记录信息",headers, dataset, out);
+			
+			System.out.println("excel导出成功！");
+		} catch (Exception e) {
+			e.printStackTrace();
+//			ResponseUtil.printText(response,e.getMessage());
+		}finally{
+			out.close();
+		}
 	}
 
 	@RequestMapping("/addConsumeInit/{productId}")

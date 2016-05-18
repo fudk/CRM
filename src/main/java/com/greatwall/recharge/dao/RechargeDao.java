@@ -15,5 +15,7 @@ public interface RechargeDao {
     public Recharge getRecharge(Recharge recharge);
     
     public List<RechargeConditions> getRechargesPage(RechargeConditions rechargeConditions,PageParameter page) throws DaoException;
+    
+    public List<RechargeConditions> getUserRechargePage(RechargeConditions rechargeConditions,PageParameter page) throws DaoException;
 
 }

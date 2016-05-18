@@ -35,7 +35,7 @@ public class JobTaskImpl implements JobTask {
 	@Autowired
 	private CallbackNotifyService callbackNotifyService;
 
-	@Scheduled(cron="0 0/2 *  * * ? ")   //每5秒执行一次  
+	@Scheduled(cron="0 0/1 *  * * ? ")   //每5秒执行一次  
 	@Override  
 	public void synState(){  
 		System.out.println("状态查询");

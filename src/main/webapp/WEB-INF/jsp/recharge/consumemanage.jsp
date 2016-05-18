@@ -150,6 +150,11 @@
 		$("#consumeForm").find("input[type!='button']").val("");
 		$("#consumeForm").find("select").val("");
 	}
+	function exportform(){
+		$("#consumeForm").attr("action","${ctx}/rechargeConsume/consume/export");
+		$("#consumeForm").submit();
+	}
+	
 </script>
 
 </head>
@@ -192,6 +197,7 @@
 
  			<input type="button" onclick="search()" value="查询" /> 
  			<input type="button" onclick="clearform()" value="清除" /> 
+ 			<input type="button" onclick="exportform()" value="导出" /> 
 			</div>
 			</form>
 			<div id="Searchresult"></div>

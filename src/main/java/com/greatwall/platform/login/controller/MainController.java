@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.greatwall.platform.base.dao.DaoException;
 import com.greatwall.platform.domain.PageParameter;
 import com.greatwall.platform.login.service.MainService;
+import com.greatwall.platform.system.dao.UserDao;
 import com.greatwall.platform.system.dto.User;
 import com.greatwall.recharge.dto.Notice;
 import com.greatwall.recharge.dto.Product;
@@ -36,13 +37,15 @@ public class MainController {
 
 	@Autowired
 	private MainService mainService;
-	
 	@Autowired
 	private NoticeService noticeService;
+	@Autowired
+	private UserDao userDao;
 	
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView main(Product product,PageParameter page,ModelMap model,HttpSession httpSession) {
 		User user = httpSession.getAttribute("user")!=null?(User)httpSession.getAttribute("user"):null;
+		
 //		if(httpSession.getAttribute("resTopList")==null){
 			JSONArray toplist = JSONArray.fromObject( mainService.getResource(user,"top") ); 
 			JSONArray leftlist = JSONArray.fromObject( mainService.getResource(user,"left") ); 
@@ -56,6 +59,10 @@ public class MainController {
 			} catch (DaoException e) {
 				logger.error("", e);
 			}
+			User us = new User();
+			us.setUserId(user.getUserId());
+			User u = (User)userDao.getUser(us);
+			model.addAttribute("userbean",u);
 		
 		return new ModelAndView("main.jsp");
 	}

@@ -28,8 +28,8 @@ public class SHHttpclientTest {
 	public static void main(String[] args) {
 		
 //		charge();
-//		getPackage();
-		getReports();
+		getPackage();
+//		getReports();
 	}
 	
 	public static void getReports(){
@@ -117,9 +117,9 @@ public class SHHttpclientTest {
 		httpPost.setConfig(requestConfig);  
 		
 		try {  
-			String account = "zsxx";
+			String account = "zhongshun";
 			String action = "getPackage";
-			String signKey = "469535f341384d8da1324be218933208";
+			String signKey = "9adcf6d7d5f6458e9f1ba24bfae6056e";
 			String v = "1.1";
 			String type = "0";
 			
